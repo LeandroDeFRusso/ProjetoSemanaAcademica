@@ -233,14 +233,82 @@ export function criarServidor(portaDesejada = 3000) {
     res.json(atividades);
   });
 
-  // GET /atividades/:id
-  app.get('/atividades/:id', (req, res) => {
-    const row = db.prepare('SELECT * FROM atividades WHERE id = ?').get(req.params.id);
-    if (!row) {
-      return res.status(404).json({ erro: 'NAO_ENCONTRADO', mensagem: 'Atividade não encontrada' });
-    }
-    res.json(getAtividadeObj(row));
-  });
+    // GET /atividades/:id
+    app.get('/atividades/:id', (req, res) => {
+      const row = db.prepare('SELECT * FROM atividades WHERE id = ?').get(req.params.id);
+      if (!row) {
+        return res.status(404).json({ erro: 'NAO_ENCONTRADO', mensagem: 'Atividade não encontrada' });
+      }
+      res.json(getAtividadeObj(row));
+    });
+
+    // PATCH /atividades/:id
+    app.patch('/atividades/:id', (req, res) => {
+      if (req.usuario.papel !== 'organizacao') {
+        return res.status(403).json({ erro: 'SOMENTE_ORGANIZACAO', mensagem: 'Apenas organização' });
+      }
+      const row = db.prepare('SELECT * FROM atividades WHERE id = ?').get(req.params.id);
+      if (!row) {
+        return res.status(404).json({ erro: 'NAO_ENCONTRADO', mensagem: 'Atividade não encontrada' });
+      }
+      if (row.cancelada) {
+        return res.status(422).json({ erro: 'ATIVIDADE_CANCELADA', mensagem: 'Atividade cancelada' });
+      }
+      const { salaId, tipo, encontros, titulo, vagas } = req.body || {};
+      if (salaId !== undefined || tipo !== undefined || encontros !== undefined) {
+        return res.status(422).json({ erro: 'CAMPO_NAO_EDITAVEL', mensagem: 'Campo não editável' });
+      }
+
+      let novoTitulo = row.titulo;
+      let novasVagas = row.vagas;
+
+      if (titulo !== undefined) {
+        novoTitulo = titulo;
+      }
+      if (vagas !== undefined) {
+        const sala = db.prepare('SELECT capacidade FROM salas WHERE id = ?').get(row.salaId);
+        if (vagas <= 0 || (sala && vagas > sala.capacidade)) {
+          return res.status(422).json({ erro: 'VAGAS_ACIMA_DA_CAPACIDADE', mensagem: 'Vagas acima da capacidade ou inválidas' });
+        }
+        if (vagas < 0) {
+          return res.status(409).json({ erro: 'VAGAS_ABAIXO_DOS_INSCRITOS', mensagem: 'Vagas abaixo dos inscritos' });
+        }
+        novasVagas = vagas;
+      }
+
+      db.prepare('UPDATE atividades SET titulo = ?, vagas = ? WHERE id = ?').run(novoTitulo, novasVagas, req.params.id);
+      const updatedRow = db.prepare('SELECT * FROM atividades WHERE id = ?').get(req.params.id);
+      res.json(getAtividadeObj(updatedRow));
+    });
+
+    // POST /atividades/:id/cancelamento
+    app.post('/atividades/:id/cancelamento', (req, res) => {
+      if (req.usuario.papel !== 'organizacao') {
+        return res.status(403).json({ erro: 'SOMENTE_ORGANIZACAO', mensagem: 'Apenas organização' });
+      }
+      const row = db.prepare('SELECT * FROM atividades WHERE id = ?').get(req.params.id);
+      if (!row) {
+        return res.status(404).json({ erro: 'NAO_ENCONTRADO', mensagem: 'Atividade não encontrada' });
+      }
+
+      if (row.cancelada) {
+        return res.status(422).json({ erro: 'ATIVIDADE_CANCELADA', mensagem: 'Atividade já cancelada' });
+      }
+
+      const encontros = db.prepare('SELECT * FROM encontros WHERE atividadeId = ? ORDER BY inicio ASC').all(row.id);
+      if (encontros.length > 0) {
+        const relogioRow = db.prepare('SELECT valor FROM sistema WHERE chave = ?').get('relogio');
+        const agoraMs = new Date(relogioRow ? relogioRow.valor : Date.now()).getTime();
+        const primeiroInicioMs = new Date(encontros[0].inicio).getTime();
+        if (agoraMs >= primeiroInicioMs) {
+          return res.status(422).json({ erro: 'ATIVIDADE_JA_INICIADA', mensagem: 'Atividade já iniciada' });
+        }
+      }
+
+      db.prepare('UPDATE atividades SET cancelada = 1 WHERE id = ?').run(req.params.id);
+      const updatedRow = db.prepare('SELECT * FROM atividades WHERE id = ?').get(req.params.id);
+      res.json(getAtividadeObj(updatedRow));
+    });
 
   return new Promise((resolve) => {
     const server = app.listen(portaDesejada, () => {

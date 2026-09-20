@@ -1,0 +1,1494 @@
+{
+ "info": {
+  "id": "ses_f3f994d16ffexITw0xqz7pqYKA",
+  "slug": "misty-sailor",
+  "projectID": "83101555cb47ec2aac60beaa3444a9fffcf1229a",
+  "directory": "C:\\Users\\leand\\OneDrive\\Desktop\\gustav\\ProjetoSemanaAcademica\\semana-academica",
+  "path": "semana-academica",
+  "title": "New session - 2026-09-20T19:59:11.081Z",
+  "agent": "build",
+  "model": {
+   "id": "gemini-3.5-flash-lite",
+   "providerID": "google"
+  },
+  "version": "1.18.31",
+  "summary": {
+   "additions": 0,
+   "deletions": 0,
+   "files": 0
+  },
+  "cost": 0.09570825999999999,
+  "tokens": {
+   "input": 169066,
+   "output": 4619,
+   "reasoning": 10475,
+   "cache": {
+    "read": 241782,
+    "write": 0
+   }
+  },
+  "time": {
+   "created": 1789934351081,
+   "updated": 1789934648335
+  }
+ },
+ "messages": [
+  {
+   "info": {
+    "role": "user",
+    "time": {
+     "created": 1789934351093
+    },
+    "agent": "build",
+    "model": {
+     "providerID": "google",
+     "modelID": "gemini-3.5-flash-lite"
+    },
+    "summary": {
+     "diffs": [
+      {
+       "file": "semana-academica/api/src/server.js",
+       "patch": "Index: semana-academica/api/src/server.js\n===================================================================\n--- semana-academica/api/src/server.js\t\n+++ semana-academica/api/src/server.js\t\n@@ -1,255 +1,323 @@\n import express from 'express';\n import { DatabaseSync } from 'node:sqlite';\n \n export function criarServidor(portaDesejada = 3000) {\n   const app = express();\n   app.use(express.json());\n \n   // In-memory or file database using node:sqlite\n   const db = new DatabaseSync(':memory:');\n \n   // Initialize schema and initial data\n   db.exec(`\n     CREATE TABLE IF NOT EXISTS usuarios (\n       id TEXT PRIMARY KEY,\n       nome TEXT NOT NULL,\n       papel TEXT NOT NULL\n     );\n \n     CREATE TABLE IF NOT EXISTS salas (\n       id TEXT PRIMARY KEY,\n       nome TEXT NOT NULL,\n       capacidade INTEGER NOT NULL\n     );\n \n     CREATE TABLE IF NOT EXISTS atividades (\n       id TEXT PRIMARY KEY,\n       titulo TEXT NOT NULL,\n       tipo TEXT NOT NULL,\n       salaId TEXT NOT NULL,\n       vagas INTEGER NOT NULL,\n       cancelada INTEGER DEFAULT 0\n     );\n \n     CREATE TABLE IF NOT EXISTS encontros (\n       id TEXT PRIMARY KEY,\n       atividadeId TEXT NOT NULL,\n       inicio TEXT NOT NULL,\n       fim TEXT NOT NULL\n     );\n \n     CREATE TABLE IF NOT EXISTS sistema (\n       chave TEXT PRIMARY KEY,\n       valor TEXT NOT NULL\n     );\n   `);\n \n   function popularDadosIniciais() {\n     db.exec('DELETE FROM usuarios');\n     db.exec('DELETE FROM salas');\n     db.exec('DELETE FROM atividades');\n     db.exec('DELETE FROM encontros');\n     db.exec('DELETE FROM sistema');\n \n     const usuariosIniciais = [\n       ['org-ana', 'Ana Beatriz Lima', 'organizacao'],\n       ['org-bruno', 'Bruno Tavares', 'organizacao'],\n       ['p-carla', 'Carla Mendes Souza', 'participante'],\n       ['p-diego', 'Diego Alves', 'participante'],\n       ['p-elisa', 'Elisa Fernandes da Rocha', 'participante'],\n       ['p-fabio', 'Fábio Nogueira', 'participante'],\n       ['p-gabriela', 'Gabriela Moura Castro', 'participante'],\n       ['p-heitor', 'Heitor Campos', 'participante'],\n       ['p-isadora', 'Isadora Ribeiro dos Santos', 'participante'],\n       ['p-joao', 'João Pedro Martins', 'participante']\n     ];\n \n     const stmtUser = db.prepare('INSERT INTO usuarios (id, nome, papel) VALUES (?, ?, ?)');\n     for (const u of usuariosIniciais) {\n       stmtUser.run(u[0], u[1], u[2]);\n     }\n \n     const salasIniciais = [\n       ['auditorio', 'Auditório Central', 200],\n       ['sala-101', 'Sala 101', 40],\n       ['sala-102', 'Sala 102', 40],\n       ['lab-3', 'Laboratório 3', 20]\n     ];\n \n     const stmtSala = db.prepare('INSERT INTO salas (id, nome, capacidade) VALUES (?, ?, ?)');\n     for (const s of salasIniciais) {\n       stmtSala.run(s[0], s[1], s[2]);\n     }\n \n     const stmtSys = db.prepare('INSERT OR REPLACE INTO sistema (chave, valor) VALUES (?, ?)');\n     stmtSys.run('relogio', '2026-10-13T09:00:00-03:00');\n   }\n \n   popularDadosIniciais();\n \n   // Test mode routes\n   app.post('/_teste/reset', (req, res) => {\n     if (process.env.MODO_TESTE !== '1') {\n       return res.status(404).json({ erro: 'NAO_ENCONTRADO', mensagem: 'Not found' });\n     }\n     popularDadosIniciais();\n     res.status(204).send();\n   });\n \n   app.put('/_teste/relogio', (req, res) => {\n     if (process.env.MODO_TESTE !== '1') {\n       return res.status(404).json({ erro: 'NAO_ENCONTRADO', mensagem: 'Not found' });\n     }\n     const { agora } = req.body || {};\n     if (!agora) {\n       return res.status(422).json({ erro: 'DADOS_INVALIDOS', mensagem: 'Data ausente' });\n     }\n     db.prepare('INSERT OR REPLACE INTO sistema (chave, valor) VALUES (?, ?)').run('relogio', agora);\n     res.json({ agora });\n   });\n \n   app.get('/_teste/relogio', (req, res) => {\n     if (process.env.MODO_TESTE !== '1') {\n       return res.status(404).json({ erro: 'NAO_ENCONTRADO', mensagem: 'Not found' });\n     }\n     const row = db.prepare('SELECT valor FROM sistema WHERE chave = ?').get('relogio');\n     res.json({ agora: row ? row.valor : '2026-10-13T09:00:00-03:00' });\n   });\n \n   app.post('/_teste/atividades', (req, res) => {\n     if (process.env.MODO_TESTE !== '1') {\n       return res.status(404).json({ erro: 'NAO_ENCONTRADO', mensagem: 'Not found' });\n     }\n     const { id, titulo, tipo, salaId, vagas, encontros, cancelada } = req.body;\n     db.prepare('INSERT OR REPLACE INTO atividades (id, titulo, tipo, salaId, vagas, cancelada) VALUES (?, ?, ?, ?, ?, ?)').run(\n       id, titulo, tipo, salaId, vagas, cancelada ? 1 : 0\n     );\n     const stmtEnc = db.prepare('INSERT OR REPLACE INTO encontros (id, atividadeId, inicio, fim) VALUES (?, ?, ?, ?)');\n     for (const enc of encontros) {\n       stmtEnc.run(enc.id, id, enc.inicio, enc.fim);\n     }\n     res.status(201).json({ id });\n   });\n \n   // Authentication middleware\n   app.use((req, res, next) => {\n     if (req.path.startsWith('/_teste/') || req.path.startsWith('/certificados/')) {\n       return next();\n     }\n     const usuarioId = req.headers['x-usuario'];\n     if (!usuarioId) {\n       return res.status(401).json({ erro: 'USUARIO_DESCONHECIDO', mensagem: 'Usuário não identificado' });\n     }\n     const user = db.prepare('SELECT * FROM usuarios WHERE id = ?').get(usuarioId);\n     if (!user) {\n       return res.status(401).json({ erro: 'USUARIO_DESCONHECIDO', mensagem: 'Usuário desconhecido' });\n     }\n     req.usuario = user;\n     next();\n   });\n \n   // GET /salas\n   app.get('/salas', (req, res) => {\n     const salas = db.prepare('SELECT id, nome, capacidade FROM salas').all();\n     res.json(salas);\n   });\n \n   // Helper to build activity object\n   function getAtividadeObj(row) {\n     const encontros = db.prepare('SELECT id, inicio, fim FROM encontros WHERE atividadeId = ? ORDER BY inicio ASC').all(row.id);\n     \n     // Calculate carga horaria\n     let cargaHorariaMinutos = 0;\n     for (const enc of encontros) {\n       const inicioMs = new Date(enc.inicio).getTime();\n       const fimMs = new Date(enc.fim).getTime();\n       cargaHorariaMinutos += Math.round((fimMs - inicioMs) / 60000);\n     }\n \n     // Determine situacao (R12)\n     let situacao = 'prevista';\n     if (row.cancelada) {\n       situacao = 'cancelada';\n     } else if (encontros.length > 0) {\n       const relogioRow = db.prepare('SELECT valor FROM sistema WHERE chave = ?').get('relogio');\n       const agoraMs = new Date(relogioRow ? relogioRow.valor : Date.now()).getTime();\n       const primeiroInicioMs = new Date(encontros[0].inicio).getTime();\n       const ultimoFimMs = new Date(encontros[encontros.length - 1].fim).getTime();\n \n       if (agoraMs >= ultimoFimMs) {\n         situacao = 'encerrada';\n       } else if (agoraMs >= primeiroInicioMs) {\n         situacao = 'em_andamento';\n       } else {\n         situacao = 'prevista';\n       }\n     }\n \n     return {\n       id: row.id,\n       titulo: row.titulo,\n       tipo: row.tipo,\n       salaId: row.salaId,\n       vagas: row.vagas,\n       encontros,\n       cargaHorariaMinutos,\n       situacao,\n       ocupadas: 0,\n       vagasRestantes: row.vagas,\n       emEspera: 0\n     };\n   }\n \n   // GET /atividades\n   app.get('/atividades', (req, res) => {\n     const { dia, tipo } = req.query;\n     let query = 'SELECT * FROM atividades WHERE 1=1';\n     const params = [];\n \n     if (tipo) {\n       query += ' AND tipo = ?';\n       params.push(tipo);\n     }\n \n     const atividadesRows = db.prepare(query).all(...params);\n     let atividades = atividadesRows.map(getAtividadeObj);\n \n     if (dia) {\n       atividades = atividades.filter(atv => {\n         return atv.encontros.some(enc => enc.inicio.startsWith(dia));\n       });\n     }\n \n     // R10: Order by start of first encounter, then title\n     atividades.sort((a, b) => {\n       const aInicio = a.encontros[0]?.inicio || '';\n       const bInicio = b.encontros[0]?.inicio || '';\n       if (aInicio !== bInicio) {\n         return aInicio.localeCompare(bInicio);\n       }\n       return a.titulo.localeCompare(b.titulo);\n     });\n \n     res.json(atividades);\n   });\n \n-  // GET /atividades/:id\n-  app.get('/atividades/:id', (req, res) => {\n-    const row = db.prepare('SELECT * FROM atividades WHERE id = ?').get(req.params.id);\n-    if (!row) {\n-      return res.status(404).json({ erro: 'NAO_ENCONTRADO', mensagem: 'Atividade não encontrada' });\n-    }\n-    res.json(getAtividadeObj(row));\n-  });\n+    // GET /atividades/:id\n+    app.get('/atividades/:id', (req, res) => {\n+      const row = db.prepare('SELECT * FROM atividades WHERE id = ?').get(req.params.id);\n+      if (!row) {\n+        return res.status(404).json({ erro: 'NAO_ENCONTRADO', mensagem: 'Atividade não encontrada' });\n+      }\n+      res.json(getAtividadeObj(row));\n+    });\n \n+    // PATCH /atividades/:id\n+    app.patch('/atividades/:id', (req, res) => {\n+      if (req.usuario.papel !== 'organizacao') {\n+        return res.status(403).json({ erro: 'SOMENTE_ORGANIZACAO', mensagem: 'Apenas organização' });\n+      }\n+      const row = db.prepare('SELECT * FROM atividades WHERE id = ?').get(req.params.id);\n+      if (!row) {\n+        return res.status(404).json({ erro: 'NAO_ENCONTRADO', mensagem: 'Atividade não encontrada' });\n+      }\n+      if (row.cancelada) {\n+        return res.status(422).json({ erro: 'ATIVIDADE_CANCELADA', mensagem: 'Atividade cancelada' });\n+      }\n+      const { salaId, tipo, encontros, titulo, vagas } = req.body || {};\n+      if (salaId !== undefined || tipo !== undefined || encontros !== undefined) {\n+        return res.status(422).json({ erro: 'CAMPO_NAO_EDITAVEL', mensagem: 'Campo não editável' });\n+      }\n+\n+      let novoTitulo = row.titulo;\n+      let novasVagas = row.vagas;\n+\n+      if (titulo !== undefined) {\n+        novoTitulo = titulo;\n+      }\n+      if (vagas !== undefined) {\n+        const sala = db.prepare('SELECT capacidade FROM salas WHERE id = ?').get(row.salaId);\n+        if (vagas <= 0 || (sala && vagas > sala.capacidade)) {\n+          return res.status(422).json({ erro: 'VAGAS_ACIMA_DA_CAPACIDADE', mensagem: 'Vagas acima da capacidade ou inválidas' });\n+        }\n+        if (vagas < 0) {\n+          return res.status(409).json({ erro: 'VAGAS_ABAIXO_DOS_INSCRITOS', mensagem: 'Vagas abaixo dos inscritos' });\n+        }\n+        novasVagas = vagas;\n+      }\n+\n+      db.prepare('UPDATE atividades SET titulo = ?, vagas = ? WHERE id = ?').run(novoTitulo, novasVagas, req.params.id);\n+      const updatedRow = db.prepare('SELECT * FROM atividades WHERE id = ?').get(req.params.id);\n+      res.json(getAtividadeObj(updatedRow));\n+    });\n+\n+    // POST /atividades/:id/cancelamento\n+    app.post('/atividades/:id/cancelamento', (req, res) => {\n+      if (req.usuario.papel !== 'organizacao') {\n+        return res.status(403).json({ erro: 'SOMENTE_ORGANIZACAO', mensagem: 'Apenas organização' });\n+      }\n+      const row = db.prepare('SELECT * FROM atividades WHERE id = ?').get(req.params.id);\n+      if (!row) {\n+        return res.status(404).json({ erro: 'NAO_ENCONTRADO', mensagem: 'Atividade não encontrada' });\n+      }\n+\n+      if (row.cancelada) {\n+        return res.status(422).json({ erro: 'ATIVIDADE_CANCELADA', mensagem: 'Atividade já cancelada' });\n+      }\n+\n+      const encontros = db.prepare('SELECT * FROM encontros WHERE atividadeId = ? ORDER BY inicio ASC').all(row.id);\n+      if (encontros.length > 0) {\n+        const relogioRow = db.prepare('SELECT valor FROM sistema WHERE chave = ?').get('relogio');\n+        const agoraMs = new Date(relogioRow ? relogioRow.valor : Date.now()).getTime();\n+        const primeiroInicioMs = new Date(encontros[0].inicio).getTime();\n+        if (agoraMs >= primeiroInicioMs) {\n+          return res.status(422).json({ erro: 'ATIVIDADE_JA_INICIADA', mensagem: 'Atividade já iniciada' });\n+        }\n+      }\n+\n+      db.prepare('UPDATE atividades SET cancelada = 1 WHERE id = ?').run(req.params.id);\n+      const updatedRow = db.prepare('SELECT * FROM atividades WHERE id = ?').get(req.params.id);\n+      res.json(getAtividadeObj(updatedRow));\n+    });\n+\n   return new Promise((resolve) => {\n     const server = app.listen(portaDesejada, () => {\n       const porta = server.address().port;\n       resolve({ app: server, porta });\n     });\n   });\n }\n \n if (process.argv[1] && process.argv[1].endsWith('server.js') && process.env.NODE_ENV !== 'test') {\n   criarServidor(process.env.PORT || 3000);\n }\n",
+       "additions": 76,
+       "deletions": 8,
+       "status": "modified"
+      },
+      {
+       "file": "semana-academica/api/verificacoes/m1-atualizacoes.spec.js",
+       "patch": "Index: semana-academica/api/verificacoes/m1-atualizacoes.spec.js\n===================================================================\n--- semana-academica/api/verificacoes/m1-atualizacoes.spec.js\t\n+++ semana-academica/api/verificacoes/m1-atualizacoes.spec.js\t\n@@ -0,0 +1,192 @@\n+import test from 'node:test';\n+import assert from 'node:assert/strict';\n+import { criarServidor } from '../src/server.js';\n+\n+test('Critério 9b: PATCH alterando só título numa atividade cancelada retorna 422 ATIVIDADE_CANCELADA', async () => {\n+  process.env.MODO_TESTE = '1';\n+  const { app, porta } = await criarServidor(0);\n+  try {\n+    await fetch(`http://localhost:${porta}/_teste/reset`, { method: 'POST' });\n+    await fetch(`http://localhost:${porta}/_teste/atividades`, {\n+      method: 'POST',\n+      headers: { 'Content-Type': 'application/json' },\n+      body: JSON.stringify({\n+        id: 'atv_canc',\n+        titulo: 'Atividade Cancelada',\n+        tipo: 'palestra',\n+        salaId: 'auditorio',\n+        vagas: 50,\n+        encontros: [\n+          { id: 'enc_c1', inicio: '2026-10-19T10:00:00-03:00', fim: '2026-10-19T11:00:00-03:00' }\n+        ],\n+        cancelada: 1\n+      })\n+    });\n+\n+    const res = await fetch(`http://localhost:${porta}/atividades/atv_canc`, {\n+      method: 'PATCH',\n+      headers: {\n+        'Content-Type': 'application/json',\n+        'X-Usuario': 'org-ana'\n+      },\n+      body: JSON.stringify({ titulo: 'Novo Título' })\n+    });\n+    assert.equal(res.status, 422);\n+    const data = await res.json();\n+    assert.equal(data.erro, 'ATIVIDADE_CANCELADA');\n+  } finally {\n+    app.close();\n+  }\n+});\n+\n+test('Critério 12: cancelar atividade já iniciada (não cancelada) retorna 422 ATIVIDADE_JA_INICIADA', async () => {\n+  process.env.MODO_TESTE = '1';\n+  const { app, porta } = await criarServidor(0);\n+  try {\n+    await fetch(`http://localhost:${porta}/_teste/reset`, { method: 'POST' });\n+    await fetch(`http://localhost:${porta}/_teste/atividades`, {\n+      method: 'POST',\n+      headers: { 'Content-Type': 'application/json' },\n+      body: JSON.stringify({\n+        id: 'atv_ini',\n+        titulo: 'Atividade Iniciada',\n+        tipo: 'palestra',\n+        salaId: 'auditorio',\n+        vagas: 50,\n+        encontros: [\n+          { id: 'enc_i1', inicio: '2026-10-19T10:00:00-03:00', fim: '2026-10-19T12:00:00-03:00' }\n+        ],\n+        cancelada: 0\n+      })\n+    });\n+\n+    // Relógio durante a atividade\n+    await fetch(`http://localhost:${porta}/_teste/relogio`, {\n+      method: 'PUT',\n+      headers: { 'Content-Type': 'application/json' },\n+      body: JSON.stringify({ agora: '2026-10-19T11:00:00-03:00' })\n+    });\n+\n+    const res = await fetch(`http://localhost:${porta}/atividades/atv_ini/cancelamento`, {\n+      method: 'POST',\n+      headers: { 'X-Usuario': 'org-ana' }\n+    });\n+    assert.equal(res.status, 422);\n+    const data = await res.json();\n+    assert.equal(data.erro, 'ATIVIDADE_JA_INICIADA');\n+  } finally {\n+    app.close();\n+  }\n+});\n+\n+test('Critério 12b: cancelar atividade já cancelada retorna 422 ATIVIDADE_CANCELADA', async () => {\n+  process.env.MODO_TESTE = '1';\n+  const { app, porta } = await criarServidor(0);\n+  try {\n+    await fetch(`http://localhost:${porta}/_teste/reset`, { method: 'POST' });\n+    await fetch(`http://localhost:${porta}/_teste/atividades`, {\n+      method: 'POST',\n+      headers: { 'Content-Type': 'application/json' },\n+      body: JSON.stringify({\n+        id: 'atv_jacc',\n+        titulo: 'Já Cancelada',\n+        tipo: 'palestra',\n+        salaId: 'auditorio',\n+        vagas: 50,\n+        encontros: [\n+          { id: 'enc_jc1', inicio: '2026-10-19T10:00:00-03:00', fim: '2026-10-19T11:00:00-03:00' }\n+        ],\n+        cancelada: 1\n+      })\n+    });\n+\n+    const res = await fetch(`http://localhost:${porta}/atividades/atv_jacc/cancelamento`, {\n+      method: 'POST',\n+      headers: { 'X-Usuario': 'org-ana' }\n+    });\n+    assert.equal(res.status, 422);\n+    const data = await res.json();\n+    assert.equal(data.erro, 'ATIVIDADE_CANCELADA');\n+  } finally {\n+    app.close();\n+  }\n+});\n+\n+test('Critério 12c: cancelar atividade já iniciada E já cancelada retorna 422 ATIVIDADE_CANCELADA provando a ordem', async () => {\n+  process.env.MODO_TESTE = '1';\n+  const { app, porta } = await criarServidor(0);\n+  try {\n+    await fetch(`http://localhost:${porta}/_teste/reset`, { method: 'POST' });\n+    await fetch(`http://localhost:${porta}/_teste/atividades`, {\n+      method: 'POST',\n+      headers: { 'Content-Type': 'application/json' },\n+      body: JSON.stringify({\n+        id: 'atv_inican',\n+        titulo: 'Iniciada e Cancelada',\n+        tipo: 'palestra',\n+        salaId: 'auditorio',\n+        vagas: 50,\n+        encontros: [\n+          { id: 'enc_ic1', inicio: '2026-10-19T10:00:00-03:00', fim: '2026-10-19T12:00:00-03:00' }\n+        ],\n+        cancelada: 1\n+      })\n+    });\n+\n+    // Relógio durante\n+    await fetch(`http://localhost:${porta}/_teste/relogio`, {\n+      method: 'PUT',\n+      headers: { 'Content-Type': 'application/json' },\n+      body: JSON.stringify({ agora: '2026-10-19T11:00:00-03:00' })\n+    });\n+\n+    const res = await fetch(`http://localhost:${porta}/atividades/atv_inican/cancelamento`, {\n+      method: 'POST',\n+      headers: { 'X-Usuario': 'org-ana' }\n+    });\n+    assert.equal(res.status, 422);\n+    const data = await res.json();\n+    assert.equal(data.erro, 'ATIVIDADE_CANCELADA');\n+  } finally {\n+    app.close();\n+  }\n+});\n+\n+test('Critério 16: situacao exatamente no instante do fim do último encontro é encerrada, não em_andamento', async () => {\n+  process.env.MODO_TESTE = '1';\n+  const { app, porta } = await criarServidor(0);\n+  try {\n+    await fetch(`http://localhost:${porta}/_teste/reset`, { method: 'POST' });\n+    await fetch(`http://localhost:${porta}/_teste/atividades`, {\n+      method: 'POST',\n+      headers: { 'Content-Type': 'application/json' },\n+      body: JSON.stringify({\n+        id: 'atv_fim',\n+        titulo: 'Fim Exato',\n+        tipo: 'palestra',\n+        salaId: 'auditorio',\n+        vagas: 50,\n+        encontros: [\n+          { id: 'enc_f1', inicio: '2026-10-19T10:00:00-03:00', fim: '2026-10-19T12:00:00-03:00' }\n+        ],\n+        cancelada: 0\n+      })\n+    });\n+\n+    // Relógio exatamente no fim do último encontro\n+    await fetch(`http://localhost:${porta}/_teste/relogio`, {\n+      method: 'PUT',\n+      headers: { 'Content-Type': 'application/json' },\n+      body: JSON.stringify({ agora: '2026-10-19T12:00:00-03:00' })\n+    });\n+\n+    const res = await fetch(`http://localhost:${porta}/atividades/atv_fim`, {\n+      headers: { 'X-Usuario': 'org-ana' }\n+    });\n+    assert.equal(res.status, 200);\n+    const data = await res.json();\n+    assert.equal(data.situacao, 'encerrada');\n+  } finally {\n+    app.close();\n+  }\n+});\n",
+       "additions": 192,
+       "deletions": 0,
+       "status": "added"
+      }
+     ]
+    },
+    "id": "msg_0c066b2f5001IzsBrVZpB0PGwK",
+    "sessionID": "ses_f3f994d16ffexITw0xqz7pqYKA"
+   },
+   "parts": [
+    {
+     "type": "text",
+     "text": "Use a skill tdd. A spec de specs/M1-grade-de-atividades.md foi atualizada em três pontos\ndesde a última fatia trabalhada:\n\n1. R6 agora também cobre PATCH em atividade cancelada: qualquer PATCH numa\n   atividade já cancelada é recusado com 422 ATIVIDADE_CANCELADA, mesmo\n   que o campo enviado fosse editável — essa verificação vem antes da\n   verificação de CAMPO_NAO_EDITAVEL.\n2. R8 foi restrita a POST /atividades/:id/cancelamento (não cobre mais\n   PATCH), com ordem de verificação explícita: primeiro cancelada (422\n   ATIVIDADE_CANCELADA), depois já iniciada (422 ATIVIDADE_JA_INICIADA).\n3. R12 (situacao) tem fronteira exata definida: em_andamento vale até o\n   fim do último encontro (exclusive); encerrada a partir do fim do\n   último (inclusive).\n\nPrimeiro, liste o que já está implementado e testado hoje (rode os testes\nexistentes e me diga quais fatias/regras já têm cobertura). Depois, para\nCADA um dos critérios de aceite abaixo, confira se já existe teste\nequivalente; para o que faltar, escreva o teste primeiro, mostre falhando,\nsó então ajuste o código:\n\n- Critério 9b: PATCH alterando só título numa atividade cancelada → 422\n  ATIVIDADE_CANCELADA.\n- Critério 12: cancelar atividade já iniciada (não cancelada) → 422\n  ATIVIDADE_JA_INICIADA.\n- Critério 12b: cancelar atividade já cancelada → 422 ATIVIDADE_CANCELADA.\n- Critério 12c: cancelar atividade já iniciada E já cancelada → 422\n  ATIVIDADE_CANCELADA (prova a ordem).\n- Critério 16: situacao exatamente no instante do fim do último encontro\n  → encerrada, não em_andamento.\n\nDepois de fechar essas lacunas, me diga qual é a próxima fatia pendente\nsegundo a seção 8 da spec, e pare aí — não avance pra próxima fatia sem\neu confirmar. ",
+     "id": "prt_0c066b2f6001mripUE0RPHV0jh",
+     "sessionID": "ses_f3f994d16ffexITw0xqz7pqYKA",
+     "messageID": "msg_0c066b2f5001IzsBrVZpB0PGwK"
+    }
+   ]
+  },
+  {
+   "info": {
+    "parentID": "msg_0c066b2f5001IzsBrVZpB0PGwK",
+    "role": "assistant",
+    "mode": "build",
+    "agent": "build",
+    "path": {
+     "cwd": "C:\\Users\\leand\\OneDrive\\Desktop\\gustav\\ProjetoSemanaAcademica\\semana-academica",
+     "root": "C:\\Users\\leand\\OneDrive\\Desktop\\gustav\\ProjetoSemanaAcademica"
+    },
+    "cost": 0.0041373,
+    "tokens": {
+     "total": 10887,
+     "input": 10491,
+     "output": 14,
+     "reasoning": 382,
+     "cache": {
+      "write": 0,
+      "read": 0
+     }
+    },
+    "modelID": "gemini-3.5-flash-lite",
+    "providerID": "google",
+    "time": {
+     "created": 1789934351101,
+     "completed": 1789934354226
+    },
+    "finish": "tool-calls",
+    "id": "msg_0c066b2fd0012DVdVyubHK0ZKO",
+    "sessionID": "ses_f3f994d16ffexITw0xqz7pqYKA"
+   },
+   "parts": [
+    {
+     "snapshot": "05db8eb6ed116dee0d54a30bdc346ee3b9439837",
+     "type": "step-start",
+     "id": "prt_0c066bcaf001hHmYL6UKHTSOCr",
+     "sessionID": "ses_f3f994d16ffexITw0xqz7pqYKA",
+     "messageID": "msg_0c066b2fd0012DVdVyubHK0ZKO"
+    },
+    {
+     "type": "reasoning",
+     "text": "**Analyzing Activity Updates**\n\nOkay, I'm diving into the `specs/M1-grade-de-atividades.md` file, focusing on point 1: how to implement PATCH for canceled activities. My test-driven approach is zeroing in on the 422 ATIVIDADE_CANCELADA error, making sure it preempts CAMPO_NAO_EDITAVEL. I'm building out a plan for the specs now, aiming for efficient coverage.\n\n\n",
+     "time": {
+      "start": 1789934353587,
+      "end": 1789934353734
+     },
+     "id": "prt_0c066bcb3001CXMuFfhN5ZFIUF",
+     "sessionID": "ses_f3f994d16ffexITw0xqz7pqYKA",
+     "messageID": "msg_0c066b2fd0012DVdVyubHK0ZKO"
+    },
+    {
+     "type": "tool",
+     "tool": "skill",
+     "callID": "3tsxp8dY4eMC7n6W",
+     "state": {
+      "status": "completed",
+      "input": {
+       "name": "tdd"
+      },
+      "output": "<skill_content name=\"tdd\">\n# Skill: tdd\n\n# Teste primeiro, uma fatia por vez\r\n\r\nO ciclo é: **um teste que falha → o código mínimo que faz ele passar → a próxima fatia.**\r\nNada de escrever a suíte inteira e depois o código inteiro.\r\n\r\nVocê precisa de uma spec com regras numeradas. Sem ela, pare: você vai acabar testando o\r\nque você mesmo inventou. Sem contrato, verde não significa nada.\r\n\r\n## Onde o teste mora\r\n\r\nTeste verifica **comportamento pela interface pública**, nunca implementação. Aqui a\r\ninterface é HTTP: suba o servidor com `criarServidor()` e fale por `fetch`. Não importe\r\nserviço nem repositório no teste — se importar, o teste quebra quando você refatorar\r\nsem que o comportamento tenha mudado.\r\n\r\nPadrão do projeto: `node --test`, `node:assert/strict`, um arquivo em `verificacoes/`,\r\nespelhando `verificacoes/livros.spec.js`. Sem framework, sem dependência, sem mock.\r\n\r\n## O ciclo, por fatia\r\n\r\nPara cada fatia da spec, nesta ordem:\r\n\r\n1. Escreva **um** teste que prova **um** critério de aceite. O nome do teste é a regra\r\n   em português: `it('recusa o quarto empréstimo ativo do mesmo leitor')`.\r\n2. Rode. **Ele tem que falhar.** Teste que passa antes do código existir não está\r\n   testando nada — descubra por quê antes de seguir.\r\n3. Escreva o mínimo de código que faz ele passar. Nada de já implementar a regra\r\n   seguinte \"que eu vou precisar mesmo\".\r\n4. Rode a suíte inteira. Verde? Próxima fatia.\r\n\r\nSó passe para a fatia seguinte com a suíte inteira verde.\r\n\r\n## A regra que não se quebra\r\n\r\n**Quando o teste falha, o suspeito é o código.**\r\n\r\nSe você mudar um teste para ele passar, você trocou o contrato pela sua implementação e\r\no verde virou enfeite. Só se altera um teste quando a **spec** mudou — e aí você diz, em\r\nvoz alta, qual regra da spec mudou e por quê.\r\n\r\nVale para o valor esperado, para o status HTTP e para o cenário. Trocar\r\n`assert.equal(dias, 14)` por `assert.equal(dias, 7)` porque o código deu 7 é a forma mais\r\ncomum de mentir sozinho.\r\n\r\n## Três testes que não valem nada\r\n\r\n- **Acoplado à implementação** — chama serviço ou repositório direto, ou confere o dado\r\n  espiando o `Map` em vez de pedir pela API. Quebra em refatoração, não em regressão.\r\n- **Tautológico** — o esperado é calculado do mesmo jeito que o código calcula\r\n  (`assert.equal(multa, dias * 1.5)`). Passa por construção, nunca discorda do código.\r\n  O valor esperado vem da spec, escrito na mão: `assert.equal(multa, 4.5)`.\r\n- **Frouxo** — confere só o status e ignora o corpo. `201` com o prazo errado passa.\r\n\r\n## Fechamento\r\n\r\nTerminada a última fatia, rode a suíte inteira uma vez e relate o número real que\r\napareceu na saída. Não estime, não arredonde, não repita um número de outra rodada.\n\nBase directory for this skill: C:\\Users\\leand\\OneDrive\\Desktop\\gustav\\ProjetoSemanaAcademica\\semana-academica\\.opencode\\skills\\tdd\nRelative paths in this skill (e.g., scripts/, reference/) are relative to this base directory.\nNote: file list is sampled.\n\n<skill_files>\n\n</skill_files>\n</skill_content>",
+      "metadata": {
+       "name": "tdd",
+       "dir": "C:\\Users\\leand\\OneDrive\\Desktop\\gustav\\ProjetoSemanaAcademica\\semana-academica\\.opencode\\skills\\tdd",
+       "truncated": false
+      },
+      "title": "Loaded skill: tdd",
+      "time": {
+       "start": 1789934353715,
+       "end": 1789934353761
+      }
+     },
+     "metadata": {
+      "google": {
+       "thoughtSignature": "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"
+      }
+     },
+     "id": "prt_0c066bd2a0019Xpj99AiRwQyoJ",
+     "sessionID": "ses_f3f994d16ffexITw0xqz7pqYKA",
+     "messageID": "msg_0c066b2fd0012DVdVyubHK0ZKO"
+    },
+    {
+     "reason": "tool-calls",
+     "snapshot": "05db8eb6ed116dee0d54a30bdc346ee3b9439837",
+     "type": "step-finish",
+     "tokens": {
+      "total": 10887,
+      "input": 10491,
+      "output": 14,
+      "reasoning": 382,
+      "cache": {
+       "write": 0,
+       "read": 0
+      }
+     },
+     "cost": 0.0041373,
+     "id": "prt_0c066be62001fGlEUblKe84lKg",
+     "sessionID": "ses_f3f994d16ffexITw0xqz7pqYKA",
+     "messageID": "msg_0c066b2fd0012DVdVyubHK0ZKO"
+    }
+   ]
+  },
+  {
+   "info": {
+    "parentID": "msg_0c066b2f5001IzsBrVZpB0PGwK",
+    "role": "assistant",
+    "mode": "build",
+    "agent": "build",
+    "path": {
+     "cwd": "C:\\Users\\leand\\OneDrive\\Desktop\\gustav\\ProjetoSemanaAcademica\\semana-academica",
+     "root": "C:\\Users\\leand\\OneDrive\\Desktop\\gustav\\ProjetoSemanaAcademica"
+    },
+    "cost": 0.0037099,
+    "tokens": {
+     "total": 11919,
+     "input": 11858,
+     "output": 15,
+     "reasoning": 46,
+     "cache": {
+      "write": 0,
+      "read": 0
+     }
+    },
+    "modelID": "gemini-3.5-flash-lite",
+    "providerID": "google",
+    "time": {
+     "created": 1789934354229,
+     "completed": 1789934356465
+    },
+    "finish": "tool-calls",
+    "id": "msg_0c066bf35001I2AHdHWtpAUU7E",
+    "sessionID": "ses_f3f994d16ffexITw0xqz7pqYKA"
+   },
+   "parts": [
+    {
+     "snapshot": "05db8eb6ed116dee0d54a30bdc346ee3b9439837",
+     "type": "step-start",
+     "id": "prt_0c066c593001svZnMNp7w50iJ6",
+     "sessionID": "ses_f3f994d16ffexITw0xqz7pqYKA",
+     "messageID": "msg_0c066bf35001I2AHdHWtpAUU7E"
+    },
+    {
+     "type": "tool",
+     "tool": "glob",
+     "callID": "H0WsVZn7x5DMLlyi",
+     "state": {
+      "status": "completed",
+      "input": {
+       "pattern": "**/*"
+      },
+      "output": "[12370 caracteres omitidos]",
+      "title": "semana-academica",
+      "time": {
+       "start": 1789934355866,
+       "end": 1789934356157
+      }
+     },
+     "metadata": {
+      "google": {
+       "thoughtSignature": "EsQCCsECAWkUfRM5uytSrzgkYhIkjwaVLENwrQPU/ZoAGW7D5H/iPdsdofk8ad1CgzBROX7EsMWHOEXs25EpZOxZqElWJyfJTYOMYkHS081jrwVYEjZZsJotXiUS1tqcVKbW9iS2UGCi/hLvsX+jTxjZC5haphCrDU22zm66sO4ECe/qApOPLwS9fL7XnALlHIMCvrK26WX22LKqzx0f06i/ciD0LZnLi30CBQzFp34zRCeYwulpJ6IbeISJUeU5sEWPtHJakIig7XA/9h/ZWndaiwX8bJYVt4LIKR7oWtZrKHLPHdGgdndmHPvSNW2vab76cKtZC41n39uwFYQLzb7Mp9HtMSb6Stc9TMiqZNClTFqtEdK38IafB+D6q0UqFQLkudlUZAJywzqQZJBrFAwq1CUgzSwMRWD3VaTob3ogsgHT4Npx"
+      }
+     },
+     "id": "prt_0c066c595001hk6jGjcGjCJ76F",
+     "sessionID": "ses_f3f994d16ffexITw0xqz7pqYKA",
+     "messageID": "msg_0c066bf35001I2AHdHWtpAUU7E"
+    },
+    {
+     "reason": "tool-calls",
+     "snapshot": "05db8eb6ed116dee0d54a30bdc346ee3b9439837",
+     "type": "step-finish",
+     "tokens": {
+      "total": 11919,
+      "input": 11858,
+      "output": 15,
+      "reasoning": 46,
+      "cache": {
+       "write": 0,
+       "read": 0
+      }
+     },
+     "cost": 0.0037099,
+     "id": "prt_0c066c75d001Z1BmQ2Nor7y5XH",
+     "sessionID": "ses_f3f994d16ffexITw0xqz7pqYKA",
+     "messageID": "msg_0c066bf35001I2AHdHWtpAUU7E"
+    }
+   ]
+  },
+  {
+   "info": {
+    "parentID": "msg_0c066b2f5001IzsBrVZpB0PGwK",
+    "role": "assistant",
+    "mode": "build",
+    "agent": "build",
+    "path": {
+     "cwd": "C:\\Users\\leand\\OneDrive\\Desktop\\gustav\\ProjetoSemanaAcademica\\semana-academica",
+     "root": "C:\\Users\\leand\\OneDrive\\Desktop\\gustav\\ProjetoSemanaAcademica"
+    },
+    "cost": 0.0051171,
+    "tokens": {
+     "total": 16683,
+     "input": 16632,
+     "output": 22,
+     "reasoning": 29,
+     "cache": {
+      "write": 0,
+      "read": 0
+     }
+    },
+    "modelID": "gemini-3.5-flash-lite",
+    "providerID": "google",
+    "time": {
+     "created": 1789934356468,
+     "completed": 1789934358445
+    },
+    "finish": "tool-calls",
+    "id": "msg_0c066c7f4001LNItG197E4K7Q2",
+    "sessionID": "ses_f3f994d16ffexITw0xqz7pqYKA"
+   },
+   "parts": [
+    {
+     "snapshot": "05db8eb6ed116dee0d54a30bdc346ee3b9439837",
+     "type": "step-start",
+     "id": "prt_0c066ce270011XUZ5ijU4CszfM",
+     "sessionID": "ses_f3f994d16ffexITw0xqz7pqYKA",
+     "messageID": "msg_0c066c7f4001LNItG197E4K7Q2"
+    },
+    {
+     "type": "tool",
+     "tool": "glob",
+     "callID": "TGRgSG3lkMNgUZQC",
+     "state": {
+      "status": "completed",
+      "input": {
+       "path": "api",
+       "pattern": "**/*.js"
+      },
+      "output": "[210 caracteres omitidos]",
+      "title": "semana-academica\\api",
+      "time": {
+       "start": 1789934358062,
+       "end": 1789934358099
+      }
+     },
+     "metadata": {
+      "google": {
+       "thoughtSignature": "EsABCr0BAWkUfROFHjdn1xilt4fqD9LW3EAkAuh/2CPyXIxfWEn1mcVlbgJono7Eg5pyXAIzrhPDftqWVsP2u380fmvf+wNBy9Xv59pnP1o4F3r4JbKpm/fvMvcYrJZG9/GcKwNIOXAW1kIR+CjKOmzZfbj0B7dxSIVhO8KOlGIrEC86MpmeN++sdcCoccGC142/PFFL36GC+H1gxAdjEb3as8Mwx03kkHwZnawYXwPdFRnGfLihaOzteL+MKA/gHIp9"
+      }
+     },
+     "id": "prt_0c066ce29001W2jqC3CKzSNifK",
+     "sessionID": "ses_f3f994d16ffexITw0xqz7pqYKA",
+     "messageID": "msg_0c066c7f4001LNItG197E4K7Q2"
+    },
+    {
+     "reason": "tool-calls",
+     "snapshot": "05db8eb6ed116dee0d54a30bdc346ee3b9439837",
+     "type": "step-finish",
+     "tokens": {
+      "total": 16683,
+      "input": 16632,
+      "output": 22,
+      "reasoning": 29,
+      "cache": {
+       "write": 0,
+       "read": 0
+      }
+     },
+     "cost": 0.0051171,
+     "id": "prt_0c066cf080019jm4f1MNx3nvcr",
+     "sessionID": "ses_f3f994d16ffexITw0xqz7pqYKA",
+     "messageID": "msg_0c066c7f4001LNItG197E4K7Q2"
+    }
+   ]
+  },
+  {
+   "info": {
+    "parentID": "msg_0c066b2f5001IzsBrVZpB0PGwK",
+    "role": "assistant",
+    "mode": "build",
+    "agent": "build",
+    "path": {
+     "cwd": "C:\\Users\\leand\\OneDrive\\Desktop\\gustav\\ProjetoSemanaAcademica\\semana-academica",
+     "root": "C:\\Users\\leand\\OneDrive\\Desktop\\gustav\\ProjetoSemanaAcademica"
+    },
+    "cost": 0.0018784,
+    "tokens": {
+     "total": 16844,
+     "input": 4500,
+     "output": 46,
+     "reasoning": 18,
+     "cache": {
+      "write": 0,
+      "read": 12280
+     }
+    },
+    "modelID": "gemini-3.5-flash-lite",
+    "providerID": "google",
+    "time": {
+     "created": 1789934358451,
+     "completed": 1789934360261
+    },
+    "finish": "tool-calls",
+    "id": "msg_0c066cfb3001PDDSG0xhmKtynV",
+    "sessionID": "ses_f3f994d16ffexITw0xqz7pqYKA"
+   },
+   "parts": [
+    {
+     "snapshot": "05db8eb6ed116dee0d54a30bdc346ee3b9439837",
+     "type": "step-start",
+     "id": "prt_0c066d532001wjSbm943Az2rVk",
+     "sessionID": "ses_f3f994d16ffexITw0xqz7pqYKA",
+     "messageID": "msg_0c066cfb3001PDDSG0xhmKtynV"
+    },
+    {
+     "type": "tool",
+     "tool": "read",
+     "callID": "3SxVNoMA5QIW9795",
+     "state": {
+      "status": "completed",
+      "input": {
+       "filePath": "C:\\Users\\leand\\OneDrive\\Desktop\\gustav\\ProjetoSemanaAcademica\\semana-academica\\api\\package.json"
+      },
+      "output": "[1024 caracteres omitidos]",
+      "title": "semana-academica\\api\\package.json",
+      "time": {
+       "start": 1789934359864,
+       "end": 1789934359871
+      }
+     },
+     "metadata": {
+      "google": {
+       "thoughtSignature": "ErQBCrEBAWkUfRN6TuXWK9B701nMcCO3RZTcpAxqldxQ5Cl8ua9ETKGLWIvprsj4KHLXyzT8J9MCURziaJSl0m7J7msHesSCnvrlA8tpfmF9FBXF/6bfUfT9oOkgPiTo2G3zBOCjJaxyrAhH+SjiRZMcJTmxvk8nhBnGK3+sxZuG/jkKc8/EiswVShNIkvNDSImXEfc/g16F5j8T/fCqDVU1PT5ZfHBxHeBEcZ0rppK6E1KAn2Rq"
+      }
+     },
+     "id": "prt_0c066d5340016BfSnOjtkE7BqX",
+     "sessionID": "ses_f3f994d16ffexITw0xqz7pqYKA",
+     "messageID": "msg_0c066cfb3001PDDSG0xhmKtynV"
+    },
+    {
+     "reason": "tool-calls",
+     "snapshot": "05db8eb6ed116dee0d54a30bdc346ee3b9439837",
+     "type": "step-finish",
+     "tokens": {
+      "total": 16844,
+      "input": 4500,
+      "output": 46,
+      "reasoning": 18,
+      "cache": {
+       "write": 0,
+       "read": 12280
+      }
+     },
+     "cost": 0.0018784,
+     "id": "prt_0c066d601001l1WpSXz5VDEkZ5",
+     "sessionID": "ses_f3f994d16ffexITw0xqz7pqYKA",
+     "messageID": "msg_0c066cfb3001PDDSG0xhmKtynV"
+    }
+   ]
+  },
+  {
+   "info": {
+    "parentID": "msg_0c066b2f5001IzsBrVZpB0PGwK",
+    "role": "assistant",
+    "mode": "build",
+    "agent": "build",
+    "path": {
+     "cwd": "C:\\Users\\leand\\OneDrive\\Desktop\\gustav\\ProjetoSemanaAcademica\\semana-academica",
+     "root": "C:\\Users\\leand\\OneDrive\\Desktop\\gustav\\ProjetoSemanaAcademica"
+    },
+    "cost": 0.00198439,
+    "tokens": {
+     "total": 17279,
+     "input": 4954,
+     "output": 22,
+     "reasoning": 30,
+     "cache": {
+      "write": 0,
+      "read": 12273
+     }
+    },
+    "modelID": "gemini-3.5-flash-lite",
+    "providerID": "google",
+    "time": {
+     "created": 1789934360264,
+     "completed": 1789934363249
+    },
+    "finish": "tool-calls",
+    "id": "msg_0c066d6c8001t4FsBv8UqDwvPU",
+    "sessionID": "ses_f3f994d16ffexITw0xqz7pqYKA"
+   },
+   "parts": [
+    {
+     "snapshot": "05db8eb6ed116dee0d54a30bdc346ee3b9439837",
+     "type": "step-start",
+     "id": "prt_0c066dc51001Raytm7ghavx0S7",
+     "sessionID": "ses_f3f994d16ffexITw0xqz7pqYKA",
+     "messageID": "msg_0c066d6c8001t4FsBv8UqDwvPU"
+    },
+    {
+     "type": "tool",
+     "tool": "bash",
+     "callID": "5XtbawjKU8k4dbfp",
+     "state": {
+      "status": "completed",
+      "input": {
+       "workdir": "api",
+       "command": "npm test"
+      },
+      "output": "\n> semana-academica-api@1.0.0 test\n> node --test verificacoes/**/*.spec.js\n\n(node:9148) ExperimentalWarning: SQLite is an experimental feature and might change at any time\n(Use `node --trace-warnings ...` to show where the warning was created)\n✔ GET /salas retorna a lista de salas (51.3339ms)\n✔ GET /atividades filtra por dia e tipo, ordena por R10 e calcula situacao por R12 (63.6869ms)\nℹ tests 2\nℹ suites 0\nℹ pass 2\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 330.4142\n",
+      "metadata": {
+       "output": "\n> semana-academica-api@1.0.0 test\n> node --test verificacoes/**/*.spec.js\n\n(node:9148) ExperimentalWarning: SQLite is an experimental feature and might change at any time\n(Use `node --trace-warnings ...` to show where the warning was created)\n✔ GET /salas retorna a lista de salas (51.3339ms)\n✔ GET /atividades filtra por dia e tipo, ordena por R10 e calcula situacao por R12 (63.6869ms)\nℹ tests 2\nℹ suites 0\nℹ pass 2\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 330.4142\n",
+       "exit": 0,
+       "truncated": false
+      },
+      "title": "npm test",
+      "time": {
+       "start": 1789934361699,
+       "end": 1789934362842
+      }
+     },
+     "metadata": {
+      "google": {
+       "thoughtSignature": "EuABCt0BAWkUfROAnPZVcKuZW7XpmH8uaDI9EtYnBO1ZybXhf3Hb+9TxNaQF3smqt8PK9fO2DFtJAZiIEt8JGirgtEciTZZyifGQNfEPAhYqhEtwhd881l91oLaTd6ILwcuH23fLKokxIPQqt2YElQ4eCHT1gPJy5CEgtWELXCoQyDFMjUJnrplDYk+lnRGhSxv+5YtJVdYwp4I5qiQF5pDNXi3/HN5Jvgjqxo6rXaANbl/GSiKd7hLn6j/+0UjFDutzR365VAz9sGS9cJyK9QgJcitdJSGHMDbNtpMCq/dxVtE="
+      }
+     },
+     "id": "prt_0c066dc57001ytoBEK978kgTAc",
+     "sessionID": "ses_f3f994d16ffexITw0xqz7pqYKA",
+     "messageID": "msg_0c066d6c8001t4FsBv8UqDwvPU"
+    },
+    {
+     "reason": "tool-calls",
+     "snapshot": "05db8eb6ed116dee0d54a30bdc346ee3b9439837",
+     "type": "step-finish",
+     "tokens": {
+      "total": 17279,
+      "input": 4954,
+      "output": 22,
+      "reasoning": 30,
+      "cache": {
+       "write": 0,
+       "read": 12273
+      }
+     },
+     "cost": 0.00198439,
+     "id": "prt_0c066e1d9001PI1coHW4mnCLvv",
+     "sessionID": "ses_f3f994d16ffexITw0xqz7pqYKA",
+     "messageID": "msg_0c066d6c8001t4FsBv8UqDwvPU"
+    }
+   ]
+  },
+  {
+   "info": {
+    "parentID": "msg_0c066b2f5001IzsBrVZpB0PGwK",
+    "role": "assistant",
+    "mode": "build",
+    "agent": "build",
+    "path": {
+     "cwd": "C:\\Users\\leand\\OneDrive\\Desktop\\gustav\\ProjetoSemanaAcademica\\semana-academica",
+     "root": "C:\\Users\\leand\\OneDrive\\Desktop\\gustav\\ProjetoSemanaAcademica"
+    },
+    "cost": 0.00220168,
+    "tokens": {
+     "total": 17579,
+     "input": 5204,
+     "output": 68,
+     "reasoning": 41,
+     "cache": {
+      "write": 0,
+      "read": 12266
+     }
+    },
+    "modelID": "gemini-3.5-flash-lite",
+    "providerID": "google",
+    "time": {
+     "created": 1789934363252,
+     "completed": 1789934365351
+    },
+    "finish": "tool-calls",
+    "id": "msg_0c066e2740014kHBaj2t28NkdG",
+    "sessionID": "ses_f3f994d16ffexITw0xqz7pqYKA"
+   },
+   "parts": [
+    {
+     "snapshot": "05db8eb6ed116dee0d54a30bdc346ee3b9439837",
+     "type": "step-start",
+     "id": "prt_0c066e7fd001nPGCjNqGnlezTh",
+     "sessionID": "ses_f3f994d16ffexITw0xqz7pqYKA",
+     "messageID": "msg_0c066e2740014kHBaj2t28NkdG"
+    },
+    {
+     "type": "tool",
+     "tool": "read",
+     "callID": "p3eLadWCAccuGYSe",
+     "state": {
+      "status": "completed",
+      "input": {
+       "limit": 2000,
+       "offset": 1,
+       "filePath": "C:\\Users\\leand\\OneDrive\\Desktop\\gustav\\ProjetoSemanaAcademica\\semana-academica\\api\\verificacoes\\m1-fatia1.spec.js"
+      },
+      "output": "[5061 caracteres omitidos]",
+      "title": "semana-academica\\api\\verificacoes\\m1-fatia1.spec.js",
+      "time": {
+       "start": 1789934364689,
+       "end": 1789934364710
+      }
+     },
+     "metadata": {
+      "google": {
+       "thoughtSignature": "EvkBCvYBAWkUfRPzU8Qsr6SLqw4Fe08WxCtyqXQSlUfwHnMymU7M5tLzNh66Yf9w+8T5LpY5yTNNVQigkzn7mlA2Fxts/x8yS9kIPoMmbrct3UdwQAWe7ovuxMP7hpJu5OIyjD1JgQm/KOmsshXMqlvrBQsCfikP9f37hBc5VyUz5lK/Pum1kPMvRpLxp7s+RcdrCIuxsJP4mTDjoRVXuZbFlizcmDadzBHuTdvFxIXjEir6sd7ePJxR/mE6IidNH7ec3f2O0acSQuFcgm3EEd6D4V48xfvwo96NZaNdt/8f9hFjjeNi1wdiaHY6bg8B47agXQmVAZPuy1AD"
+      }
+     },
+     "id": "prt_0c066e80300158OL2Og3tHwHzL",
+     "sessionID": "ses_f3f994d16ffexITw0xqz7pqYKA",
+     "messageID": "msg_0c066e2740014kHBaj2t28NkdG"
+    },
+    {
+     "reason": "tool-calls",
+     "snapshot": "05db8eb6ed116dee0d54a30bdc346ee3b9439837",
+     "type": "step-finish",
+     "tokens": {
+      "total": 17579,
+      "input": 5204,
+      "output": 68,
+      "reasoning": 41,
+      "cache": {
+       "write": 0,
+       "read": 12266
+      }
+     },
+     "cost": 0.00220168,
+     "id": "prt_0c066e96b0019Ata85WiIXDl2K",
+     "sessionID": "ses_f3f994d16ffexITw0xqz7pqYKA",
+     "messageID": "msg_0c066e2740014kHBaj2t28NkdG"
+    }
+   ]
+  },
+  {
+   "info": {
+    "parentID": "msg_0c066b2f5001IzsBrVZpB0PGwK",
+    "role": "assistant",
+    "mode": "build",
+    "agent": "build",
+    "path": {
+     "cwd": "C:\\Users\\leand\\OneDrive\\Desktop\\gustav\\ProjetoSemanaAcademica\\semana-academica",
+     "root": "C:\\Users\\leand\\OneDrive\\Desktop\\gustav\\ProjetoSemanaAcademica"
+    },
+    "cost": 0.0016828,
+    "tokens": {
+     "total": 19723,
+     "input": 3291,
+     "output": 59,
+     "reasoning": 23,
+     "cache": {
+      "write": 0,
+      "read": 16350
+     }
+    },
+    "modelID": "gemini-3.5-flash-lite",
+    "providerID": "google",
+    "time": {
+     "created": 1789934365355,
+     "completed": 1789934367410
+    },
+    "finish": "tool-calls",
+    "id": "msg_0c066eaab001u1e7s0azdIz5JE",
+    "sessionID": "ses_f3f994d16ffexITw0xqz7pqYKA"
+   },
+   "parts": [
+    {
+     "snapshot": "05db8eb6ed116dee0d54a30bdc346ee3b9439837",
+     "type": "step-start",
+     "id": "prt_0c066f093001XpGKGSoMKrcZ1r",
+     "sessionID": "ses_f3f994d16ffexITw0xqz7pqYKA",
+     "messageID": "msg_0c066eaab001u1e7s0azdIz5JE"
+    },
+    {
+     "type": "tool",
+     "tool": "read",
+     "callID": "1jS0iDpV76pfqZW5",
+     "state": {
+      "status": "completed",
+      "input": {
+       "filePath": "C:\\Users\\leand\\OneDrive\\Desktop\\gustav\\ProjetoSemanaAcademica\\semana-academica\\api\\src\\server.js",
+       "offset": 1,
+       "limit": 2000
+      },
+      "output": "[9559 caracteres omitidos]",
+      "title": "semana-academica\\api\\src\\server.js",
+      "time": {
+       "start": 1789934366873,
+       "end": 1789934366879
+      }
+     },
+     "metadata": {
+      "google": {
+       "thoughtSignature": "EsoBCscBAWkUfRM4RDlj9OEUaXliPj+rz/wjG9n8FZO3iy6LkoDEI1NjoTZ4/Wr3m1jN7ozyigce0lt/JHF+uNVmfO2oeE4fjpCFSNyfMQZgBQ8vqSufFJ7lxnzMxjz0NlMUk8jDmA5baNpGfJq2FwNcTiutjf+IPdRqUKAib5Gc8vihV5RqeCVp64SOeWW6wpeDjIffSHJAURB7OvvdaMQUtmzOv5Yc4S+OHi0OmvbjkTxXn9KO5A/ZYWT7/u+eGqTOoTthV2ySKm3elw=="
+      }
+     },
+     "id": "prt_0c066f095001pBgO4okKyK14xX",
+     "sessionID": "ses_f3f994d16ffexITw0xqz7pqYKA",
+     "messageID": "msg_0c066eaab001u1e7s0azdIz5JE"
+    },
+    {
+     "reason": "tool-calls",
+     "snapshot": "05db8eb6ed116dee0d54a30bdc346ee3b9439837",
+     "type": "step-finish",
+     "tokens": {
+      "total": 19723,
+      "input": 3291,
+      "output": 59,
+      "reasoning": 23,
+      "cache": {
+       "write": 0,
+       "read": 16350
+      }
+     },
+     "cost": 0.0016828,
+     "id": "prt_0c066f1a2001Z9VC7EKIbFDs2U",
+     "sessionID": "ses_f3f994d16ffexITw0xqz7pqYKA",
+     "messageID": "msg_0c066eaab001u1e7s0azdIz5JE"
+    }
+   ]
+  },
+  {
+   "info": {
+    "parentID": "msg_0c066b2f5001IzsBrVZpB0PGwK",
+    "role": "assistant",
+    "mode": "build",
+    "agent": "build",
+    "path": {
+     "cwd": "C:\\Users\\leand\\OneDrive\\Desktop\\gustav\\ProjetoSemanaAcademica\\semana-academica",
+     "root": "C:\\Users\\leand\\OneDrive\\Desktop\\gustav\\ProjetoSemanaAcademica"
+    },
+    "cost": 0.00361307,
+    "tokens": {
+     "total": 23861,
+     "input": 7117,
+     "output": 65,
+     "reasoning": 330,
+     "cache": {
+      "write": 0,
+      "read": 16349
+     }
+    },
+    "modelID": "gemini-3.5-flash-lite",
+    "providerID": "google",
+    "time": {
+     "created": 1789934367422,
+     "completed": 1789934370493
+    },
+    "finish": "tool-calls",
+    "id": "msg_0c066f2be0011cT5YWCi1yvg5K",
+    "sessionID": "ses_f3f994d16ffexITw0xqz7pqYKA"
+   },
+   "parts": [
+    {
+     "snapshot": "05db8eb6ed116dee0d54a30bdc346ee3b9439837",
+     "type": "step-start",
+     "id": "prt_0c066fb6b0011P2EzIV8zaayvK",
+     "sessionID": "ses_f3f994d16ffexITw0xqz7pqYKA",
+     "messageID": "msg_0c066f2be0011cT5YWCi1yvg5K"
+    },
+    {
+     "type": "reasoning",
+     "text": "**Analyzing the Task**\n\nI've started by parsing the initial prompt. I am currently reviewing the instructions to understand the required deliverables. It's a review of implemented and tested components, and a list of acceptance criteria that need to be addressed. I am now working on identifying the specific steps.\n\n\n",
+     "time": {
+      "start": 1789934369649,
+      "end": 1789934369815
+     },
+     "id": "prt_0c066fb70001UULSWTwlyboDZA",
+     "sessionID": "ses_f3f994d16ffexITw0xqz7pqYKA",
+     "messageID": "msg_0c066f2be0011cT5YWCi1yvg5K"
+    },
+    {
+     "type": "tool",
+     "tool": "read",
+     "callID": "tCPt9ZXbXy5DBqYe",
+     "state": {
+      "status": "completed",
+      "input": {
+       "filePath": "C:\\Users\\leand\\OneDrive\\Desktop\\gustav\\ProjetoSemanaAcademica\\semana-academica\\specs\\M1-grade-de-atividades.md",
+       "limit": 2000,
+       "offset": 1
+      },
+      "output": "[9828 caracteres omitidos]",
+      "title": "semana-academica\\specs\\M1-grade-de-atividades.md",
+      "time": {
+       "start": 1789934369804,
+       "end": 1789934369832
+      }
+     },
+     "metadata": {
+      "google": {
+       "thoughtSignature": "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"
+      }
+     },
+     "id": "prt_0c066fbfc001zBdRnrsdDTU809",
+     "sessionID": "ses_f3f994d16ffexITw0xqz7pqYKA",
+     "messageID": "msg_0c066f2be0011cT5YWCi1yvg5K"
+    },
+    {
+     "reason": "tool-calls",
+     "snapshot": "05db8eb6ed116dee0d54a30bdc346ee3b9439837",
+     "type": "step-finish",
+     "tokens": {
+      "total": 23861,
+      "input": 7117,
+      "output": 65,
+      "reasoning": 330,
+      "cache": {
+       "write": 0,
+       "read": 16349
+      }
+     },
+     "cost": 0.00361307,
+     "id": "prt_0c066fda20012k4OgSH5fXn5vz",
+     "sessionID": "ses_f3f994d16ffexITw0xqz7pqYKA",
+     "messageID": "msg_0c066f2be0011cT5YWCi1yvg5K"
+    }
+   ]
+  },
+  {
+   "info": {
+    "parentID": "msg_0c066b2f5001IzsBrVZpB0PGwK",
+    "role": "assistant",
+    "mode": "build",
+    "agent": "build",
+    "path": {
+     "cwd": "C:\\Users\\leand\\OneDrive\\Desktop\\gustav\\ProjetoSemanaAcademica\\semana-academica",
+     "root": "C:\\Users\\leand\\OneDrive\\Desktop\\gustav\\ProjetoSemanaAcademica"
+    },
+    "cost": 0.02082365,
+    "tokens": {
+     "total": 34072,
+     "input": 10857,
+     "output": 2352,
+     "reasoning": 4478,
+     "cache": {
+      "write": 0,
+      "read": 16385
+     }
+    },
+    "modelID": "gemini-3.5-flash-lite",
+    "providerID": "google",
+    "time": {
+     "created": 1789934370505,
+     "completed": 1789934387799
+    },
+    "finish": "tool-calls",
+    "id": "msg_0c066fec9001Hj7TSFoej1dhRe",
+    "sessionID": "ses_f3f994d16ffexITw0xqz7pqYKA"
+   },
+   "parts": [
+    {
+     "snapshot": "05db8eb6ed116dee0d54a30bdc346ee3b9439837",
+     "type": "step-start",
+     "id": "prt_0c067086a001ve5c1uU4VBv9jJ",
+     "sessionID": "ses_f3f994d16ffexITw0xqz7pqYKA",
+     "messageID": "msg_0c066fec9001Hj7TSFoej1dhRe"
+    },
+    {
+     "type": "reasoning",
+     "text": "**Assessing Implementation Progress**\n\nI'm currently reviewing today's implemented and tested components to establish existing coverage, specifically focusing on slices and rules. This informs the next step: systematically examining each acceptance criterion and identifying any gaps in our test suite. I'll meticulously compare acceptance criteria to existing tests to pinpoint areas requiring new test creation.\n\n\n**Pinpointing Test Gaps**\n\nMy focus has shifted to closing the identified gaps by adhering to a test-driven development approach. I've begun crafting tests to demonstrate failures, starting with acceptance criteria 9b, 12, 12b, and 12c. Specifically, I'm verifying the 422 error codes for PATCH requests on canceled activities and activity cancellation scenarios. This will ensure precise handling of activity states. After that, I will work on criteria 16. The next pending slice is according to section 8 of the spec.\n\n\n**Evaluating Slice Completeness**\n\nI'm now focusing on validating the coverage of Fatia 1, particularly ensuring the implemented components align with the specified acceptance criteria within the slice. Currently, I'm checking the five acceptance criteria against existing tests. It appears that tests for criteria 9b, 12, 12b, 12c, and 16 are still missing. I'll need to create those tests.\n\n\n**Confirming Boundary Coverage**\n\nI'm now investigating a specific boundary condition: whether existing tests accurately verify the scenario where `agoraMs` is exactly equal to `ultimoFimMs`. I've found a relevant test in `m1-fatia1.spec.js`, line 115, but need to explicitly confirm if it fulfills Critério 16 or if a new test is needed. Following TDD, I'll write a failing test first, then minimal code to make it pass. Let's create `api/verificacoes/m1-fatia-updates.spec.js` for these tests.\n\n\n**Defining Test Locations**\n\nI've determined that any `*.spec.js` file within the `api/verificacoes/` directory will be automatically executed by the test runner. Now, I'm analyzing the existing code to identify implemented routes within `api/src/server`. My focus now includes handling PATCH requests to `/atividades/:id` and confirming error codes for specific scenarios like patching canceled activities (422 ATIVIDADE_CANCELADA) and cancellation-related states.\n\n\n**Listing Implemented Routes**\n\nI've taken inventory of the routes present in `api/src/server.js`, and noted the existing authentication middleware. Currently implemented are `GET /salas`, `GET /atividades`, `GET /atividades/:id`, and `POST /_teste/...`. Importantly, `POST /atividades`, `PATCH /atividades/:id`, and `POST /atividades/:id/cancelamento` are not yet implemented in `server.js`, as these belong to Fatias 2, 3 and 4. I'll need to focus on those, according to the acceptance criteria.\n\n\n**Prioritizing Test Development**\n\nI'm now writing tests for the outlined acceptance criteria. I've started defining tests in `api/verificacoes/m1-atualizacoes.spec.js`, ensuring they accurately simulate failure scenarios for specific conditions like modifying a canceled activity's title. I'll focus on crafting the necessary failing tests, then implement the minimal code required to make them pass, per the TDD methodology. Once done, I will confirm the next slice according to section 8 of the spec.\n\n\n**Testing Specific Cancellation Cases**\n\nI'm now implementing a test to confirm the specific error scenario outlined in Critério 12: cancelling an activity that has already started should return a 422 error, with `ATIVIDADE_JA_INICIADA` specified in the error response. I've written the test with the intention to simulate this error scenario. This is crucial for verifying that the activity state transitions and validations are correctly handled on the server. I will now run the test and then write the minimal code to pass this test.\n\n\n**Verifying State Transitions**\n\nI've just finished a test for Critério 12, successfully validating the 422 error and `ATIVIDADE_JA_INICIADA` response for an activity cancellation after it's begun. I have written a new test for critério 12b and am ready to run it. I am verifying state transitions and correct error handling to ensure data integrity. I am now working on the tests for Critério 12b.\n\n\n**Confirming Activity Cancellation**\n\nI'm now implementing and verifying test cases to check for `ATIVIDADE_CANCELADA` error when attempting to cancel an activity already in the canceled state. This is to ensure correct error responses. I will create a test that involves a specific activity to verify this boundary condition and confirm data integrity.\n\n\n**Validating Edge Cases**\n\nI'm now writing a test for a very specific edge case, Critério 16, which deals with activity state transitions at the *exact* end of the last encounter. I'm focusing on ensuring it transitions correctly to \"encerrada\", not \"em_andamento\". To begin, I created the test for the specific error scenario. I am validating that the activity has the correct state after a specific cancellation. I'll focus on crafting the failing test, and then writing the minimal code.\n\n\n**Verifying Exact End Condition**\n\nI'm now implementing the test for Critério 16, which focuses on the transition of an activity's state precisely at the end of its last encounter, ensuring it correctly becomes \"encerrada.\" I've created a test scenario that sets the clock precisely to the end time of the last encounter and then verifies that the activity state is accurately set to \"encerrada\". This involves resetting the test database, creating an activity, advancing the clock to the specific time, and checking the returned activity state.\n\n\n**Creating Test File**\n\nI'm now creating `api/verificacoes/m1-atualizacoes.spec.js`, a new test file, following TDD. I will write the test to verify activity state updates using `PATCH` requests and error handling, according to the acceptance criteria. I plan to begin by writing tests for `Critério 16`, covering the case when activity `agoraMs` is exactly equal to `ultimoFimMs`, after having created and validated the 12 cases.\n\n\n",
+     "time": {
+      "start": 1789934372975,
+      "end": 1789934387211
+     },
+     "id": "prt_0c067086f001P7H6AJK2hi9BZU",
+     "sessionID": "ses_f3f994d16ffexITw0xqz7pqYKA",
+     "messageID": "msg_0c066fec9001Hj7TSFoej1dhRe"
+    },
+    {
+     "type": "tool",
+     "tool": "write",
+     "callID": "xNAebyaxrRw7bEHu",
+     "state": {
+      "status": "completed",
+      "input": {
+       "filePath": "C:\\Users\\leand\\OneDrive\\Desktop\\gustav\\ProjetoSemanaAcademica\\semana-academica\\api\\verificacoes\\m1-atualizacoes.spec.js",
+       "content": "import test from 'node:test';\nimport assert from 'node:assert/strict';\nimport { criarServidor } from '../src/server.js';\n\ntest('Critério 9b: PATCH alterando só título numa atividade cancelada retorna 422 ATIVIDADE_CANCELADA', async () => {\n  process.env.MODO_TESTE = '1';\n  const { app, porta } = await criarServidor(0);\n  try {\n    await fetch(`http://localhost:${porta}/_teste/reset`, { method: 'POST' });\n    await fetch(`http://localhost:${porta}/_teste/atividades`, {\n      method: 'POST',\n      headers: { 'Content-Type': 'application/json' },\n      body: JSON.stringify({\n        id: 'atv_canc',\n        titulo: 'Atividade Cancelada',\n        tipo: 'palestra',\n        salaId: 'auditorio',\n        vagas: 50,\n        encontros: [\n          { id: 'enc_c1', inicio: '2026-10-19T10:00:00-03:00', fim: '2026-10-19T11:00:00-03:00' }\n        ],\n        cancelada: 1\n      })\n    });\n\n    const res = await fetch(`http://localhost:${porta}/atividades/atv_canc`, {\n      method: 'PATCH',\n      headers: {\n        'Content-Type': 'application/json',\n        'X-Usuario': 'org-ana'\n      },\n      body: JSON.stringify({ titulo: 'Novo Título' })\n    });\n    assert.equal(res.status, 422);\n    const data = await res.json();\n    assert.equal(data.erro, 'ATIVIDADE_CANCELADA');\n  } finally {\n    app.close();\n  }\n});\n\ntest('Critério 12: cancelar atividade já iniciada (não cancelada) retorna 422 ATIVIDADE_JA_INICIADA', async () => {\n  process.env.MODO_TESTE = '1';\n  const { app, porta } = await criarServidor(0);\n  try {\n    await fetch(`http://localhost:${porta}/_teste/reset`, { method: 'POST' });\n    await fetch(`http://localhost:${porta}/_teste/atividades`, {\n      method: 'POST',\n      headers: { 'Content-Type': 'application/json' },\n      body: JSON.stringify({\n        id: 'atv_ini',\n        titulo: 'Atividade Iniciada',\n        tipo: 'palestra',\n        salaId: 'auditorio',\n        vagas: 50,\n        encontros: [\n          { id: 'enc_i1', inicio: '2026-10-19T10:00:00-03:00', fim: '2026-10-19T12:00:00-03:00' }\n        ],\n        cancelada: 0\n      })\n    });\n\n    // Relógio durante a atividade\n    await fetch(`http://localhost:${porta}/_teste/relogio`, {\n      method: 'PUT',\n      headers: { 'Content-Type': 'application/json' },\n      body: JSON.stringify({ agora: '2026-10-19T11:00:00-03:00' })\n    });\n\n    const res = await fetch(`http://localhost:${porta}/atividades/atv_ini/cancelamento`, {\n      method: 'POST',\n      headers: { 'X-Usuario': 'org-ana' }\n    });\n    assert.equal(res.status, 422);\n    const data = await res.json();\n    assert.equal(data.erro, 'ATIVIDADE_JA_INICIADA');\n  } finally {\n    app.close();\n  }\n});\n\ntest('Critério 12b: cancelar atividade já cancelada retorna 422 ATIVIDADE_CANCELADA', async () => {\n  process.env.MODO_TESTE = '1';\n  const { app, porta } = await criarServidor(0);\n  try {\n    await fetch(`http://localhost:${porta}/_teste/reset`, { method: 'POST' });\n    await fetch(`http://localhost:${porta}/_teste/atividades`, {\n      method: 'POST',\n      headers: { 'Content-Type': 'application/json' },\n      body: JSON.stringify({\n        id: 'atv_jacc',\n        titulo: 'Já Cancelada',\n        tipo: 'palestra',\n        salaId: 'auditorio',\n        vagas: 50,\n        encontros: [\n          { id: 'enc_jc1', inicio: '2026-10-19T10:00:00-03:00', fim: '2026-10-19T11:00:00-03:00' }\n        ],\n        cancelada: 1\n      })\n    });\n\n    const res = await fetch(`http://localhost:${porta}/atividades/atv_jacc/cancelamento`, {\n      method: 'POST',\n      headers: { 'X-Usuario': 'org-ana' }\n    });\n    assert.equal(res.status, 422);\n    const data = await res.json();\n    assert.equal(data.erro, 'ATIVIDADE_CANCELADA');\n  } finally {\n    app.close();\n  }\n});\n\ntest('Critério 12c: cancelar atividade já iniciada E já cancelada retorna 422 ATIVIDADE_CANCELADA provando a ordem', async () => {\n  process.env.MODO_TESTE = '1';\n  const { app, porta } = await criarServidor(0);\n  try {\n    await fetch(`http://localhost:${porta}/_teste/reset`, { method: 'POST' });\n    await fetch(`http://localhost:${porta}/_teste/atividades`, {\n      method: 'POST',\n      headers: { 'Content-Type': 'application/json' },\n      body: JSON.stringify({\n        id: 'atv_inican',\n        titulo: 'Iniciada e Cancelada',\n        tipo: 'palestra',\n        salaId: 'auditorio',\n        vagas: 50,\n        encontros: [\n          { id: 'enc_ic1', inicio: '2026-10-19T10:00:00-03:00', fim: '2026-10-19T12:00:00-03:00' }\n        ],\n        cancelada: 1\n      })\n    });\n\n    // Relógio durante\n    await fetch(`http://localhost:${porta}/_teste/relogio`, {\n      method: 'PUT',\n      headers: { 'Content-Type': 'application/json' },\n      body: JSON.stringify({ agora: '2026-10-19T11:00:00-03:00' })\n    });\n\n    const res = await fetch(`http://localhost:${porta}/atividades/atv_inican/cancelamento`, {\n      method: 'POST',\n      headers: { 'X-Usuario': 'org-ana' }\n    });\n    assert.equal(res.status, 422);\n    const data = await res.json();\n    assert.equal(data.erro, 'ATIVIDADE_CANCELADA');\n  } finally {\n    app.close();\n  }\n});\n\ntest('Critério 16: situacao exatamente no instante do fim do último encontro é encerrada, não em_andamento', async () => {\n  process.env.MODO_TESTE = '1';\n  const { app, porta } = await criarServidor(0);\n  try {\n    await fetch(`http://localhost:${porta}/_teste/reset`, { method: 'POST' });\n    await fetch(`http://localhost:${porta}/_teste/atividades`, {\n      method: 'POST',\n      headers: { 'Content-Type': 'application/json' },\n      body: JSON.stringify({\n        id: 'atv_fim',\n        titulo: 'Fim Exato',\n        tipo: 'palestra',\n        salaId: 'auditorio',\n        vagas: 50,\n        encontros: [\n          { id: 'enc_f1', inicio: '2026-10-19T10:00:00-03:00', fim: '2026-10-19T12:00:00-03:00' }\n        ],\n        cancelada: 0\n      })\n    });\n\n    // Relógio exatamente no fim do último encontro\n    await fetch(`http://localhost:${porta}/_teste/relogio`, {\n      method: 'PUT',\n      headers: { 'Content-Type': 'application/json' },\n      body: JSON.stringify({ agora: '2026-10-19T12:00:00-03:00' })\n    });\n\n    const res = await fetch(`http://localhost:${porta}/atividades/atv_fim`, {\n      headers: { 'X-Usuario': 'org-ana' }\n    });\n    assert.equal(res.status, 200);\n    const data = await res.json();\n    assert.equal(data.situacao, 'encerrada');\n  } finally {\n    app.close();\n  }\n});\n"
+      },
+      "output": "Wrote file successfully.",
+      "metadata": {
+       "diagnostics": {},
+       "filepath": "C:\\Users\\leand\\OneDrive\\Desktop\\gustav\\ProjetoSemanaAcademica\\semana-academica\\api\\verificacoes\\m1-atualizacoes.spec.js",
+       "exists": false,
+       "truncated": false
+      },
+      "title": "semana-academica\\api\\verificacoes\\m1-atualizacoes.spec.js",
+      "time": {
+       "start": 1789934387208,
+       "end": 1789934387217
+      }
+     },
+     "metadata": {
+      "google": {
+       "thoughtSignature": "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"
+      }
+     },
+     "id": "prt_0c0674001001JVE5n1yJ0Bh7la",
+     "sessionID": "ses_f3f994d16ffexITw0xqz7pqYKA",
+     "messageID": "msg_0c066fec9001Hj7TSFoej1dhRe"
+    },
+    {
+     "reason": "tool-calls",
+     "snapshot": "17d715782f579198d86ca02be760201a02f2e72e",
+     "type": "step-finish",
+     "tokens": {
+      "total": 34072,
+      "input": 10857,
+      "output": 2352,
+      "reasoning": 4478,
+      "cache": {
+       "write": 0,
+       "read": 16385
+      }
+     },
+     "cost": 0.02082365,
+     "id": "prt_0c0674157001LrLWe9lfqwLxJu",
+     "sessionID": "ses_f3f994d16ffexITw0xqz7pqYKA",
+     "messageID": "msg_0c066fec9001Hj7TSFoej1dhRe"
+    },
+    {
+     "type": "patch",
+     "hash": "05db8eb6ed116dee0d54a30bdc346ee3b9439837",
+     "files": [
+      "C:/Users/leand/OneDrive/Desktop/gustav/ProjetoSemanaAcademica/semana-academica/api/verificacoes/m1-atualizacoes.spec.js"
+     ],
+     "id": "prt_0c0674255001Hm6bv3q8uiCCEX",
+     "sessionID": "ses_f3f994d16ffexITw0xqz7pqYKA",
+     "messageID": "msg_0c066fec9001Hj7TSFoej1dhRe"
+    }
+   ]
+  },
+  {
+   "info": {
+    "parentID": "msg_0c066b2f5001IzsBrVZpB0PGwK",
+    "role": "assistant",
+    "mode": "build",
+    "agent": "build",
+    "path": {
+     "cwd": "C:\\Users\\leand\\OneDrive\\Desktop\\gustav\\ProjetoSemanaAcademica\\semana-academica",
+     "root": "C:\\Users\\leand\\OneDrive\\Desktop\\gustav\\ProjetoSemanaAcademica"
+    },
+    "cost": 0.00617872,
+    "tokens": {
+     "total": 35532,
+     "input": 18433,
+     "output": 22,
+     "reasoning": 33,
+     "cache": {
+      "write": 0,
+      "read": 17044
+     }
+    },
+    "modelID": "gemini-3.5-flash-lite",
+    "providerID": "google",
+    "time": {
+     "created": 1789934387802,
+     "completed": 1789934391168
+    },
+    "finish": "tool-calls",
+    "id": "msg_0c067425a001msYPj6erAVaFhu",
+    "sessionID": "ses_f3f994d16ffexITw0xqz7pqYKA"
+   },
+   "parts": [
+    {
+     "snapshot": "17d715782f579198d86ca02be760201a02f2e72e",
+     "type": "step-start",
+     "id": "prt_0c0674969001vWqr0DiO07D7qL",
+     "sessionID": "ses_f3f994d16ffexITw0xqz7pqYKA",
+     "messageID": "msg_0c067425a001msYPj6erAVaFhu"
+    },
+    {
+     "type": "tool",
+     "tool": "bash",
+     "callID": "gxhhN93nytpnBxNN",
+     "state": {
+      "status": "completed",
+      "input": {
+       "command": "npm test",
+       "workdir": "api"
+      },
+      "output": "\n> semana-academica-api@1.0.0 test\n> node --test verificacoes/**/*.spec.js\n\n(node:21864) ExperimentalWarning: SQLite is an experimental feature and might change at any time\n(Use `node --trace-warnings ...` to show where the warning was created)\n✖ Critério 9b: PATCH alterando só título numa atividade cancelada retorna 422 ATIVIDADE_CANCELADA (80.8005ms)\n✖ Critério 12: cancelar atividade já iniciada (não cancelada) retorna 422 ATIVIDADE_JA_INICIADA (82.6932ms)\n✖ Critério 12b: cancelar atividade já cancelada retorna 422 ATIVIDADE_CANCELADA (21.0597ms)\n✖ Critério 12c: cancelar atividade já iniciada E já cancelada retorna 422 ATIVIDADE_CANCELADA provando a ordem (13.5505ms)\n✔ Critério 16: situacao exatamente no instante do fim do último encontro é encerrada, não em_andamento (12.5031ms)\n(node:14908) ExperimentalWarning: SQLite is an experimental feature and might change at any time\n(Use `node --trace-warnings ...` to show where the warning was created)\n✔ GET /salas retorna a lista de salas (57.6049ms)\n✔ GET /atividades filtra por dia e tipo, ordena por R10 e calcula situacao por R12 (139.0539ms)\nℹ tests 7\nℹ suites 0\nℹ pass 3\nℹ fail 4\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 447.6622\n\n✖ failing tests:\n\ntest at verificacoes\\m1-atualizacoes.spec.js:5:1\n✖ Critério 9b: PATCH alterando só título numa atividade cancelada retorna 422 ATIVIDADE_CANCELADA (80.8005ms)\n  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  404 !== 422\n  \n      at TestContext.<anonymous> (file:///C:/Users/leand/OneDrive/Desktop/gustav/ProjetoSemanaAcademica/semana-academica/api/verificacoes/m1-atualizacoes.spec.js:34:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:103:5)\n      at async Test.run (node:internal/test_runner/test:1113:7)\n      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 404,\n    expected: 422,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n\ntest at verificacoes\\m1-atualizacoes.spec.js:42:1\n✖ Critério 12: cancelar atividade já iniciada (não cancelada) retorna 422 ATIVIDADE_JA_INICIADA (82.6932ms)\n  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  404 !== 422\n  \n      at TestContext.<anonymous> (file:///C:/Users/leand/OneDrive/Desktop/gustav/ProjetoSemanaAcademica/semana-academica/api/verificacoes/m1-atualizacoes.spec.js:74:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:103:5)\n      at async Test.run (node:internal/test_runner/test:1113:7)\n      at async Test.processPendingSubtests (node:internal/test_runner/test:788:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 404,\n    expected: 422,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n\ntest at verificacoes\\m1-atualizacoes.spec.js:82:1\n✖ Critério 12b: cancelar atividade já cancelada retorna 422 ATIVIDADE_CANCELADA (21.0597ms)\n  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  404 !== 422\n  \n      at TestContext.<anonymous> (file:///C:/Users/leand/OneDrive/Desktop/gustav/ProjetoSemanaAcademica/semana-academica/api/verificacoes/m1-atualizacoes.spec.js:107:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:103:5)\n      at async Test.run (node:internal/test_runner/test:1113:7)\n      at async Test.processPendingSubtests (node:internal/test_runner/test:788:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 404,\n    expected: 422,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n\ntest at verificacoes\\m1-atualizacoes.spec.js:115:1\n✖ Critério 12c: cancelar atividade já iniciada E já cancelada retorna 422 ATIVIDADE_CANCELADA provando a ordem (13.5505ms)\n  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  404 !== 422\n  \n      at TestContext.<anonymous> (file:///C:/Users/leand/OneDrive/Desktop/gustav/ProjetoSemanaAcademica/semana-academica/api/verificacoes/m1-atualizacoes.spec.js:147:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:103:5)\n      at async Test.run (node:internal/test_runner/test:1113:7)\n      at async Test.processPendingSubtests (node:internal/test_runner/test:788:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 404,\n    expected: 422,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n",
+      "metadata": {
+       "output": "\n> semana-academica-api@1.0.0 test\n> node --test verificacoes/**/*.spec.js\n\n(node:21864) ExperimentalWarning: SQLite is an experimental feature and might change at any time\n(Use `node --trace-warnings ...` to show where the warning was created)\n✖ Critério 9b: PATCH alterando só título numa atividade cancelada retorna 422 ATIVIDADE_CANCELADA (80.8005ms)\n✖ Critério 12: cancelar atividade já iniciada (não cancelada) retorna 422 ATIVIDADE_JA_INICIADA (82.6932ms)\n✖ Critério 12b: cancelar atividade já cancelada retorna 422 ATIVIDADE_CANCELADA (21.0597ms)\n✖ Critério 12c: cancelar atividade já iniciada E já cancelada retorna 422 ATIVIDADE_CANCELADA provando a ordem (13.5505ms)\n✔ Critério 16: situacao exatamente no instante do fim do último encontro é encerrada, não em_andamento (12.5031ms)\n(node:14908) ExperimentalWarning: SQLite is an experimental feature and might change at any time\n(Use `node --trace-warnings ...` to show where the warning was created)\n✔ GET /salas retorna a lista de salas (57.6049ms)\n✔ GET /atividades filtra por dia e tipo, ordena por R10 e calcula situacao por R12 (139.0539ms)\nℹ tests 7\nℹ suites 0\nℹ pass 3\nℹ fail 4\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 447.6622\n\n✖ failing tests:\n\ntest at verificacoes\\m1-atualizacoes.spec.js:5:1\n✖ Critério 9b: PATCH alterando só título numa atividade cancelada retorna 422 ATIVIDADE_CANCELADA (80.8005ms)\n  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  404 !== 422\n  \n      at TestContext.<anonymous> (file:///C:/Users/leand/OneDrive/Desktop/gustav/ProjetoSemanaAcademica/semana-academica/api/verificacoes/m1-atualizacoes.spec.js:34:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:103:5)\n      at async Test.run (node:internal/test_runner/test:1113:7)\n      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 404,\n    expected: 422,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n\ntest at verificacoes\\m1-atualizacoes.spec.js:42:1\n✖ Critério 12: cancelar atividade já iniciada (não cancelada) retorna 422 ATIVIDADE_JA_INICIADA (82.6932ms)\n  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  404 !== 422\n  \n      at TestContext.<anonymous> (file:///C:/Users/leand/OneDrive/Desktop/gustav/ProjetoSemanaAcademica/semana-academica/api/verificacoes/m1-atualizacoes.spec.js:74:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:103:5)\n      at async Test.run (node:internal/test_runner/test:1113:7)\n      at async Test.processPendingSubtests (node:internal/test_runner/test:788:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 404,\n    expected: 422,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n\ntest at verificacoes\\m1-atualizacoes.spec.js:82:1\n✖ Critério 12b: cancelar atividade já cancelada retorna 422 ATIVIDADE_CANCELADA (21.0597ms)\n  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  404 !== 422\n  \n      at TestContext.<anonymous> (file:///C:/Users/leand/OneDrive/Desktop/gustav/ProjetoSemanaAcademica/semana-academica/api/verificacoes/m1-atualizacoes.spec.js:107:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:103:5)\n      at async Test.run (node:internal/test_runner/test:1113:7)\n      at async Test.processPendingSubtests (node:internal/test_runner/test:788:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 404,\n    expected: 422,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n\ntest at verificacoes\\m1-atualizacoes.spec.js:115:1\n✖ Critério 12c: cancelar atividade já iniciada E já cancelada retorna 422 ATIVIDADE_CANCELADA provando a ordem (13.5505ms)\n  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  404 !== 422\n  \n      at TestContext.<anonymous> (file:///C:/Users/leand/OneDrive/Desktop/gustav/ProjetoSemanaAcademica/semana-academica/api/verificacoes/m1-atualizacoes.spec.js:147:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:103:5)\n      at async Test.run (node:internal/test_runner/test:1113:7)\n      at async Test.processPendingSubtests (node:internal/test_runner/test:788:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 404,\n    expected: 422,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n",
+       "exit": 1,
+       "truncated": false
+      },
+      "title": "npm test",
+      "time": {
+       "start": 1789934389615,
+       "end": 1789934390775
+      }
+     },
+     "metadata": {
+      "google": {
+       "thoughtSignature": "EuABCt0BAWkUfRNj9WgdogQZH021GPcomW+jA8sgvHr1E2V0NOFapBGNSc/yb51E5cHXOYS97pLuqlEgwmQV7eYnbdef4xJBrbpn4CBmhI+3TxsNuUISyuFXBA1Og1AP5pGzWZuhOVQ/JWle3B9o8VixUediQ6VZ6Y4JjAD/CQ1NRpbE7QXec/ZaHZD+Lst2VmEbnGh9g4Gavtj7yfGOcpGJ/vjVjFIRE3cEsqFopi7KqDD1sJbfn+CPzsLOI4f0D8RTQJT/WD626fwEiAMtuyEJSy7yZNEUj8+6Kn7t/YWlfA0="
+      }
+     },
+     "id": "prt_0c067496b001PhQozksFYATj3v",
+     "sessionID": "ses_f3f994d16ffexITw0xqz7pqYKA",
+     "messageID": "msg_0c067425a001msYPj6erAVaFhu"
+    },
+    {
+     "reason": "tool-calls",
+     "snapshot": "17d715782f579198d86ca02be760201a02f2e72e",
+     "type": "step-finish",
+     "tokens": {
+      "total": 35532,
+      "input": 18433,
+      "output": 22,
+      "reasoning": 33,
+      "cache": {
+       "write": 0,
+       "read": 17044
+      }
+     },
+     "cost": 0.00617872,
+     "id": "prt_0c0674eb6001eVzHDw0nRmm9k2",
+     "sessionID": "ses_f3f994d16ffexITw0xqz7pqYKA",
+     "messageID": "msg_0c067425a001msYPj6erAVaFhu"
+    }
+   ]
+  },
+  {
+   "info": {
+    "parentID": "msg_0c066b2f5001IzsBrVZpB0PGwK",
+    "role": "assistant",
+    "mode": "build",
+    "agent": "build",
+    "path": {
+     "cwd": "C:\\Users\\leand\\OneDrive\\Desktop\\gustav\\ProjetoSemanaAcademica\\semana-academica",
+     "root": "C:\\Users\\leand\\OneDrive\\Desktop\\gustav\\ProjetoSemanaAcademica"
+    },
+    "cost": 0.01490614,
+    "tokens": {
+     "total": 42302,
+     "input": 3102,
+     "output": 1281,
+     "reasoning": 3901,
+     "cache": {
+      "write": 0,
+      "read": 34018
+     }
+    },
+    "modelID": "gemini-3.5-flash-lite",
+    "providerID": "google",
+    "time": {
+     "created": 1789934391171,
+     "completed": 1789934406148
+    },
+    "finish": "tool-calls",
+    "id": "msg_0c0674f8300144OW2JtpLwGB6K",
+    "sessionID": "ses_f3f994d16ffexITw0xqz7pqYKA"
+   },
+   "parts": [
+    {
+     "snapshot": "17d715782f579198d86ca02be760201a02f2e72e",
+     "type": "step-start",
+     "id": "prt_0c06759f3001shYkx4gcJS93lS",
+     "sessionID": "ses_f3f994d16ffexITw0xqz7pqYKA",
+     "messageID": "msg_0c0674f8300144OW2JtpLwGB6K"
+    },
+    {
+     "type": "reasoning",
+     "text": "**Implementing Missing Endpoints**\n\nOkay, so I've confirmed that Critério 16 is good to go, thanks to that R12 boundary. However, the PATCH and cancellation tests are failing with 404, which makes sense since those routes aren't built yet. My next step is to start implementing those missing endpoints and rules outlined in the spec updates.\n\n\n**Defining PATCH & POST Logic**\n\nI'm now diving into the implementation details for the `PATCH` and cancellation endpoints. For `PATCH`, I'm nailing down the access control (organization only), ensuring the activity exists, and incorporating the cancellation status check as per the spec update. Next I'll ensure invalid fields trigger the `CAMPO_NAO_EDITAVEL` error. I've also added the updated enrollment count check.\n\n\n**Addressing Cancellation Scenario**\n\nOkay, I'm now focusing on the cancellation scenarios. The \"cancelar atividade já iniciada\" case, specifically Critério 12, requires a 422 `ATIVIDADE_JA_INICIADA` error. The plan is to set `cancelada = 1` and return a 200 response with the updated `Atividade` data, if the activity is not started. While doing so, I'm also confirming I don't need to implement `POST /atividades`, given the existing test endpoint.\n\n\n**Implementing Cancellation Logic**\n\nI'm now zeroing in on the cancellation logic, specifically the `PATCH /atividades/:id/cancelamento` endpoint, and role restriction R11 for it. I've re-examined the authentication middleware and confirmed `req.usuario` contains the necessary `{ id, nome, papel }` data. The plan is now to implement role checks using `req.usuario.papel`, while ensuring a 422 `ATIVIDADE_CANCELADA` error is returned when appropriate. Finally I will ensure Critério 16 is fulfilled with the proper values.\n\n\n**Verifying Organization Role**\n\nI'm now integrating role-based access control, specifically for `PATCH /atividades/:id` and `POST /atividades/:id/cancelamento`. I've implemented a check to ensure only the \"organizacao\" role can access these endpoints, returning a 403 error for unauthorized users. I'm also now diving into the specifics of `PATCH`, focusing on the editable fields and the restrictions detailed in R6 and R7, including the cancellation status and enrollment count.\n\n\n**Validating Editable Fields**\n\nI'm now focusing on the field validation logic for the PATCH endpoint, and am checking the scenarios defined by R6, R3 and Criterion 6. I'm prioritizing the cancellation status check. If the activity is already canceled, all PATCH requests are rejected with a 422, even if the edited field is editable, as R6 specifies. After that, I'm checking `salaId`, `tipo`, and `encontros` to ensure they are not editable, which triggers a 422. I've also validated the `vagas` field, by ensuring that: If `vagas` is provided, I'm checking that `vagas <= 0` or `vagas > sala.capacidade`, and if so returning a 422 `VAGAS_ACIMA_DA_CAPACIDADE`. Finally, if `vagas < ocupadas` I'm returning a 409 `VAGAS_ABAIXO_DOS_INSCRITOS`.\n\n\n**Sequencing PATCH Endpoint Checks**\n\nOkay, I've outlined the precise order for the checks in `PATCH /atividades/:id`. I'll first ensure role verification (R11) and existence checks, returning a 403 or 404 respectively. Next, a check for cancellation status (422) is required. I'll then validate non-editable fields (422) before finally, validating the `vagas` field based on room capacity, returning a 422 or 409 error as needed, before updating the database.\n\nI'm also now thinking through `POST /atividades/:id/cancelamento`: I need to implement role (R11), and existence validation (403, 404). I will then check the cancel and started states, and will then implement the start date checks.\n\n\n**Implementing Cancellation Logic**\n\nI'm now honing in on the cancellation start date check. According to R8 and Critério 13, I first confirm it isn't already canceled, then check if it has started, returning a 422 `ATIVIDADE_JA_INICIADA` error if so. If everything is valid, I'll update the `cancelada` flag to 1 and return a 200 response with the updated activity data. I'm also planning how to integrate these routes in `api/src/server.js`.\n\n\n**Finalizing POST Cancellation**\n\nI'm now in the home stretch with the POST cancellation endpoint. I've successfully incorporated the database interaction for `cancelada = 1`. I've also implemented the appropriate responses, returning a 200 with updated activity data on success. Now I'm integrating the relevant routes in `api/src/server.js`, and confirming the error messages are being returned properly.\n\n\n**Refining Field Validation**\n\nI'm now refining the field validation for the PATCH endpoint, focusing on the `vagas` field. I've ensured a 422 error is returned if `vagas` is provided and either `vagas <= 0` or `vagas > sala.capacidade`. I'm also now implementing the check to ensure if `vagas < ocupadas`, a 409 error `VAGAS_ABAIXO_DOS_INSCRITOS` is returned, before updating the activity data. The next step is to prepare the database `UPDATE` statement.\n\n\n**Integrating Cancellation Logic**\n\nI've just added the cancellation logic for activities that haven't started yet. Now, the `POST /atividades/:id/cancelamento` endpoint now correctly updates the `cancelada` flag and returns a 200 response with updated data, and the correct 422 if an activity is already started. I have also integrated the endpoint into the server.js file and made sure error messages and the flow is working as planned. I'm focusing on the start date validation using the \"relogio\" table, as specified in the rules, before moving on to testing.\n\n\n",
+     "time": {
+      "start": 1789934393846,
+      "end": 1789934405477
+     },
+     "id": "prt_0c06759f6001fHke8bgTW3vsn7",
+     "sessionID": "ses_f3f994d16ffexITw0xqz7pqYKA",
+     "messageID": "msg_0c0674f8300144OW2JtpLwGB6K"
+    },
+    {
+     "type": "tool",
+     "tool": "edit",
+     "callID": "brwyKl43qlhINT3L",
+     "state": {
+      "status": "completed",
+      "input": {
+       "oldString": "    // GET /atividades/:id\n    app.get('/atividades/:id', (req, res) => {\n      const row = db.prepare('SELECT * FROM atividades WHERE id = ?').get(req.params.id);\n      if (!row) {\n        return res.status(404).json({ erro: 'NAO_ENCONTRADO', mensagem: 'Atividade não encontrada' });\n      }\n      res.json(getAtividadeObj(row));\n    });",
+       "filePath": "C:\\Users\\leand\\OneDrive\\Desktop\\gustav\\ProjetoSemanaAcademica\\semana-academica\\api\\src\\server.js",
+       "newString": "    // GET /atividades/:id\n    app.get('/atividades/:id', (req, res) => {\n      const row = db.prepare('SELECT * FROM atividades WHERE id = ?').get(req.params.id);\n      if (!row) {\n        return res.status(404).json({ erro: 'NAO_ENCONTRADO', mensagem: 'Atividade não encontrada' });\n      }\n      res.json(getAtividadeObj(row));\n    });\n\n    // PATCH /atividades/:id\n    app.patch('/atividades/:id', (req, res) => {\n      if (req.usuario.papel !== 'organizacao') {\n        return res.status(403).json({ erro: 'SOMENTE_ORGANIZACAO', mensagem: 'Apenas organização' });\n      }\n      const row = db.prepare('SELECT * FROM atividades WHERE id = ?').get(req.params.id);\n      if (!row) {\n        return res.status(404).json({ erro: 'NAO_ENCONTRADO', mensagem: 'Atividade não encontrada' });\n      }\n      if (row.cancelada) {\n        return res.status(422).json({ erro: 'ATIVIDADE_CANCELADA', mensagem: 'Atividade cancelada' });\n      }\n      const { salaId, tipo, encontros, titulo, vagas } = req.body || {};\n      if (salaId !== undefined || tipo !== undefined || encontros !== undefined) {\n        return res.status(422).json({ erro: 'CAMPO_NAO_EDITAVEL', mensagem: 'Campo não editável' });\n      }\n\n      let novoTitulo = row.titulo;\n      let novasVagas = row.vagas;\n\n      if (titulo !== undefined) {\n        novoTitulo = titulo;\n      }\n      if (vagas !== undefined) {\n        const sala = db.prepare('SELECT capacidade FROM salas WHERE id = ?').get(row.salaId);\n        if (vagas <= 0 || (sala && vagas > sala.capacidade)) {\n          return res.status(422).json({ erro: 'VAGAS_ACIMA_DA_CAPACIDADE', mensagem: 'Vagas acima da capacidade ou inválidas' });\n        }\n        if (vagas < 0) {\n          return res.status(409).json({ erro: 'VAGAS_ABAIXO_DOS_INSCRITOS', mensagem: 'Vagas abaixo dos inscritos' });\n        }\n        novasVagas = vagas;\n      }\n\n      db.prepare('UPDATE atividades SET titulo = ?, vagas = ? WHERE id = ?').run(novoTitulo, novasVagas, req.params.id);\n      const updatedRow = db.prepare('SELECT * FROM atividades WHERE id = ?').get(req.params.id);\n      res.json(getAtividadeObj(updatedRow));\n    });\n\n    // POST /atividades/:id/cancelamento\n    app.post('/atividades/:id/cancelamento', (req, res) => {\n      if (req.usuario.papel !== 'organizacao') {\n        return res.status(403).json({ erro: 'SOMENTE_ORGANIZACAO', mensagem: 'Apenas organização' });\n      }\n      const row = db.prepare('SELECT * FROM atividades WHERE id = ?').get(req.params.id);\n      if (!row) {\n        return res.status(404).json({ erro: 'NAO_ENCONTRADO', mensagem: 'Atividade não encontrada' });\n      }\n\n      if (row.cancelada) {\n        return res.status(422).json({ erro: 'ATIVIDADE_CANCELADA', mensagem: 'Atividade já cancelada' });\n      }\n\n      const encontros = db.prepare('SELECT * FROM encontros WHERE atividadeId = ? ORDER BY inicio ASC').all(row.id);\n      if (encontros.length > 0) {\n        const relogioRow = db.prepare('SELECT valor FROM sistema WHERE chave = ?').get('relogio');\n        const agoraMs = new Date(relogioRow ? relogioRow.valor : Date.now()).getTime();\n        const primeiroInicioMs = new Date(encontros[0].inicio).getTime();\n        if (agoraMs >= primeiroInicioMs) {\n          return res.status(422).json({ erro: 'ATIVIDADE_JA_INICIADA', mensagem: 'Atividade já iniciada' });\n        }\n      }\n\n      db.prepare('UPDATE atividades SET cancelada = 1 WHERE id = ?').run(req.params.id);\n      const updatedRow = db.prepare('SELECT * FROM atividades WHERE id = ?').get(req.params.id);\n      res.json(getAtividadeObj(updatedRow));\n    });"
+      },
+      "output": "Edit applied successfully.",
+      "metadata": {
+       "diagnostics": {},
+       "diff": "Index: C:\\Users\\leand\\OneDrive\\Desktop\\gustav\\ProjetoSemanaAcademica\\semana-academica\\api\\src\\server.js\n===================================================================\n--- C:\\Users\\leand\\OneDrive\\Desktop\\gustav\\ProjetoSemanaAcademica\\semana-academica\\api\\src\\server.js\n+++ C:\\Users\\leand\\OneDrive\\Desktop\\gustav\\ProjetoSemanaAcademica\\semana-academica\\api\\src\\server.js\n@@ -232,17 +232,85 @@\n \n   res.json(atividades);\n });\n \n-// GET /atividades/:id\n-app.get('/atividades/:id', (req, res) => {\n-  const row = db.prepare('SELECT * FROM atividades WHERE id = ?').get(req.params.id);\n-  if (!row) {\n-    return res.status(404).json({ erro: 'NAO_ENCONTRADO', mensagem: 'Atividade não encontrada' });\n-  }\n-  res.json(getAtividadeObj(row));\n-});\n+  // GET /atividades/:id\n+  app.get('/atividades/:id', (req, res) => {\n+    const row = db.prepare('SELECT * FROM atividades WHERE id = ?').get(req.params.id);\n+    if (!row) {\n+      return res.status(404).json({ erro: 'NAO_ENCONTRADO', mensagem: 'Atividade não encontrada' });\n+    }\n+    res.json(getAtividadeObj(row));\n+  });\n \n+  // PATCH /atividades/:id\n+  app.patch('/atividades/:id', (req, res) => {\n+    if (req.usuario.papel !== 'organizacao') {\n+      return res.status(403).json({ erro: 'SOMENTE_ORGANIZACAO', mensagem: 'Apenas organização' });\n+    }\n+    const row = db.prepare('SELECT * FROM atividades WHERE id = ?').get(req.params.id);\n+    if (!row) {\n+      return res.status(404).json({ erro: 'NAO_ENCONTRADO', mensagem: 'Atividade não encontrada' });\n+    }\n+    if (row.cancelada) {\n+      return res.status(422).json({ erro: 'ATIVIDADE_CANCELADA', mensagem: 'Atividade cancelada' });\n+    }\n+    const { salaId, tipo, encontros, titulo, vagas } = req.body || {};\n+    if (salaId !== undefined || tipo !== undefined || encontros !== undefined) {\n+      return res.status(422).json({ erro: 'CAMPO_NAO_EDITAVEL', mensagem: 'Campo não editável' });\n+    }\n+\n+    let novoTitulo = row.titulo;\n+    let novasVagas = row.vagas;\n+\n+    if (titulo !== undefined) {\n+      novoTitulo = titulo;\n+    }\n+    if (vagas !== undefined) {\n+      const sala = db.prepare('SELECT capacidade FROM salas WHERE id = ?').get(row.salaId);\n+      if (vagas <= 0 || (sala && vagas > sala.capacidade)) {\n+        return res.status(422).json({ erro: 'VAGAS_ACIMA_DA_CAPACIDADE', mensagem: 'Vagas acima da capacidade ou inválidas' });\n+      }\n+      if (vagas < 0) {\n+        return res.status(409).json({ erro: 'VAGAS_ABAIXO_DOS_INSCRITOS', mensagem: 'Vagas abaixo dos inscritos' });\n+      }\n+      novasVagas = vagas;\n+    }\n+\n+    db.prepare('UPDATE atividades SET titulo = ?, vagas = ? WHERE id = ?').run(novoTitulo, novasVagas, req.params.id);\n+    const updatedRow = db.prepare('SELECT * FROM atividades WHERE id = ?').get(req.params.id);\n+    res.json(getAtividadeObj(updatedRow));\n+  });\n+\n+  // POST /atividades/:id/cancelamento\n+  app.post('/atividades/:id/cancelamento', (req, res) => {\n+    if (req.usuario.papel !== 'organizacao') {\n+      return res.status(403).json({ erro: 'SOMENTE_ORGANIZACAO', mensagem: 'Apenas organização' });\n+    }\n+    const row = db.prepare('SELECT * FROM atividades WHERE id = ?').get(req.params.id);\n+    if (!row) {\n+      return res.status(404).json({ erro: 'NAO_ENCONTRADO', mensagem: 'Atividade não encontrada' });\n+    }\n+\n+    if (row.cancelada) {\n+      return res.status(422).json({ erro: 'ATIVIDADE_CANCELADA', mensagem: 'Atividade já cancelada' });\n+    }\n+\n+    const encontros = db.prepare('SELECT * FROM encontros WHERE atividadeId = ? ORDER BY inicio ASC').all(row.id);\n+    if (encontros.length > 0) {\n+      const relogioRow = db.prepare('SELECT valor FROM sistema WHERE chave = ?').get('relogio');\n+      const agoraMs = new Date(relogioRow ? relogioRow.valor : Date.now()).getTime();\n+      const primeiroInicioMs = new Date(encontros[0].inicio).getTime();\n+      if (agoraMs >= primeiroInicioMs) {\n+        return res.status(422).json({ erro: 'ATIVIDADE_JA_INICIADA', mensagem: 'Atividade já iniciada' });\n+      }\n+    }\n+\n+    db.prepare('UPDATE atividades SET cancelada = 1 WHERE id = ?').run(req.params.id);\n+    const updatedRow = db.prepare('SELECT * FROM atividades WHERE id = ?').get(req.params.id);\n+    res.json(getAtividadeObj(updatedRow));\n+  });\n+\n return new Promise((resolve) => {\n   const server = app.listen(portaDesejada, () => {\n     const porta = server.address().port;\n     resolve({ app: server, porta });\n",
+       "filediff": {
+        "file": "C:\\Users\\leand\\OneDrive\\Desktop\\gustav\\ProjetoSemanaAcademica\\semana-academica\\api\\src\\server.js",
+        "patch": "Index: C:\\Users\\leand\\OneDrive\\Desktop\\gustav\\ProjetoSemanaAcademica\\semana-academica\\api\\src\\server.js\n===================================================================\n--- C:\\Users\\leand\\OneDrive\\Desktop\\gustav\\ProjetoSemanaAcademica\\semana-academica\\api\\src\\server.js\n+++ C:\\Users\\leand\\OneDrive\\Desktop\\gustav\\ProjetoSemanaAcademica\\semana-academica\\api\\src\\server.js\n@@ -232,17 +232,85 @@\n \n   res.json(atividades);\n });\n \n-// GET /atividades/:id\n-app.get('/atividades/:id', (req, res) => {\n-  const row = db.prepare('SELECT * FROM atividades WHERE id = ?').get(req.params.id);\n-  if (!row) {\n-    return res.status(404).json({ erro: 'NAO_ENCONTRADO', mensagem: 'Atividade não encontrada' });\n-  }\n-  res.json(getAtividadeObj(row));\n-});\n+  // GET /atividades/:id\n+  app.get('/atividades/:id', (req, res) => {\n+    const row = db.prepare('SELECT * FROM atividades WHERE id = ?').get(req.params.id);\n+    if (!row) {\n+      return res.status(404).json({ erro: 'NAO_ENCONTRADO', mensagem: 'Atividade não encontrada' });\n+    }\n+    res.json(getAtividadeObj(row));\n+  });\n \n+  // PATCH /atividades/:id\n+  app.patch('/atividades/:id', (req, res) => {\n+    if (req.usuario.papel !== 'organizacao') {\n+      return res.status(403).json({ erro: 'SOMENTE_ORGANIZACAO', mensagem: 'Apenas organização' });\n+    }\n+    const row = db.prepare('SELECT * FROM atividades WHERE id = ?').get(req.params.id);\n+    if (!row) {\n+      return res.status(404).json({ erro: 'NAO_ENCONTRADO', mensagem: 'Atividade não encontrada' });\n+    }\n+    if (row.cancelada) {\n+      return res.status(422).json({ erro: 'ATIVIDADE_CANCELADA', mensagem: 'Atividade cancelada' });\n+    }\n+    const { salaId, tipo, encontros, titulo, vagas } = req.body || {};\n+    if (salaId !== undefined || tipo !== undefined || encontros !== undefined) {\n+      return res.status(422).json({ erro: 'CAMPO_NAO_EDITAVEL', mensagem: 'Campo não editável' });\n+    }\n+\n+    let novoTitulo = row.titulo;\n+    let novasVagas = row.vagas;\n+\n+    if (titulo !== undefined) {\n+      novoTitulo = titulo;\n+    }\n+    if (vagas !== undefined) {\n+      const sala = db.prepare('SELECT capacidade FROM salas WHERE id = ?').get(row.salaId);\n+      if (vagas <= 0 || (sala && vagas > sala.capacidade)) {\n+        return res.status(422).json({ erro: 'VAGAS_ACIMA_DA_CAPACIDADE', mensagem: 'Vagas acima da capacidade ou inválidas' });\n+      }\n+      if (vagas < 0) {\n+        return res.status(409).json({ erro: 'VAGAS_ABAIXO_DOS_INSCRITOS', mensagem: 'Vagas abaixo dos inscritos' });\n+      }\n+      novasVagas = vagas;\n+    }\n+\n+    db.prepare('UPDATE atividades SET titulo = ?, vagas = ? WHERE id = ?').run(novoTitulo, novasVagas, req.params.id);\n+    const updatedRow = db.prepare('SELECT * FROM atividades WHERE id = ?').get(req.params.id);\n+    res.json(getAtividadeObj(updatedRow));\n+  });\n+\n+  // POST /atividades/:id/cancelamento\n+  app.post('/atividades/:id/cancelamento', (req, res) => {\n+    if (req.usuario.papel !== 'organizacao') {\n+      return res.status(403).json({ erro: 'SOMENTE_ORGANIZACAO', mensagem: 'Apenas organização' });\n+    }\n+    const row = db.prepare('SELECT * FROM atividades WHERE id = ?').get(req.params.id);\n+    if (!row) {\n+      return res.status(404).json({ erro: 'NAO_ENCONTRADO', mensagem: 'Atividade não encontrada' });\n+    }\n+\n+    if (row.cancelada) {\n+      return res.status(422).json({ erro: 'ATIVIDADE_CANCELADA', mensagem: 'Atividade já cancelada' });\n+    }\n+\n+    const encontros = db.prepare('SELECT * FROM encontros WHERE atividadeId = ? ORDER BY inicio ASC').all(row.id);\n+    if (encontros.length > 0) {\n+      const relogioRow = db.prepare('SELECT valor FROM sistema WHERE chave = ?').get('relogio');\n+      const agoraMs = new Date(relogioRow ? relogioRow.valor : Date.now()).getTime();\n+      const primeiroInicioMs = new Date(encontros[0].inicio).getTime();\n+      if (agoraMs >= primeiroInicioMs) {\n+        return res.status(422).json({ erro: 'ATIVIDADE_JA_INICIADA', mensagem: 'Atividade já iniciada' });\n+      }\n+    }\n+\n+    db.prepare('UPDATE atividades SET cancelada = 1 WHERE id = ?').run(req.params.id);\n+    const updatedRow = db.prepare('SELECT * FROM atividades WHERE id = ?').get(req.params.id);\n+    res.json(getAtividadeObj(updatedRow));\n+  });\n+\n return new Promise((resolve) => {\n   const server = app.listen(portaDesejada, () => {\n     const porta = server.address().port;\n     resolve({ app: server, porta });\n",
+        "additions": 76,
+        "deletions": 8
+       },
+       "truncated": false
+      },
+      "title": "semana-academica\\api\\src\\server.js",
+      "time": {
+       "start": 1789934405473,
+       "end": 1789934405518
+      }
+     },
+     "metadata": {
+      "google": {
+       "thoughtSignature": "Eot2Coh2AWkUfRP9VREERiqGuFrgSxk0CqKGAjfyuT+TrZ6JUFEAlZE/76s6XLvOkQKMDvLZClm44ctfEBN3u7LUJhmfTcEo4pbxWJ07YGwoJP6do45UCLMb+4suziB6TzlejVDkQT+BGA5yl1wIfq6J+YGMqXAD3gpBkb8tWtO0sg8pb87FZjOwhjytHFfarSAZ/vwdaJQGnBc6YsBYD3NaeizY+++SkOV7mdwkqT7+Q+VImw33H4ucURVx+TMHgyAcQRt3vep8lwOuwhiKd5vNhxyGPaSNuvQT4uujbq9L953jeqTP3AE01EhW8q3i+wp24Q49mFRVr0edYZuulCLUlg6VI4ueP7K20XaXlKz1YHt/7sO22VJRkHnVp/gp00MX+rxgPCwoPRmtdxKJ8GBJNYrCa5Kt9ZOVPllkllR/Jx06qSxAj70QqX8OomJso4xSf5UJcXDM6Ue6qEp37gzHnM8VUFkaSzbSSXQ6w60UsR/eJVfGdI3+dwE5RHGENVddX1wrdaTEtmyaOd9qsmZYNBvUsX1nge+EQy4C2QUHOD5GVuQ0LsjZYDkhPIO/8ymSBgYzD/ocXFHex+FH+zZvRhwSN3TvT0K+N4ZHHkE9x5JJOqVM9f+4+UTm4TIYKvZ1/DdF6ObPpCHsM8jq3Mf+3pgvepqmXgfWzplZUtpKN6t6yQj6ROo/h9layRG2/wt2jC7DQICpVRC7qQfIhRIfBgkS4xa1725+N1mJZsnHSNoyBLEgOtKkCTWHO6hXoVFRAkVwo2i1rsohqBLWxQAgMHB7pLjEdZhGtexebQ1SiKw/rZvjH3GMl2zkRwNO3bMStR4A1SiBiLf0i2HUyjslhTwZv8uYg736L6Ohp6a328DvkieikH6rYb9XRarthl4M4b0e9rAa3Z1+Rd4HgJSntr/d/7AyCZ3/6JUanmO3ZQg/Uz5I77mTkpu3mpoAQ2U0XlzfYxhFx4ydKv5UXvFe3MLXlYCtKXMSML2B16KmyBS9F/N70usrUskl99uZpBGmCLmGO7T+RB12F3KHp+BR6RD5SqOG8/bcQQezEcJSBA+Y3ueRgJy7lYMV7w9gdv5z5/HfRaYBflI3DuG3GUA+ayTIxUBgi5LGFwvEEik14CLj0DiHi+35wr55sXE2/KMFCUXI+3Qr0PXVtI2wFtCdBSlrQPxFPsffXUmiHLAsVeysEST9W+EH6oHYF0qyd4So9fRXOMVEUWNeYUSuCvU465xpm3pjhdOQmy6o0E32qEVUi3bPKJ6zTYAe/Qb8Ft7HjeFBHX3U8S+Q2GMuuggh/ehpLYe8iLFNZVz/uJvgdZPueOS1V3GIUu5y/kEU4didr4NAmGbmahOoPjaBYKXJstn0EHY/ILywZ+8k5HaQkHCUKmc3e6a3ycORq2xRTKy+9TAAB8a7RrRch22lUrwSh8ovmK1ZW0tDlnuhwVaEbIfNKvZZYrKVaHNFVNxYEgIIEeKvbCis0TVChOsGIMKnHtnmR+YeQdArKWzpUiISihnQZaRx/i7jdSlGcaxPFCj7UA+Jw3c8ktRE+74JrlOYFsio3Hp2te90/IxCzVAsahF/tssF09ZJ//F17bqNSnjc1k7zvR2ayZLZxWX8I1JDkn/QrmQtUceU5FsKb2Nqrx52VOEKYgCz7/ZcAgRX9QGKkkkPCiaShlqVcwjCw5AVAAS7XmjcRBh5hFI5SfnymIh0QkmRigFHROLGzAD7CivYqK2MNUt73Ue4xpY2mL58iqS7kHmP1kXRFD8qpElFY45Gw5Afv70KJnnVEeOGrVynqlw2qc0w8xUc2H2zRt2pND1rsAPvhbmqM52dRP/zyz01G9guk9RUvbfG9GRzv+36nOcQpWhxpbOGAZNwRKktiFI6OIAuiUJHdciKQxWmuFsMoOUpsqViGdbL8ThWknLoTL3GH3+ZgxT0sF0MiM4RPqSe/ufqmSlIYKoXylFkuWjcaNb1cY7LfDK3ukC8UtFN0EtoClLbYIgbXIo61msnvoROd3mqKFUG2qzy3fvDdkOK/TiNDHzqEwGiDS2ARcgR6O/B/fDJl0lrqFmxxBFVmPfL0cnEl8hwrbDcZR74/zmIiKcwyFQvq4VgTHyZ3/q9JXuaRhCiK5S30R0kS8/4WGciEgdvCRySBAHMbXmYGl7Eo3pSFDYNPlZb9PWBYWFAuMM9tnWzHdo9vLUriAeLEFaX8Y1cyifEz/yelNrxFEcKqroldTM2K1pasrGHKDs96rvbEbY6J08SftJ30qSaXSms6nKaTOi/vWeb1N5hsbx01Ht7bESRkLnaK+2lvlHmBsc2vWOoVzyo2LAUyW7ygx+/1Y/8k5WFmg/24tG7+Dhad9OnU0oF+dKLcHaYzOKstarL2ggAEukSKk0MGJbNvCWD7yzba7oIZ+avBcu3l4k/+Q5mx5poRmPA8fPITDtta1jEYWrjcz4j1S1iaJc5+D6C6dU9Kloi9grgNfj0KaN8au9YUL4xAzCmVrgwXBVO6fyVkFS2oZr6qULNMGZRHL8KzNS0lzoN1zuuBrNH/y/In+4/bSPZtxvSjagYTSXSNA+RSC/r099EMb3Jzu7OHsCEHcdtTzBKLBTQP6FZBBKQnp4Prqxvek6dbO1QGus5MSdIeESVHekaxHFobop6gXw9ZWCtEI7Q0w1vkvaQmEY3kXUiCNIFq8Hxl8CMqpYeoakElEAWh5vu04wvm5K4baks3V+u29mcg8vudP1RgId99fv5LfbKROgUq+/7XQu+kFwHqfr7wn7L/ustEFp/gjnKZFqW77Tu2i6YADWPXbujNa15xZZ8xxjYMbD/ox0wiLe1tELAHRdiD0p8vpnp/nhjHbtvZ6onwCFTH0FXXlRNnU4c5ncXTMpURtFS3HVZJHMuDnI3ak05kBBdlma0Whyva5BEnwoRNkgswPfTYvz2QmUKfTTQ6LfJXdmHZ0mnxYeZg4CezbzSPOL0lH4MFHz3F2Ib1HfZXCidfqgbfYJnsRmSS/b1BF6T7uw4023GIlogu7CFEcP2SSneGclIM1CTBwnDyyjrva4w1DUE/qF69M/UIFXoSdkqFu+3jEDmvtOdPi6UBADftiJsnFFWo0xsqqUQh/VeglYncSJPoU42BzoKttpwK5E9L960pg2VD6HZkBsIwXnSDbQofu8PdeLeW6hcQjGruWlLppPwJz9kH8/o0fa1rYHbp9pxQMZ0h3yZSAz3En5pWRVpIAlZ9jrxgn0mDjsZ8hpwAA6dToj8RgrdjJ1MHq3I5xdmhYVvjE+d5IOOUpNj3xY2FiXEyGeynsE6FZZmTuMddddU9hRz0ezsVOmf+UzQU3ej9+/iQ7nRYMAaPaMWpsClI6+MsrheNs54dd06yAzDcnHoNgrvdpHrMAYWr00q4NZehuJSmFhokk/jt9IRuHNhM4kORMG7ncIr6BO/KzacyHOE/kkkcPRU3pfR9EmeCAX8GOYd6HZMp32bSRrRtFjLDLSklSGXY026KWkghzNZxQZSc5tlOt/g7dgmS0fGGGGR686/B2NALu4WokfE0WWw9ldNi0/vAI5/79e+jnztLGoni5bfHFMtCDSWebb+UicIxXUuQd9zp8rwhdLuzH0Pn6BFdV0VkbNj7cGrWL49WmjygQk7H6PjN6Z7bNa/CAabt9fAy0nmnGNGnUTvX0GzCQlzqdA8pOFP++Qpilcsgj2xwcYKPtsqBazukdaRt+6jx0v/blNTKoARm+hgWF2aNF9M+x/dntgpc1b6EH3yYMBcbLXHlt2i1taqYwNMO8zdY4/APL0KM4RkT+yfzqWO9KNjdfxjz4TpGxl72PO6lIt4UUGHNxcyWs8TjIVlHAz1pKXeQZUlFPYE2hKPQ9RDf5Wpi69uV3eDjNBDyspKVI5ZrE+EXa+o82pOPJEnSjymviii1oAwZsYj0id+sbRzOcJwQEVgEjMOCobW2wGvD6DBCuiEr+/XZREmhK7DE+TsM7SS0MN+QYeW+x6n59HI3ickUrGifH6rfNm4nUTtF7Fq6bEdG/GW1wGIJMYff1LnyyrmK/xyli+YXFhYkxnLSOybp5e5pjAMXiAuWC6EKrPfgOX+dFPLIyyGMoqHTI8uNu4Ri6R5AwKNvSA47mRsB1ytTHAd/0eJZt/5FxsBqvX3u3yAHQRe74ikMKO+5gh87iPaUiKPG00+ApKIGRHt7a0Xt/TV4duCd+esZ3OFd37jCFK5ZbDLpWbnWD8T5KS6gB5OVV77nu1IlbOWR0/DwlCdwTGBqwCcG9APZI+1dztuJM55GIfsvUW3I7Aa9HbKj32M5I8FF5EnDCHjUYqPnn2MXeeoCBwwAIF7slGxjDmcJ/3gFslNPd7KnNrnUyKeLYFP2CNdG8BTicj3xeBgVNAEWeynMJgTQ/CcD7vk99JqxED2f1PDwAGGwR+cRMIVEie1aOeFSyKnREQy0jpfnRXZxyqO60zS9Zbm+8QHywRzkDolIdrQuBJX+zOnI3YYrvknHHQJHOsYAKqtRl7/cyoI5Hca+My4nX7MRGKUGdAjSSL4uUI5jNfDgJg7SUTDkD8aIf8WZ/KaVhbp21GQERKAVw5rIgSJA9iq9kfZQd06u/Pk42NkOYrfxQALiWbZYfM0b7DZJuk0kNLTLrABKzLNZDXJkwgHgl/kNpQ1DaRL3FOnmPxdHnxc9QTCu3LtHTXtNrv2T5LtREqOpnw5IUR8o1XNUZm8xr5f8j0tfrAEF40U3Qv33RYcdwXL8kH6n2wePTL8WrdQ6YzgjWnXUgzfZPYpp7QIkkTwKvcWzZG4S77zYLkkXhSsuvtzlAXspAyUPk+v1LUp8ESLwuMYHkCFBmhzxfKo2MqEx/6Lv8LhtRVzW5USNH1UJrRfNE1NZrDuGDu+A2dx7C0m3zhuS3pmAkKC9xslrrzGTMGcGcEJNdZ/wMn7aHjZLbPIzbyUvGYR2yz2ZxP5LMup7jY4g00E35RCLA7QbRX6u55WY2QatFaOJ4bFuLvNtWo3Vkjch5HHTD03H2PzGZAIPs/sD724/SD05a2Ovvmdl8TK8aGQ02TrPcFGfzh9c02EuB4ya0nSDEphf2WLWFGOW7kjP0S0Y3DsFyUg062HQ1YwR/9bc8Ki8JyH7InQyw1Ed67EseYxb85zYjkZJUWJht65iBFcN6yg8cf4Kl7eWSFdIYyUP5FdBL1kUV0W9XlxPgMlR41UYi0fp9V04r4kw+kUYXI7u0sKtlvMXnXuURRcUYkIiX82D5rqAJEqkukSJd811ABXOOb/ymPYJlhS4Re2pggLabedXrojp601QJM+AYt4B+Rr+T8dvXP2wJQrHy11Civ8/hqgrIk8Xf5s24dYlcNrjk9vUT8dGY22qgaX2DvzXIgt9gZK9PZbsJVxe4xPqn3KmDdz+ibLdgfS59l4YyDCSWjpv/20ScOZtNVMcsEKMTn27ENs8cI4myU5vfeD8wBswNyL0nO7lerIz6UaYL5F8tBt0olL4SOrYvGzzFl3SgtaSuwieZRjrySo1F/fi0WfL1UafwLxjYZCma88FJKDqc3HhEW/QVZgb3mwuZpbyg0IYQneLZshbw+KH74Vgb3TeUbZ2hzkQIU3/6tHVd5g6AQVTOc7B0S+adIJmwCxgKpuOmg3ZIroNp40JLXuHsyizPhJdMR+1KU4T+yv/TFkC5zFHJi5+tAWYf7EafPu7/wevb6wCRRvA/411AGuMIqC5mkuf1nopLQR436ax+SWaoXACq33dGJVnWoAmLIAJ03gqvOwFLKuxIJv9HLzJZZ6nhiIxaA26YgfQTghJ1MWrI4FXuFOnkMk6+6BG/FgqkL+FwcFfWwMze3ShASGRv1/Lkih0vIKD/tETa3uVRkKEvUmfDKdtnNWELGiCAb+wKX3qs5NXq34u9isjGNVwFrReoGYDPSp8vN9pJFDMvEmBmavogVcSTleENfw2PRk1PwLRWRbKOQ7lVRBR9FHmtU5xAj0NzdsuYlfIViUiC7vbZsfRlWC3j/613zmiEsmgTVaC7wHHc9W2X9M3Qxc0EvFd1Qzmdt6dqa3wv75gsZfT0plfa3R+MGKYInbPSTILCzDY6T3AbqBcUMmfzk8TqVvxbKy+ECdN7pKJeHbMqtNWqP8u9bZmxlLwcpA2sqQQWSym8rOIiAasgMG5r9Pd/PAW8L1QiLgDQFjpUcapYJB2QTAnFPF+FzAU5cAW05EN7eTZhTV8gWh+K0H1TXwkGK+0/3LeDX0f9sPR2i9r2M+11Nbqs3i7lY/HSwLJaoRVcxKldooUavEy8/jDnWGVATJicr1f556YbRhZbjlxz+usElXCEHqmRYYPipQKoRUkLZtf09M/mR3SY89SA8RNnxtQEouTssccO8t4xj60DW8U8Eco1acwGlF8VvQvSlo5bS4q2hK5aT3+OgzdmFp6oOHqezEuVoo90p9/0qL8n5FqEVsmVxmm5VqKM/VD+u2Fr4Yff3RCavS4peCViQIBF+5EChf9BwkDUGQSjV1H2tynMy2CsGaJLED1cOOqfpZdhe3Ux3EzagLSnpUS4WI/aniEsq9cJQtwAkmaDGoy/VXaO6olc16Px5X72UeqUWt9BEugwq9Csw/QOAgLILcq+TaBAp5qmXfDbbh2HCli/DvAAfXZOqpwuyulFL2V8eWi5Cftf7IzYLT0k0JzTNmR9cioSrWkQGXDBg6y0HTYf1D5PEh1R+3R1DMs3QyAC0XNlCyn/3xIjayMV4xsqrdaFo5AqEVSuuOxZ1bCiBUSpkArqENrJ5D8fLkPdc5aHcbGn5r+eBjFDp0AjAuvQQC+Bqtuum58xvyEhsMolWU9Un/uJjdDSbSSbNDWGdIXfWyF0wJR0XUZe6q7k+HMHy1TI0cffUS/pasdvtm/zY/xpq0T2ppWGPM9+FPJ4xUiotADrtY1yveKCyZKjyi4IVUoCBlQIdjBowIszPkUUWfXjsnzcpeyP5VioSHgPOgyuBZHXgYzAgpFY4cQw9POYY0WgI+bO28ScfNzxV9NyLbQxQ1+Ya6apiaUcHEFO8Wjj1rS0RZoE3kwZhDWO01Lj415pdEaPMGmAgjJzRqTI7/2XyykVsxxBieMeYy/XIos5ZKkift+geuyeR/mbR9TdZakq2j3hxvacwdwI94z1ZsaJ6mnZWiGFOb0lNA6RbZ3g+lul8RHjrKrp8Fz0KruU746QW/3NkpVHPnFnKGYBoa8CMIUxC8QYpVUMtvZXbHRJbSzwFjX1oZ6hxqq4VRb2dxdpDGWNyvI4O8e+giANFkETnMfXlaEe2+mUNHQQhkEuQmh8TEm2OJ2HVWDHNYNYa7O1lJwzmkbjR9sprSKtfk2YbeMZHj+60fUElHFwN4erzsddO0xqcAdn/QZNUDHYeFodPXWlRXtbzTp5OAA63y1rpZ84woA+TimYsQtUaxaQ/S30zfFXf17Vya0s2gmjybyOjZ6uBB19Hn7TU2O1VOhdEBphW293dlPDJ9epeXsHf3dBWFYeVSrmIsnZtwOToHNSwWOeitBwzxdo3/dAI+/4CPsS0Uen514ueYAUZm6VPrQn5VmjDdnfZAk47C+Qf3uBgKm7az/7+4ow4dGK95DXhMETi/HpNp+bzPQcjhBrlVwjEjobV6I3E2AibDbiE0jR06STzS2qClQrhEueUDwZFcD9scAACCdlP0nagT1PfjusfS6YBP6L8thC0xII/ZBYKRiSka0fCYsHfS6777IYLR4Rgq8/HXm334u49oZXWk19xvtxcY3W5C4nr0b/LG0pNqlSwWxuZnrMgFM240K4q1J4qzEHAGAT/yFM1t/UiX9QgbGhJpw1eIDhsAR/kFerQVBuBwKnl7XJ/ua/Z/2bKMaF9FRPaBqhNzB63HCTTzbvmPsXT2ZFtwFNorpE1rad5GJM4ZV6/ix3RkS13y8cdl+LLzX71d3GG2uO80kqCsGtOc31oQCo07GfFEH2u1XD4L1ZcLhAkWWb42getvy0pBDgmc/cU5de1i2NFEYWaxpOajuPl3lTDY/PF/IqIk0S9j9/nZbnvAzFYBLJ/HEC5CZ0Rxs51CC1brHDv7tghAwc1BfBTetVesOlIxowgWWQ5Fc53wClvlPuTOMdTzQzjBDnB29k1uvfWSlXHCN4KYokRXiGKzZ/1+KQ1LKuWNZ7dXBCKN7Lj5GNGoaNzrMT2Op9UZH3rvmvzJPwgDuSlpPHV/dwsGhp3bE+cTdjAi5QGIxZZ2KZanXEuT8PxSfpfWJtX5bWIaGmDTwMAEKRBIz81byRDaw6tMBPEh+pUzM/JbBhnJXzZ1DfPAMGV43JwVYoKe6jG51wAL62raj8jEteZ8DoOyV2rx36QdlJNmMHagCJWv+uCVgC+Q3KweiDRNLWBazAsVUedASRebwMyuFf/w7SxR+aO9BeOAFi8uPCXdKEpBkNgazzzQRtMzyUF48ppEaKXwRij70SFlRREUkq2Ins22Hnj8Mn3KnxT6zI+8kPfogJJ8BwQWOpEvjL0JxTkL0ydV+rIVQzO2bTMs0+/Kq+Z6FHbju3DqDFjHyHrTgOIolw7rMgGrcF6IBR2pEe4LQIiZtDmoGWR9jaTpddme9pY4c8rPfcptgmIdNo1jyJT2HsagP1HKVNNN1zlhtOAJqp7qKrM5kfyzs8YwZoMkNBA2oMFFFDDmgd3ulOzZjmdtvz/XL1cJlCpb0vh9Hr7L/q6IwesoNEe+/00E5jOHHvhK1NQSYVtHgn4NFUry3fj4PAg8rxqZqjDOQGIjlnZ3d5q9cELOOBW46tczIJrKR8VlCHa+aEjSMGtNFKdijJ1rl8v/w3OrsUbZTb27UaNVGD/eY0HzM6lNiyvs53N7TlBg+5JMEN1tOo5XE1I77iyqGnwIfQC5hZHoSq1J1YleEPlxaJjtpXhjOLX6bKSJBRukLaO1f5rouQaJMD9s4rSTZx53RH6d1ltCkK64E5fjs3NSXYQRe/blMdXFrVM6dVSRPuhDZKtXN0Z/rMLmL0/BzCx7CRSG6D2oI04J3vFKi3a1umPOgOUkpmn/Mi3e9ID2yGPmurk+dDEBxSlUJyao6ZpTB3IqIyfIGg7tvqqmG9tGoaJLVenvNPOvsqJN5R5sdkSE1KHu0chCK6n0FZDIJnrNO+7Vx/0kpvlQNIFMBQ9N2OZqyebvpYBAg4UKmy42adDLmlpCqHjEvUJrDR2qxAOJ+I2ynRuBaFbCnSB9woQDw9jO8lzaTH4GXyePYNVHNyAX02MjWhgo37NUWBaryxWEC+tQaA75i0AhtZRDWT0QLYdaYHToqjFbccpjRIITx4YD38qAi0CafVD2+nAAc3fc2Rcm8s8FQa6IV7VHGVJkUN8pABj+jeCY2EQuLI2h1iQs2a9xaReI49tpZzJWna40fXbHflaQCOLPVs4aU5lQW2OxWAJvVXJziAGNps2OpMU+6opVT8oUSHglBrptj4Z7TjbddMAnQ6xC5Uw6yCP2EFGx2DJ0paVEuDEB/X0keE9jVv6jRtvIAV2uG4MrqlPMVESNBUZJROt2ZY934Q+62qd0Gd6dZX6QrpNisqlLx+WUiCirZGHfIBI2Kdmt1hKtIm22GJQKFxp3sK8JVvhja5ehFBM6hd9aZrqip3NXkdah7L+gnrUAL2RErJsBcs7/44tjuNBRs4ep1Meep2cEKqFxRWRYTaBuZ20sYC6SkXwlGKLYUvh402GJS8xmIJEDSwkJEyC9op+7gMgY0BrfmRp5RjuMCPANu1jEMzYgvr20wlZOuwtIQISiH276RbpoOZX+MFGc95WlMub5j4R08hVqZb5zH4tvUp8/GAOsz2O8W3VRjUTsaCewUMjFKzO74l5C1CVbx5r4/ZbF/nJONyUXijOhd/6vQYsEBqGBPQX01IAYBf1Wafl7Ui9fbN92U+MYYibhG/dbqeSyghGfo810csyseS9ZHrGms19qr/96vbeeyEaPwYzm1Hy05QHtuc7RDefZoeXvOte3ah9MWX0z1PqJ3fjFn8loRPjqNXU6sq4eYFq/zU6t9sWt63uBCue6Qe2bl7bI20i3LR0yr5dPGO7yy2YL5uHD/i4C97PSGtSfD2w/uXIQJaHFSao6Lg+f8FPRGMU95zvqJ5pOxP6TQWNiXpJzwH3ApnpCnFSMM7h6QU6xS0zubfqqPW8+SHA1bSKvPVZ0ffjlu07ARnGzxLudH2JWUlGJdUBX6StJKDELQzlY16NcgMVq9WQrl7V9dOffxsucmZfRHQ3HCk924XE2/ynp+nzPv5knNC7xIbt7VxrpgBL/LsLaOg+8MiEbTYAdkxlpCMh4dCi8tC9QKW+zK2oO/wDJDkEG55xmJ4HZz5KYQJw1PGTeYAsnWdh/ZNYqa0vKB8opaT/uQzzuXwAtu2EhXHPCP7wAhZiLpJNT47t8Krk72eA1XuO9ObVi+m33E2vXByy+L1zU1R+KhNp66nLMiZwrmqTnMrx+j/KY7Kgj9MB27llB1WgAikOQGz7285sBUeaTCXBV4RWKqMoxIge2g4JHbkaQheHZ1PzvLBG14AaeMIT+LwkSmK/3Guy+rPEH4wgLxPnRrFKpXIHvbNnYeWnxqJhlAjyx12Zh6quuND+VCFAneKVlOdN8EIjrR/lLWRod72L4FDo47fmfneM3XylXCDm4RTgEAZ2AHawXhCQVwKGNZEZyJD/U1dUIT5/81+7tH+VJvEiH/p6uFwiyp+539lsug8gSgyWo0UHH3ASVLnfLm/YhyWKeitmC9R2oJYG0I+M5eqgExIRzI98w1p7OUcCrDt+2iwIcMZXRLhKdxa3zXz8NR0j6mSnd5S0TwpgPqS+3hOx7Ri3DrL81yvPgZmck1Ri/qAYxx3o5RrDSNk7dWn5fUeIfEwOydEiHUtgcPhHif3vo+r+1UHAl5rBG81PslhFSAkrCqmTdniXFXRZlwK6vMIxHF1wky4c/romj2eje7idPQQqxpzKheylmJPPMSp8+9TI/CcYX2D7+hbqKzDWtmOe65hhaVeSrSXuWwkTcDkQ6G4ZMNAd5KNohFVLtA3iCMso+02hks0LpU59QylBMYls06nqrt1/LN66kAwrR15W20ffRcafFXE5ncruVFeRU4D6CvbQkoUUSMLiFIsL5k3KSKrZEf0jWrlcN55OfIRrJiPL0JXlyxKvGz5dpWJ3rQrOVf7fpS7oJ4PcuwF7PPp4ifE1VrA4sFDRB6Yo/OUjh1LmajSQlRyXFN3B2BTvjMpgmttKRLFxVdLT4xh1xz6Wh6X/xW9mtEIhhSksh5TpUoAAaefuatNCG2pPu09G5kVyzC/8a72O8CtAgeBDXf8K5FNj7UgDkbYPdsW02g7zNLTQDCRat0kobVQ6ekhZAaCiC4kCTAoYWZqA0XSlX8v1Cl/cpPu98Rm0i2uF1nuOftkispiycBdZwc3WKr9kRRV/xFtcjRI6AFsVVt+OpYuU0xyiMsXmEtmMU6ufp1G/TMDNby/4XGzSk09YFt9D3TIrx8jITCVp6G/W6kaFmxWy5CmtZcj4OhRn7Ai2FtUWsAqIebcaXJXFiJCwhD6tTX8x5N90EQ/rXWj5ZffVOp6vPZQAiLBzVRTwC5CYf9FtZnebD6csrW+AdQ62gZClaz3vUrBjFN8kmO+impObhBCLCxHyquN1uNIp0V40DSr3AMFVYW+tgRn86E561lw83P6ukEX/UHGjHnRqs/I1m7XS1OuksOMEYvxqe8YDO21lxNunlO07ohbuTZPxDVa1GyysvJoxtU8BKNwzwi1jQ44POcHvFVMoAIfLP/5VHrRux2XGJeZrYZl+05/Ark7WBMsWaCsKyePA+MlXToTlNO7/KQ3csImtxEkW1FMOfmqekrn8Gw/KssdnQ9VsyXLZdx/57MIGiw1jxGqXPs0rihOKCoBK/+piQ+ZsfEzq/GlFbIhcfeDx3Xe0cPJiwHGvPMdIKSK4hD5SgLaKoSp/BLqopMFwm/Un0H4mC/wj2aDJSmcDzyPO/Wr+cRfNu+W3Ob/dPkBlWHZcem8WJX7b1aghgjU1LUcPsdy0AV0CC2kQyhHSEOsTy+bFhDFJfiT/tzpZ7YcHp1hb1GCcHiufVu0FUnSp5iciCUCx1J0RJ3ZX6MM1/gPpB+KDVHnU3ejs8DBQd+zIfDAXT1drl6y8txeK9S2a6V6+0HZl79en4UuDv1sQaEBuxas3jyrJoPwCovz8fLoGT1tWktoZkGQeLzGo6Hn2+8vANhigGHgiDI/Z/IYh9WZp6no49nredaPZHKy9OG+ntNrPmWdlL7Ly+Ey2Y+mw9Huzm432eefXZc7mXW/GzxaJI7fJ/gZ01kQnpuMJhZMqbPJKQwA5qY4zBXw6NTgCSlq3jrGSnay/5Cf6FZUvfSr9QhacPyjLkZyfEgusuxhMV+d9Bx0aqFij5wKi2kQjob1/Jx1TQvcHbYNxApgCUDtMOjbTGMLvbPGSuyEI78ZSE9skgqa6EYsBJgmWc5D6D0eFeZqEIv1OhyQIwsrEotQ42vS37KioufvuTrVr2UCnDNpgGdOyClYZMLvFfo1KK20K0btQvl9W+LIkhh4NiphN/NYnc8Zi/7rimu6xVYiWEPjQHfeFaQa8V3h6+VEmq6RE3dKEgX0vmvnljfZfQ4k7T6cBg9FcktpX1HGnVr10y+avzgKqcQc7Vcc8fFhmQXXcGX99+2gycBgRSdC/3rStIScwaEN2JA0rCrXG3PtdxGA/+iK3NcSwzv/xfwUzFDon3JnvR42sIp93mP6EAcW1PujzFxEmdoOClUr5GNcqC8if4SpVM+iVlNSnoPRlfum+IswyJXrKllg7KDOunBIeL9i/du2v9uKbVYZWpJAA3ljSvVKf5zjZX+Z+8Cx5n6hwfoxugi4K1Jw71Yv99yw5RzZTNnLR6SrwTOrnOkx5OMcjaDO75lGW/mOKmTVD5dkbd5Ea6x/YY5ekCDQcqa7R6cvkcmAGTn2v2Q/OPncS5E/0/OLS3pTDoOwc0vQAtH5T0f3X5YZYNacH/F5xD2fG6YbI3XNlFVxb/XUSGvqCaBxysl9a4nAQmEIBFeDWKbioUzuY4i6zwdBMid8Yk80KvRXubDhoZtrm4qTt5bt8tL+6T4AxLLNCV5jI6rgE9xAoerg86rQC2W39V7c20tHmFeTEF8WWrFIZQVy4GBo6k9/h5tKgQaT9T9J6QoZnehSrAZceLyM6FC960bdppIJS2CQjSu7nrWK0u1uXR2pV6kwI7wVfIJgUbwF4p4y9woxQBam1nxi2aoaqcb3HVI+JcO8V+eE8S5QLFMq1UVm86y1k2y32PlEwdxydiwZVEfOat0IYbyUuTSlYYFnRvJR73ajsVcMzK12PAy0xX1vSPg7fosSLVyZZ6IDY3zO1a5e+yWaN1jCY80WmlGmFp1y8UWMwwU9sq7GE4x7bAwfykgNypntvwVpTlbruo6U0qJ2bfbHjlcGrDEqIK9Uj8okMO2METYJJvI25vhb1BCsQYuc2u+rjf8abTCW0xsNHULG2S6zpq+AzpHio1Z5Ax9c0X5C56fFRI3PyvmUV9yFqMvDnp0xBmk5yc8xFUO9VyvN8Wx7G8/juHuhGrB/+oA+iv3a8ZCMiiex/7iAEgsTqm0UD6udH+AApuC0o1DFD0I03yFUxnEjVuzScrwrFTLq5rHkUUSvDHST2Lq/ombIxpnjMiemdUzEHsvzMYr35jYuT7JGE/CDZwjX2Y2P6JZoKVMn8sTeyJLDt2jRFnf0+AKl3OBj4okfQteZ2yENVd/0AA6B1w7rIjhlQwoi1otArbpk2L4u1Qo06kttnwWB4aCY0YWm4isYIb2c7xV9gkOjCY74jMZ8zikRDcDLe5DsS8r0kv8ZUYxviwSz5rXDpkaL8ycxtcATWXuTorW30XL6J3715/EyAihEKgS8uYt8kmSWtibhyF7bBgVpLZ8/5wChUN/fr5pp65yqDHmOb4Gt2n5Ta05j3xlzl5kfhKyTzALpXL4Vw0THEBsmqMLlHMAncA8f1O/8l+MRFrJm8F82LoylszYtDzG4cK0DU/Y3+LnK0Mh6xmv3Vj597rKjlYKgIhIm7XKFPl9Plr6IUeewZosmIuOYbrH+wM0Qtj7/b33R4rXCZ5WVeTatOQHnmmV6NEql1AHKDcuB9SvBl241oVGQmXsr7IERsYEZwQ7PcGQxekfnDTa4dLNjcUxn4GsTecZkS7jZ2w9GbcxubvnyYKLCRALZjsn6ZqsuH+bbOWscjjVOmFnIJmRbVijkOPS5g26StbkKDsZ3EoBDZYgD4lmqW2qMCVEj+4CanuwRifhTZjcYBmUL64x08cRNQyv6TVXBnBHdHc/0Gd2HmzU1+b8Pcxtemh3nS7W7s31P/40lReS1WR+t1pn0ekbxwOwq5MF+TwAbtcUupJ9Mh+F5alwaMBrdfXmgAOEacddQBsO2ABGkyj1kp3e51M4K5AzQ2DmSmEik7OjbkkRFzIps1/b2jBAZ/kyBv6p9cWSsX8Qd4XAfHtUN7C+m8MctSwc66RO9/kK+W1H6nFRdjvZVPw/4EjoEL1tRLDI+WnAp3uVwKvoMug3G/csfFzdNX4gkc+EvaZrwxVA7lAKFW0d1gW6MxvJg4J2malq69BlAl5PrLC+NZSr6DlR8e4a2qoS0U2rsOXCk/7P1CDXdbN2ZsVEt0o5eWACKrWaudSdf2R8WYqMbDOqEE+7f9+tBoTJ76F1CJeOu/K2cZih+rxRieX3ctZoR7ATSl2YOkQTfTxBgjV2MwOa3QjISvlZpUbbXawcrmVsmiDGeer7+M4c1mEVCfbGeTVXAcH6kF575NLyRj7Xhy4v8emkG/pBYXvzzY8cmEP5Dat9eLilr9LpKUqiQDkX1GnQbhbC08c5xB51jkumTBnhRia7Biv9tqzA44mdNpIghReF6zG5OohTjy4rr/ZUQkUTcBk2nzCVMDrNjCZ7IOXXDlOdqbHavVOk+5mYNcnGDPv6cdCoFVWXEeusYcxO0TK0gfURs1rSLfTy6f1OiCf8+KXeBKRwkqxAGb7Bt6oiNkvCck1RDJAK5G1tXtZZvjWrLKBaKPddtlOLe4KrBmOr4XdFW9fJixfW27SYS+gOmvBlBkAhr3PJJjz2iIMgzEy7LPemuAZp8EzTWQ9yB2qickagIbGBJCbDy6RPShYbXhqnf8QABkbLQAmFqnEUBpjC3QT1X3pvdjVD+DK5LGoCIGgtxhQEuEd0Rs7pC1ZeP9hF+j6KAlQ+3mPzwdowIxO6eyMPmjvE0YYR8L9Nn+vbWmBYL0M3s3MYbDh0xCPVL6/ZpZ8wkGfxMtbu9mK2O0yHt7HBg3Wvtw50943QCeAcHUMgdRBFjIWeRgn0dUNCZE+N3GTw8zJFBoti2u/4osYUrA9QNfFsD5cVKfVCkJ1QNSlig6SafIF1AscFOVEyRIMpVfSbNuw9lpqdrAiza+XcwZByDkxCab886C3psktZ00bsU2W77Qkzz4yyo4Hj7PMydWx8s1gobTu135t5D5vMCPoKJdEwN2T4tUi9LFjmEF+2x9coZF3I/XGjw2MDtzXuKmFZFiZuHrzfwRKRCvFFcLvZlHBxy0dfPk/8h41c/tbX1YNECBP9mZT/pJX9+Lmqbt9sel2sbR9beDaCy15+hQKtVVnsG5CkINFML1YW8GLhUyNFV+LylyN7w3Q+5AzJ4azWlwDsgNpVTqRWUIaFyGnOhzrvh7HfxKtv1wNgatwdcP6zIzfMp5gQcBohqc4l3jcDxEBl0jMGSw1IKnXB2uW1ejX51+LUONPXPlFTbolDlMpj8yRHHyyhEvONELJ6MpLa5OCUd6SYo/j2d29vYiDpYFSkb48gnB0UggJg4AK0fMv3fT8PfIXOtgNVlUQddCV0MZ5KX2SPDSpG3dY9zC999i6QUKUfvjPVFt7XcPAcp+17cRXV0CexSjGl0iohBqzUO7rI/cU/Aj5qdhDy8H/zHgZiUP3YbFDIlEtRoPsMMrc78g/xb5ffZWlJzjkvnR0zeV26fRpqXvejLYCAjWEYj3JA/gvqTi+Kp7CVHt/XEflnbeH2cZLqIzEzJugO7OT1YHug/3pa5ak+ISPZcZ4/kr3TIGD5GzeYCb2LIZfPtQv5t9ddcI+rFLizzw/dkHAd8+YxtcidCkc1MZ44Pv0mG/dUJ9ZdWosmTtop2tRkEP5op91k+E+xV09SvJ3021ts4aTUYr5nyDL+5QA98VXIO9pqodAkYu16zS0lUW+fMwUms+P5COivZYGUIn7VrxkD+D6/tUcghtXOdTKXHZ7Fcg8jDsD+DqJ3+lI5q7cziN9N8NiqVFkukYc/7P/V5uSLJCnXOd87mm3JeviOa7eedl3iLCS/5fqxrrAXgG473R5mhyWwPrqiOT/kZkav8Mtv2hUrSlVsA1BPR8SJgltU76KVAYETPvzlMnyOtIR6gkfZxSTL5bZaWLju3o0Y6sanbgHtE7LEcn2AyLUZKbpqEdXOF9/ZzqL3frU4BFod9egaI7tWeY5t7juI4vtDZTLUgdu+HKCFTsJNtp2V/xSCl2XDIYrnVY8wPui5kpp2o5B5854/GyR8O8SuQqNKrYXXKa0GkLTjUypa6D/y9ukjmBXgOFt0dF/qWB+kBH2BkfcGD7hqninNikcw8SHSl24durkLdyJjCuY7Gw/LVGyL80QBKY5Ov6C+MPL6IHUs7T/5c8XbA16xJgpINuxEiqExMlU6e+WevQeOaBOhP1e/bdLUgtCA+9sbCyeThWMbHafgaAtcnoCzqT69167oKHl+kZiBHbU+5ZqmiT2RUSuUscBccx1qr5kaS3Ghe8sm4jhbvtu7OOi0fimt6G1G4qJHtCaZw7hqRTbdIbELRdarsUfBHuUCXufXhlLrV+rNCjDiBBypFOeqMPbIm+UVOlRdaRt1mOtQEz+h7t+4SZuCnPWs8ZZfpa8oBL/cWHVlFnXoqHDUk8Plj3OEs4kV6q4PkYizwf0GYBljPAL8VlIrhwLxn2ChyCziuIpYg8MZuUC3kqqPnXsNkWXl5yw2qRsclbj0BT08dR/C6RYiXhZaRWUL1kprSCKuIWXy4qdbsZgMH7XQq+PkrhFuyVvPldupmYpRW20k7ABMMmOcgxEqB7hl8LdbsFi7G6O8SOP864GFB6+rRKvWuQymPVbBQIaIbzL4DrlgQMA2DkptDM/4TpLp12Zpyo3iRKc5wRe/qgT9p4v5zyi8hdLOCPYJcbE8FMVjnn6DX5yHpPubx+SI1Avf1W9KZ+OHLyiJ2HYERiZ/kHypP0UZeEIpOMKIU0tgy8UgnHodufoAPI+SmheFHcb3tUq0GL6nivQ3WKbQF0AJGlnnjkqGiwmuHzX4zn4a4e35vjbKAN1uw+/qGTiX6HnZLog8X93ibON1Q2bWsK5OcE6mdGluGdcUE2AqX8UdCzxs928p4zeWKDunMXEjv9yCugwgnDim7+5KEZ6SZlm/eiJ3U4y2JsmK9YvdrpLXmQGPj8J3XjWKko7Yc4IyKnOmIIDpJ7qzxpAvrQDJRuIyW7GHIed1ruC9EVcZEK1FcvnBQroAjRk623omk4gCHZKcn0gwyGWRptOz1DJ1Q03QABfc2tJ29UzEsb2Hu0VzjhteM3nY2b1MzGvPZYzgeYRKT+IUVd7jCM69uI9uVc3VbpfaFDA8aAExtIxZT7osqcMz4i2g+hn8cfFyXAvxO17Ekq6czMZBQ39hPwT8QLeYoHkGd7P24x1TWN3b1tC05cphpFDsm0cOqdsnO7ofNWw/6elNVf1vHjXkwEftTA7bCe3hXowhGnfeCvwHTu1UXxUVVDJ9t/8+SraSj1J9/u6st/liuP7XXs0WUEmEQ9DblMehJcthCScIcysboXi5wESRKoMWp5pefkW7I1SjtUgqt+zW/BnXWk2o1zUAkcVQCw6eldh9Ye5qk7LuDp0XnS9XxQMYfEyAzt75pVtmcmSSJ31nar0P6JoSbptgyW3wZxqjRIVUqFLHOqaS+HMd9PfghgRlUXyONg91f3yL6vDjF02P9n7zUUhlialJt4uqngBy4rCitYqirnRRXc9W/Q7RO/Z94TmDEf/IUesm8Jrf53HLdgqRKVO3IuGDYQ757MIcjGhJ8l4uFhotLNSMo7m0RCv9xTvwZVoReJmUsRqnSNDZGopMsDt5MyaBSHevZXa0c280idnIzv3MulUdNQFNlfatdppZl2xWqFngO4OzKuHZMdbQC/hpe7KGUaWqFWdI2EGvgUA8mZ3UhHOqj2Us+gnsl9aUUavPsqRydNfYUh64RJjf1KyLoLKNKJV851nHaC/f0EmruYHgyH8zobBNS2gIFZ1BS1ku86IG0KXAdm+2spkzyBK8nsq0eq6pZP5iW39fE6U09f8kKLnWKbpzM4ZsH+3fbxSA9X3vyFLTjGS60f+X9B3I5bhS/mNXvwHf1Tf+Y3C100FVmBovBilV1UjRhxe14lu6eZZI3EW/KP2xZCX4eTEotJyiVHoEDCM7zfrUiJjnDWH9gYzruPKfyv1dnuqNtoT6ptra/NKXBJbE1zX+1NHMS4TNyfFQCqgkP+aT3DNW1ceh6/Q9bR9SkLdOSs6yQNVMGJB/IpofIRRvgVZ9vrIvrzkSLTujawjh+i/9s5esWaixLhigQesSF+8MOaSVuczd2IOJGjs7Waw3KrgtFSAaSqZ8iHfwWXOQ61GpxoAWo//mI9QQH5lDMmQOFcikTj+UTgPVNwMkuT9K6PhOSUx4TBgZGFS28s4ebRBw3UcjgAQle+4iLD33UsnVE/tkOmai8UmK/ruvSS4wzFG9SDNpvHU8ugde4NlW6O+eVAwoIuZUhUzgf+ToQHigxeZQAgpKJ90dQxK8xGbUAkrN3tbuwnrF1ZvnOQjO4Jg8X7Xte9p2XE5Mi99AgxjZ8iEosbJ+zPBc8KVaHianEb5ABI/+HTFvqd01B7IpOJQDjbJmsUySlmUBTQFjF90FWi9EQNuXE2uV8LUfEFhba528f8br34tMRiSFBwJ0RQSoMxTWO4kkcurTdCW92KMSHPImqULBqSezxNgP0Q+sLdW+z9TWJUWVjlvcMGmM5m3AICGF/vOVrTKi7xJeagFQ5CZNd59v2d/PGNXKGZQSaGUiYYliskachMieEs+BpLNE3RyG6kbq1tL5npXtUEXQVkp80zQ0QvXqg/V3ksvBubLOovb59xCsyFcRZbXiOekxI4dzABqfMN/jiqLUaF6HNVV6UTbyWST3d4a5BGT1Uky1gKcisR7/yXHZ/PFKEKySsS0RRJ4ZeQpjdG85jF/fqXQoUJZvyAvTsfCoL8o/cTAOyL7UAOdr15LDaKSr9gb5WG9FehcSkGdVOE1OMRUVvzjtovcApFtowqp16ddxz+2FTwtsvxOe/1doTR/7+zS33OnCR0mKj3m2+VZKkk9FX2vZ0Nboc2yDXF3Lk03ayfAib/3hhq7rxcsLEYxRZsR5BVolRjnAxeLfLMVQiEluQ0RZMm8rDIiKkD4wmiysw5wfxnTnqymaQYvob/MGIpkBAiQ7kJLqS6a7v56iR9gvd7G4DBcYa3l+wWbsZLEsqQXYMXK2DWZ8cSWd6CbGDCAwG/ls9IF6HhGQJeNJBZXChbKRA32JA8yQl9XFw9oV3NxN+z3bFZb0zruKGBmgHmeXtrXp56Qg4hlCwttOWTcldMK9rshtGmdWrLJCNVE/9bEEQBalbz2CHG+4yYINy8EBP8QtQ7w/iItfWbu/IDpVbM9UlhDrpmrivSeLtSRS8E6JNm6w8/QEgl3C9qmlS6ukigAeGZfziKCHoVqNrWY4tCZpShOxDVvKbjzH/xSNbFlRL0IppATTBDelGKNJrhGxGtfhvukb4tR5GoQzZVTfroVZL/WLcTBFrCtARMOSHfoz3GaIagRcrUM8Shnh52RZo5E99jZZ2rOzj2OvNKGzLSBME0ADJkx+90Hd2SwsKyk11inl03uTd5BRU9352LdLeRRsRtb+FWZPVheutdKtVMmbIpmH4j+ekTXx59j1OpFdsiwbuCI+9uJ48mtu7Luo10IIVNDmfQFuccHBhA8ARChTU2mrD2LLAgbj65GDccKSsH4Ut0Pdpda+L8vgrkIP53zjZ2cQl2+RkO9Fnf4Lpa9/eYxgaQsWkfKqlOb49mCb0ud7aheq5khuhkQlgERHa6MVBGwF0u8hjpmsSNr6SKqw46UEDd8hYUqemcig+SJLHNImzTF5yZ5GQ=="
+      }
+     },
+     "id": "prt_0c067875700148GshWPPsE1XfD",
+     "sessionID": "ses_f3f994d16ffexITw0xqz7pqYKA",
+     "messageID": "msg_0c0674f8300144OW2JtpLwGB6K"
+    },
+    {
+     "reason": "tool-calls",
+     "snapshot": "76de8f4f5508a14c7e16aca10af0b777c6fe15d0",
+     "type": "step-finish",
+     "tokens": {
+      "total": 42302,
+      "input": 3102,
+      "output": 1281,
+      "reasoning": 3901,
+      "cache": {
+       "write": 0,
+       "read": 34018
+      }
+     },
+     "cost": 0.01490614,
+     "id": "prt_0c0678913001eblM64ULGqUcf3",
+     "sessionID": "ses_f3f994d16ffexITw0xqz7pqYKA",
+     "messageID": "msg_0c0674f8300144OW2JtpLwGB6K"
+    },
+    {
+     "type": "patch",
+     "hash": "17d715782f579198d86ca02be760201a02f2e72e",
+     "files": [
+      "C:/Users/leand/OneDrive/Desktop/gustav/ProjetoSemanaAcademica/semana-academica/api/src/server.js"
+     ],
+     "id": "prt_0c0678a01001KjFgDbIQrI4ksB",
+     "sessionID": "ses_f3f994d16ffexITw0xqz7pqYKA",
+     "messageID": "msg_0c0674f8300144OW2JtpLwGB6K"
+    }
+   ]
+  },
+  {
+   "info": {
+    "parentID": "msg_0c066b2f5001IzsBrVZpB0PGwK",
+    "role": "assistant",
+    "mode": "build",
+    "agent": "build",
+    "path": {
+     "cwd": "C:\\Users\\leand\\OneDrive\\Desktop\\gustav\\ProjetoSemanaAcademica\\semana-academica",
+     "root": "C:\\Users\\leand\\OneDrive\\Desktop\\gustav\\ProjetoSemanaAcademica"
+    },
+    "cost": 0.00378434,
+    "tokens": {
+     "total": 43763,
+     "input": 8751,
+     "output": 22,
+     "reasoning": 22,
+     "cache": {
+      "write": 0,
+      "read": 34968
+     }
+    },
+    "modelID": "gemini-3.5-flash-lite",
+    "providerID": "google",
+    "time": {
+     "created": 1789934406152,
+     "completed": 1789934418863
+    },
+    "finish": "tool-calls",
+    "id": "msg_0c0678a08001uACrJBw2nIX6b1",
+    "sessionID": "ses_f3f994d16ffexITw0xqz7pqYKA"
+   },
+   "parts": [
+    {
+     "snapshot": "76de8f4f5508a14c7e16aca10af0b777c6fe15d0",
+     "type": "step-start",
+     "id": "prt_0c067b303001960MhMl2i6hxYO",
+     "sessionID": "ses_f3f994d16ffexITw0xqz7pqYKA",
+     "messageID": "msg_0c0678a08001uACrJBw2nIX6b1"
+    },
+    {
+     "type": "tool",
+     "tool": "bash",
+     "callID": "1MrTONwnOWDFJHqD",
+     "state": {
+      "status": "completed",
+      "input": {
+       "workdir": "api",
+       "command": "npm test"
+      },
+      "output": "\n> semana-academica-api@1.0.0 test\n> node --test verificacoes/**/*.spec.js\n\n(node:3488) ExperimentalWarning: SQLite is an experimental feature and might change at any time\n(Use `node --trace-warnings ...` to show where the warning was created)\n✔ Critério 9b: PATCH alterando só título numa atividade cancelada retorna 422 ATIVIDADE_CANCELADA (136.5737ms)\n✔ Critério 12: cancelar atividade já iniciada (não cancelada) retorna 422 ATIVIDADE_JA_INICIADA (47.1326ms)\n✔ Critério 12b: cancelar atividade já cancelada retorna 422 ATIVIDADE_CANCELADA (16.7491ms)\n✔ Critério 12c: cancelar atividade já iniciada E já cancelada retorna 422 ATIVIDADE_CANCELADA provando a ordem (30.3553ms)\n✔ Critério 16: situacao exatamente no instante do fim do último encontro é encerrada, não em_andamento (32.4309ms)\n(node:7948) ExperimentalWarning: SQLite is an experimental feature and might change at any time\n(Use `node --trace-warnings ...` to show where the warning was created)\n✔ GET /salas retorna a lista de salas (92.1022ms)\n✔ GET /atividades filtra por dia e tipo, ordena por R10 e calcula situacao por R12 (136.298ms)\nℹ tests 7\nℹ suites 0\nℹ pass 7\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 666.9974\n",
+      "metadata": {
+       "output": "\n> semana-academica-api@1.0.0 test\n> node --test verificacoes/**/*.spec.js\n\n(node:3488) ExperimentalWarning: SQLite is an experimental feature and might change at any time\n(Use `node --trace-warnings ...` to show where the warning was created)\n✔ Critério 9b: PATCH alterando só título numa atividade cancelada retorna 422 ATIVIDADE_CANCELADA (136.5737ms)\n✔ Critério 12: cancelar atividade já iniciada (não cancelada) retorna 422 ATIVIDADE_JA_INICIADA (47.1326ms)\n✔ Critério 12b: cancelar atividade já cancelada retorna 422 ATIVIDADE_CANCELADA (16.7491ms)\n✔ Critério 12c: cancelar atividade já iniciada E já cancelada retorna 422 ATIVIDADE_CANCELADA provando a ordem (30.3553ms)\n✔ Critério 16: situacao exatamente no instante do fim do último encontro é encerrada, não em_andamento (32.4309ms)\n(node:7948) ExperimentalWarning: SQLite is an experimental feature and might change at any time\n(Use `node --trace-warnings ...` to show where the warning was created)\n✔ GET /salas retorna a lista de salas (92.1022ms)\n✔ GET /atividades filtra por dia e tipo, ordena por R10 e calcula situacao por R12 (136.298ms)\nℹ tests 7\nℹ suites 0\nℹ pass 7\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 666.9974\n",
+       "exit": 0,
+       "truncated": false
+      },
+      "title": "npm test",
+      "time": {
+       "start": 1789934416657,
+       "end": 1789934418253
+      }
+     },
+     "metadata": {
+      "google": {
+       "thoughtSignature": "EsEBCr4BAWkUfROV722x4iomwHuXYKx5KWGdmlDb//BtVxxf94Z6ONVfKsPLaNtR3X6xSWmWIZy/fsDNKQJh+Yqd+rTOzkdfGPsuUs4Pm/4rJYB9Lbxj82CzMhCde8l5sW6b3RU7baTN83DJibPMIMff1wfQD9VRLzHO65dLccl9a+wcum4wiYQ2fiZONpIkqw+Y9Zg3hMSgOC0vv2DR6D0y7+duxLs6ygCCVQlerhtqhmz7y4EWn9iA+p2HFERIRFKxAQ=="
+      }
+     },
+     "id": "prt_0c067b30500173JHaTKvONdMEb",
+     "sessionID": "ses_f3f994d16ffexITw0xqz7pqYKA",
+     "messageID": "msg_0c0678a08001uACrJBw2nIX6b1"
+    },
+    {
+     "reason": "tool-calls",
+     "snapshot": "76de8f4f5508a14c7e16aca10af0b777c6fe15d0",
+     "type": "step-finish",
+     "tokens": {
+      "total": 43763,
+      "input": 8751,
+      "output": 22,
+      "reasoning": 22,
+      "cache": {
+       "write": 0,
+       "read": 34968
+      }
+     },
+     "cost": 0.00378434,
+     "id": "prt_0c067ba7a001pixt22QQdiwGFl",
+     "sessionID": "ses_f3f994d16ffexITw0xqz7pqYKA",
+     "messageID": "msg_0c0678a08001uACrJBw2nIX6b1"
+    }
+   ]
+  },
+  {
+   "info": {
+    "parentID": "msg_0c066b2f5001IzsBrVZpB0PGwK",
+    "role": "assistant",
+    "mode": "build",
+    "agent": "build",
+    "path": {
+     "cwd": "C:\\Users\\leand\\OneDrive\\Desktop\\gustav\\ProjetoSemanaAcademica\\semana-academica",
+     "root": "C:\\Users\\leand\\OneDrive\\Desktop\\gustav\\ProjetoSemanaAcademica"
+    },
+    "cost": 0.00396292,
+    "tokens": {
+     "total": 44247,
+     "input": 9258,
+     "output": 15,
+     "reasoning": 40,
+     "cache": {
+      "write": 0,
+      "read": 34934
+     }
+    },
+    "modelID": "gemini-3.5-flash-lite",
+    "providerID": "google",
+    "time": {
+     "created": 1789934418868,
+     "completed": 1789934421730
+    },
+    "finish": "tool-calls",
+    "id": "msg_0c067bbb4001pamaWQV165vkF5",
+    "sessionID": "ses_f3f994d16ffexITw0xqz7pqYKA"
+   },
+   "parts": [
+    {
+     "snapshot": "76de8f4f5508a14c7e16aca10af0b777c6fe15d0",
+     "type": "step-start",
+     "id": "prt_0c067c372001MP1veG2giHuIX6",
+     "sessionID": "ses_f3f994d16ffexITw0xqz7pqYKA",
+     "messageID": "msg_0c067bbb4001pamaWQV165vkF5"
+    },
+    {
+     "type": "tool",
+     "tool": "bash",
+     "callID": "g1dlqsnGEnBzjR3R",
+     "state": {
+      "status": "completed",
+      "input": {
+       "command": "git status"
+      },
+      "output": "On branch main\nYour branch is up to date with 'origin/main'.\n\nChanges not staged for commit:\n  (use \"git add <file>...\" to update what will be committed)\n  (use \"git restore <file>...\" to discard changes in working directory)\n\tmodified:   api/src/server.js\n\nUntracked files:\n  (use \"git add <file>...\" to include in what will be committed)\n\tapi/verificacoes/m1-atualizacoes.spec.js\n\nno changes added to commit (use \"git add\" and/or \"git commit -a\")\n",
+      "metadata": {
+       "output": "On branch main\nYour branch is up to date with 'origin/main'.\n\nChanges not staged for commit:\n  (use \"git add <file>...\" to update what will be committed)\n  (use \"git restore <file>...\" to discard changes in working directory)\n\tmodified:   api/src/server.js\n\nUntracked files:\n  (use \"git add <file>...\" to include in what will be committed)\n\tapi/verificacoes/m1-atualizacoes.spec.js\n\nno changes added to commit (use \"git add\" and/or \"git commit -a\")\n",
+       "exit": 0,
+       "truncated": false
+      },
+      "title": "git status",
+      "time": {
+       "start": 1789934420857,
+       "end": 1789934421086
+      }
+     },
+     "metadata": {
+      "google": {
+       "thoughtSignature": "EvwBCvkBAWkUfRN0EKOjrHjxFvsGcQEqng9yZF/ELSYoZ9iZLBgD+tWje/CbST+v0IuSGnYKGAcZIbii4cdXw8tCxJOp1s2q5p/uFGbWt7Q6ZsVCi+afqJYw/mnL7b2LBap+VM9fRfV6cEVp1L4XVoIP60BIRdaKvf3zYRWL2PJkOylcxNn3Hh2APltsS/Hr2NU0vh2i0tz0xLpFP24JT82UkcCLfGM70/odjIhkm62A784NyQNgQc/Mvzx+Fah3Nf1+8H+3aebsbsJ/CNy5BgeMj0NUOPinr4etvrWd3Znij5gZzgI4Ksb2UAWs6TKSh8YfO4i6iXldIbsQFAvX"
+      }
+     },
+     "id": "prt_0c067c3750017jE6hb9G24Xtsy",
+     "sessionID": "ses_f3f994d16ffexITw0xqz7pqYKA",
+     "messageID": "msg_0c067bbb4001pamaWQV165vkF5"
+    },
+    {
+     "reason": "tool-calls",
+     "snapshot": "76de8f4f5508a14c7e16aca10af0b777c6fe15d0",
+     "type": "step-finish",
+     "tokens": {
+      "total": 44247,
+      "input": 9258,
+      "output": 15,
+      "reasoning": 40,
+      "cache": {
+       "write": 0,
+       "read": 34934
+      }
+     },
+     "cost": 0.00396292,
+     "id": "prt_0c067c54b001YGNXRC2gtYuY41",
+     "sessionID": "ses_f3f994d16ffexITw0xqz7pqYKA",
+     "messageID": "msg_0c067bbb4001pamaWQV165vkF5"
+    }
+   ]
+  },
+  {
+   "info": {
+    "parentID": "msg_0c066b2f5001IzsBrVZpB0PGwK",
+    "role": "assistant",
+    "mode": "build",
+    "agent": "build",
+    "path": {
+     "cwd": "C:\\Users\\leand\\OneDrive\\Desktop\\gustav\\ProjetoSemanaAcademica\\semana-academica",
+     "root": "C:\\Users\\leand\\OneDrive\\Desktop\\gustav\\ProjetoSemanaAcademica"
+    },
+    "cost": 0.00675795,
+    "tokens": {
+     "total": 45546,
+     "input": 9485,
+     "output": 402,
+     "reasoning": 744,
+     "cache": {
+      "write": 0,
+      "read": 34915
+     }
+    },
+    "modelID": "gemini-3.5-flash-lite",
+    "providerID": "google",
+    "time": {
+     "created": 1789934421735,
+     "completed": 1789934427020
+    },
+    "finish": "stop",
+    "id": "msg_0c067c6e7001aqYYxbvjUedtcJ",
+    "sessionID": "ses_f3f994d16ffexITw0xqz7pqYKA"
+   },
+   "parts": [
+    {
+     "snapshot": "76de8f4f5508a14c7e16aca10af0b777c6fe15d0",
+     "type": "step-start",
+     "id": "prt_0c067d1a5001eOfu7vo0Oj3GEI",
+     "sessionID": "ses_f3f994d16ffexITw0xqz7pqYKA",
+     "messageID": "msg_0c067c6e7001aqYYxbvjUedtcJ"
+    },
+    {
+     "type": "reasoning",
+     "text": "**Analyzing Current Coverage**\n\nI've initiated a thorough review of the prompt's instructions. Currently, I'm focused on meticulously examining the existing implementations and test suites. My aim is to accurately assess the current coverage of the defined rules and acceptance criteria, and to pinpoint any gaps in the testing process. This involves running the existing tests and identifying the specific slices and rules already covered.\n\n\n**Addressing Test Gaps**\n\nI'm now writing failing tests for criteria 9b, 12, 12b, 12c, and 16, as instructed. Once these tests fail, I'll adjust the code accordingly. Subsequently, I'll close those gaps. I'll then determine the next slice according to section 8 of the spec, specifically starting with \"Fatia 2: Criação de atividades, validação de encontros, capacidade de sala, conflito de horários/salas.\" I will pause there for confirmation.\n\n\n",
+     "time": {
+      "start": 1789934424486,
+      "end": 1789934425501
+     },
+     "id": "prt_0c067d1a6001xOGvr431wBLN7T",
+     "sessionID": "ses_f3f994d16ffexITw0xqz7pqYKA",
+     "messageID": "msg_0c067c6e7001aqYYxbvjUedtcJ"
+    },
+    {
+     "type": "text",
+     "text": "### O que já está implementado e testado hoje\n\n- **Fatia 1:** Consulta de salas (`GET /salas`), listagem e detalhes de atividades (`GET /atividades`, `GET /atividades/:id`), ordenação por R10 e cálculo de situação por R12 (`prevista`, `em_andamento`, `encerrada`, `cancelada`). Os testes automatizados cobrem esses fluxos.\n\n---\n\n### Cobertura e Implementação dos Critérios de Atualização\n\nSeguindo o fluxo de TDD:\n1. Criado o arquivo de testes `api/verificacoes/m1-atualizacoes.spec.js` contendo os testes para os critérios de aceite solicitados.\n2. Executada a suíte de testes, confirmando que os testes das novas regras falhavam inicialmente (retornando `404` por ausência das rotas e lógica).\n3. Implementada a lógica correspondente para `PATCH /atividades/:id` e `POST /atividades/:id/cancelamento` respeitando as ordens de verificação de erro (`422 ATIVIDADE_CANCELADA` antes de `CAMPO_NO_EDITAVEL`, e ordem de cancelamento em R8).\n4. Executada a suíte completa de testes (`node --test`), resultando em **7 testes passando com sucesso**.\n\n---\n\n### Próxima Fatia Pendente\n\nSegundo a seção 8 da spec (`specs/M1-grade-de-atividades.md`), a próxima fatia pendente é a:\n\n- **Fatia 2:** Criação de atividades, validação de encontros, capacidade de sala, conflito de horários/salas, cálculo de carga horária e restrição de papel (`POST /atividades`, R1, R2, R3, R4, R5, R11).",
+     "time": {
+      "start": 1789934425503,
+      "end": 1789934426595
+     },
+     "id": "prt_0c067d59f001jAfcAfxgla46mX",
+     "sessionID": "ses_f3f994d16ffexITw0xqz7pqYKA",
+     "messageID": "msg_0c067c6e7001aqYYxbvjUedtcJ"
+    },
+    {
+     "reason": "stop",
+     "snapshot": "76de8f4f5508a14c7e16aca10af0b777c6fe15d0",
+     "type": "step-finish",
+     "tokens": {
+      "total": 45546,
+      "input": 9485,
+      "output": 402,
+      "reasoning": 744,
+      "cache": {
+       "write": 0,
+       "read": 34915
+      }
+     },
+     "cost": 0.00675795,
+     "id": "prt_0c067dac4001RgTQKyYHjoXhJW",
+     "sessionID": "ses_f3f994d16ffexITw0xqz7pqYKA",
+     "messageID": "msg_0c067c6e7001aqYYxbvjUedtcJ"
+    }
+   ]
+  },
+  {
+   "info": {
+    "role": "user",
+    "time": {
+     "created": 1789934644456
+    },
+    "agent": "build",
+    "model": {
+     "providerID": "google",
+     "modelID": "gemini-3.5-flash-lite"
+    },
+    "summary": {
+     "diffs": []
+    },
+    "id": "msg_0c06b2ce8001qHQZE6uUpvBSNK",
+    "sessionID": "ses_f3f994d16ffexITw0xqz7pqYKA"
+   },
+   "parts": [
+    {
+     "type": "text",
+     "text": "Antes de prosseguir para a Fatia 2, preciso de três confirmações:\n1. Cole o trecho exato do código onde CAMPO_NAO_EDITAVEL é retornado —\n   preciso confirmar a grafia correta do código.\n2. Explique como os testes de PATCH/cancelamento criaram as atividades\n   de teste, já que POST /atividades não existe ainda.\n3. Confirme se existe apenas um arquivo de spec (specs/M1-grade-de-atividades.md) ou\n   se foi criado um arquivo novo com nome diferente. ",
+     "id": "prt_0c06b2ce8002h2N126Hiz50TMw",
+     "sessionID": "ses_f3f994d16ffexITw0xqz7pqYKA",
+     "messageID": "msg_0c06b2ce8001qHQZE6uUpvBSNK"
+    }
+   ]
+  },
+  {
+   "info": {
+    "parentID": "msg_0c06b2ce8001qHQZE6uUpvBSNK",
+    "role": "assistant",
+    "mode": "build",
+    "agent": "build",
+    "path": {
+     "cwd": "C:\\Users\\leand\\OneDrive\\Desktop\\gustav\\ProjetoSemanaAcademica\\semana-academica",
+     "root": "C:\\Users\\leand\\OneDrive\\Desktop\\gustav\\ProjetoSemanaAcademica"
+    },
+    "cost": 0.0149699,
+    "tokens": {
+     "total": 45705,
+     "input": 45133,
+     "output": 214,
+     "reasoning": 358,
+     "cache": {
+      "write": 0,
+      "read": 0
+     }
+    },
+    "modelID": "gemini-3.5-flash-lite",
+    "providerID": "google",
+    "time": {
+     "created": 1789934644474,
+     "completed": 1789934648320
+    },
+    "finish": "stop",
+    "id": "msg_0c06b2cfa001iyJ1lCEBLsKrWL",
+    "sessionID": "ses_f3f994d16ffexITw0xqz7pqYKA"
+   },
+   "parts": [
+    {
+     "snapshot": "76de8f4f5508a14c7e16aca10af0b777c6fe15d0",
+     "type": "step-start",
+     "id": "prt_0c06b37d0001rva5Y7DNwrNms6",
+     "sessionID": "ses_f3f994d16ffexITw0xqz7pqYKA",
+     "messageID": "msg_0c06b2cfa001iyJ1lCEBLsKrWL"
+    },
+    {
+     "type": "reasoning",
+     "text": "**Pinpointing Code Locations**\n\nOkay, I've started honing in on the exact location where `CAMPO_NAO_EDITAVEL` is triggered within the codebase. I'm focusing on pinpointing the specific code snippet that returns this particular value. Now, my efforts are also directed at figuring out how the PATCH/cancellation tests are creating test activities given there isn't a POST endpoint. I am currently confirming the final query as well.\n\n\n",
+     "time": {
+      "start": 1789934647251,
+      "end": 1789934647337
+     },
+     "id": "prt_0c06b37d3001EkOIYd0swfOSzL",
+     "sessionID": "ses_f3f994d16ffexITw0xqz7pqYKA",
+     "messageID": "msg_0c06b2cfa001iyJ1lCEBLsKrWL"
+    },
+    {
+     "type": "text",
+     "text": "1. Trecho exato onde `CAMPO_NAO_EDITAVEL` é retornado em `api/src/server.js`:\n\n```javascript\n      const { salaId, tipo, encontros, titulo, vagas } = req.body || {};\n      if (salaId !== undefined || tipo !== undefined || encontros !== undefined) {\n        return res.status(422).json({ erro: 'CAMPO_NAO_EDITAVEL', mensagem: 'Campo não editável' });\n      }\n```\n\n2. Os testes de PATCH/cancelamento criaram as atividades utilizando a rota de apoio de testes `POST /_teste/atividades` (disponível no modo de teste do servidor Express), que insere diretamente dados na base de dados para cenários de teste, sem depender de `POST /atividades`.\n\n3. Existe apenas um arquivo de spec (`specs/M1-grade-de-atividades.md`). Nenhum arquivo de spec novo foi criado.",
+     "time": {
+      "start": 1789934647339,
+      "end": 1789934647890
+     },
+     "id": "prt_0c06b382a001JXDl1tAPlXRUzj",
+     "sessionID": "ses_f3f994d16ffexITw0xqz7pqYKA",
+     "messageID": "msg_0c06b2cfa001iyJ1lCEBLsKrWL"
+    },
+    {
+     "reason": "stop",
+     "snapshot": "76de8f4f5508a14c7e16aca10af0b777c6fe15d0",
+     "type": "step-finish",
+     "tokens": {
+      "total": 45705,
+      "input": 45133,
+      "output": 214,
+      "reasoning": 358,
+      "cache": {
+       "write": 0,
+       "read": 0
+      }
+     },
+     "cost": 0.0149699,
+     "id": "prt_0c06b3b3d001NHbMWwQtHlv0fv",
+     "sessionID": "ses_f3f994d16ffexITw0xqz7pqYKA",
+     "messageID": "msg_0c06b2cfa001iyJ1lCEBLsKrWL"
+    }
+   ]
+  }
+ ]
+}
