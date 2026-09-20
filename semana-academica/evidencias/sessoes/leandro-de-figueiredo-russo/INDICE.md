@@ -37,4 +37,5 @@ Requisições são chamadas ao modelo: cada passo do agente é uma. Skills conta
 | 20/09 20:01 | [New session - 2026-09-20T23:01:11.323Z](ses_f3ef2abe4ffeygzRR93b4c9xUk.md) | 5 | — | auditor | 0 / 0 | 0 | 0 | 0 | — |
 | 20/09 20:04 | [New session - 2026-09-20T23:04:49.438Z](ses_f3eef57e1ffeGumNM9eEi2z6M4.md) | 56 | front-end | — | 7 / 5 | 2 | 1 | 3 | — |
 | 20/09 20:23 | [New session - 2026-09-20T23:23:20.266Z](ses_f3ede64b5ffeoXyScmDwZFVh9B.md) | 7 | — | revisor-de-contrato (2) | 0 / 0 | 0 | 0 | 0 | — |
-| | **Total: 25 sessões** | 416 | novo-subagente, grilling (3), to-spec (2), tdd (6), front-end | auditor (5), revisor-de-contrato (2) | 18 / 43 | 8 | 19 | 6 | — |
+| 20/09 20:34 | [New session - 2026-09-20T23:34:22.433Z](ses_f3ed44a1effeXWQsihkm0mGqMT.md) | 27 | tdd | revisor-de-contrato (4) | 1 / 1 | 1 | 0 | 0 | — |
+| | **Total: 26 sessões** | 443 | novo-subagente, grilling (3), to-spec (2), tdd (7), front-end | auditor (5), revisor-de-contrato (6) | 19 / 44 | 9 | 19 | 6 | — |
