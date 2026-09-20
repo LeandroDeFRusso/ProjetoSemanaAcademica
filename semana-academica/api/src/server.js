@@ -1,5 +1,6 @@
 import express from 'express';
 import { DatabaseSync } from 'node:sqlite';
+import crypto from 'node:crypto';
 
 export function criarServidor(portaDesejada = 3000) {
   const app = express();
@@ -232,6 +233,108 @@ export function criarServidor(portaDesejada = 3000) {
 
     res.json(atividades);
   });
+
+    // POST /atividades
+    app.post('/atividades', (req, res) => {
+      if (req.usuario.papel !== 'organizacao') {
+        return res.status(403).json({ erro: 'SOMENTE_ORGANIZACAO', mensagem: 'Apenas organização' });
+      }
+      const { titulo, tipo, salaId, vagas, encontros } = req.body || {};
+
+      if (!encontros || !Array.isArray(encontros)) {
+        return res.status(422).json({ erro: 'DADOS_INVALIDOS', mensagem: 'Encontros inválidos' });
+      }
+
+      if (tipo === 'palestra' && encontros.length !== 1) {
+        return res.status(422).json({ erro: 'QUANTIDADE_DE_ENCONTROS', mensagem: 'Palestra deve ter 1 encontro' });
+      }
+      if (tipo === 'minicurso' && (encontros.length < 2 || encontros.length > 5)) {
+        return res.status(422).json({ erro: 'QUANTIDADE_DE_ENCONTROS', mensagem: 'Minicurso deve ter entre 2 e 5 encontros' });
+      }
+
+      const inicioEvento = new Date('2026-10-19T00:00:00-03:00').getTime();
+      const fimEvento = new Date('2026-10-23T23:59:59.999-03:00').getTime();
+
+      for (let i = 0; i < encontros.length; i++) {
+        const enc = encontros[i];
+        if (!enc.inicio || !enc.fim) {
+          return res.status(422).json({ erro: 'ENCONTRO_INVALIDO', mensagem: 'Início e fim obrigatórios' });
+        }
+        const inicioMs = new Date(enc.inicio).getTime();
+        const fimMs = new Date(enc.fim).getTime();
+
+        if (isNaN(inicioMs) || isNaN(fimMs) || inicioMs >= fimMs) {
+          return res.status(422).json({ erro: 'ENCONTRO_INVALIDO', mensagem: 'Datas inválidas' });
+        }
+
+        if (inicioMs < inicioEvento || fimMs > fimEvento) {
+          return res.status(422).json({ erro: 'ENCONTRO_INVALIDO', mensagem: 'Fora do período do evento' });
+        }
+
+        const dInicio = enc.inicio.substring(0, 10);
+        const dFim = enc.fim.substring(0, 10);
+        if (dInicio !== dFim) {
+          return res.status(422).json({ erro: 'ENCONTRO_INVALIDO', mensagem: 'Início e fim devem ser no mesmo dia' });
+        }
+
+        const duracaoMinutos = Math.round((fimMs - inicioMs) / 60000);
+        if (duracaoMinutos < 60 || duracaoMinutos > 240) {
+          return res.status(422).json({ erro: 'ENCONTRO_INVALIDO', mensagem: 'Duração deve ser entre 1h e 4h' });
+        }
+
+        for (let j = i + 1; j < encontros.length; j++) {
+          const outro = encontros[j];
+          const outroInicioMs = new Date(outro.inicio).getTime();
+          const outroFimMs = new Date(outro.fim).getTime();
+          if (inicioMs < outroFimMs && fimMs > outroInicioMs) {
+            return res.status(422).json({ erro: 'ENCONTRO_INVALIDO', mensagem: 'Encontros sobrepostos' });
+          }
+        }
+      }
+
+      const sala = db.prepare('SELECT * FROM salas WHERE id = ?').get(salaId);
+      if (!sala) {
+        return res.status(422).json({ erro: 'SALA_INEXISTENTE', mensagem: 'Sala não encontrada' });
+      }
+      if (vagas === undefined || vagas === null || vagas < 1 || vagas > sala.capacidade) {
+        return res.status(422).json({ erro: 'VAGAS_ACIMA_DA_CAPACIDADE', mensagem: 'Vagas acima da capacidade ou inválidas' });
+      }
+
+      const existingEncontros = db.prepare(`
+        SELECT e.* FROM encontros e
+        JOIN atividades a ON e.atividadeId = a.id
+        WHERE a.salaId = ? AND a.cancelada = 0
+      `).all(salaId);
+
+      for (const novoEnc of encontros) {
+        const novoInicioMs = new Date(novoEnc.inicio).getTime();
+        const novoFimMs = new Date(novoEnc.fim).getTime();
+        const quinzeMinMs = 15 * 60 * 1000;
+
+        for (const ex of existingEncontros) {
+          const exInicioMs = new Date(ex.inicio).getTime();
+          const exFimMs = new Date(ex.fim).getTime();
+
+          if (novoInicioMs < (exFimMs + quinzeMinMs) && novoFimMs > (exInicioMs - quinzeMinMs)) {
+            return res.status(409).json({ erro: 'CONFLITO_DE_SALA', mensagem: 'Conflito de horário na sala' });
+          }
+        }
+      }
+
+      const atividadeId = 'atv_' + crypto.randomBytes(4).toString('hex');
+      db.prepare('INSERT INTO atividades (id, titulo, tipo, salaId, vagas, cancelada) VALUES (?, ?, ?, ?, ?, ?)').run(
+        atividadeId, titulo, tipo, salaId, vagas, 0
+      );
+
+      const stmtEnc = db.prepare('INSERT INTO encontros (id, atividadeId, inicio, fim) VALUES (?, ?, ?, ?)');
+      for (const enc of encontros) {
+        const encId = enc.id || ('enc_' + crypto.randomBytes(4).toString('hex'));
+        stmtEnc.run(encId, atividadeId, enc.inicio, enc.fim);
+      }
+
+      const createdRow = db.prepare('SELECT * FROM atividades WHERE id = ?').get(atividadeId);
+      return res.status(201).json(getAtividadeObj(createdRow));
+    });
 
     // GET /atividades/:id
     app.get('/atividades/:id', (req, res) => {
