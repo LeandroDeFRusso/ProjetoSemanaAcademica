@@ -2,6 +2,26 @@ import express from 'express';
 import { DatabaseSync } from 'node:sqlite';
 import crypto from 'node:crypto';
 
+const ocupadasStubs = new Map();
+
+export function setOcupadasStub(atividadeId, qtd) {
+  ocupadasStubs.set(atividadeId, qtd);
+}
+
+export function getOcupadas(atividadeId) {
+  return ocupadasStubs.get(atividadeId) ?? 0;
+}
+
+export const atividadesService = {
+  setOcupadasStub,
+  getOcupadas
+};
+
+export const atividadesRepository = {
+  setOcupadasStub,
+  getOcupadas
+};
+
 export function criarServidor(portaDesejada = 3000) {
   const app = express();
   app.use(express.json());
@@ -186,6 +206,9 @@ export function criarServidor(portaDesejada = 3000) {
       }
     }
 
+    const ocupadas = getOcupadas(row.id);
+    const vagasRestantes = Math.max(0, row.vagas - ocupadas);
+
     return {
       id: row.id,
       titulo: row.titulo,
@@ -195,8 +218,8 @@ export function criarServidor(portaDesejada = 3000) {
       encontros,
       cargaHorariaMinutos,
       situacao,
-      ocupadas: 0,
-      vagasRestantes: row.vagas,
+      ocupadas,
+      vagasRestantes,
       emEspera: 0
     };
   }
@@ -373,7 +396,8 @@ export function criarServidor(portaDesejada = 3000) {
         if (vagas <= 0 || (sala && vagas > sala.capacidade)) {
           return res.status(422).json({ erro: 'VAGAS_ACIMA_DA_CAPACIDADE', mensagem: 'Vagas acima da capacidade ou inválidas' });
         }
-        if (vagas < 0) {
+        const ocupadasAtuais = getOcupadas(row.id);
+        if (vagas < ocupadasAtuais) {
           return res.status(409).json({ erro: 'VAGAS_ABAIXO_DOS_INSCRITOS', mensagem: 'Vagas abaixo dos inscritos' });
         }
         novasVagas = vagas;

@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { criarServidor } from '../src/server.js';
+import { criarServidor, setOcupadasStub } from '../src/server.js';
 
 test('PATCH /atividades/:id por participante retorna 403 SOMENTE_ORGANIZACAO', async () => {
   process.env.MODO_TESTE = '1';
@@ -150,6 +150,47 @@ test('PATCH /atividades/:id definindo vagas <= 0 retorna 422 VAGAS_ACIMA_DA_CAPA
     assert.equal(res.status, 422);
     const body = await res.json();
     assert.equal(body.erro, 'VAGAS_ACIMA_DA_CAPACIDADE');
+  } finally {
+    app.close();
+  }
+});
+
+test('R7: PATCH /atividades/:id reduzindo vagas abaixo das inscrições ocupadas retorna 409 VAGAS_ABAIXO_DOS_INSCRITOS [via stub M2]', async () => {
+  process.env.MODO_TESTE = '1';
+  const { app, porta } = await criarServidor(0);
+  try {
+    await fetch(`http://localhost:${porta}/_teste/reset`, { method: 'POST' });
+    await fetch(`http://localhost:${porta}/_teste/atividades`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        id: 'atv_r7_stub',
+        titulo: 'Atividade R7 Stub',
+        tipo: 'palestra',
+        salaId: 'auditorio',
+        vagas: 50,
+        encontros: [
+          { id: 'enc_r7_stub', inicio: '2026-10-19T10:00:00-03:00', fim: '2026-10-19T11:00:00-03:00' }
+        ],
+        cancelada: 0
+      })
+    });
+
+    // Forçar ocupadas = 5 via importação direta do repositório/serviço (stub M2)
+    setOcupadasStub('atv_r7_stub', 5);
+
+    const res = await fetch(`http://localhost:${porta}/atividades/atv_r7_stub`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Usuario': 'org-ana'
+      },
+      body: JSON.stringify({ vagas: 3 })
+    });
+
+    assert.equal(res.status, 409);
+    const body = await res.json();
+    assert.equal(body.erro, 'VAGAS_ABAIXO_DOS_INSCRITOS');
   } finally {
     app.close();
   }
