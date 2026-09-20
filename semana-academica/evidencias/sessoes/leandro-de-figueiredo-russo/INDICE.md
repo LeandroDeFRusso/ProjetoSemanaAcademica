@@ -25,4 +25,5 @@ Requisições são chamadas ao modelo: cada passo do agente é uma. Skills conta
 | 20/09 16:59 | [New session - 2026-09-20T19:59:11.081Z](ses_f3f994d16ffexITw0xqz7pqYKA.md) | 15 | tdd | — | 1 / 2 | 1 | 0 | 0 | — |
 | 20/09 17:10 | [TDD da fatia 2 de M1-grade-de-atividades.md](ses_f3f8e8186ffe5fnE43obPnwwZE.md) | 46 | tdd | — | 4 / 10 | 4 | 4 | 0 | — |
 | 20/09 17:23 | [New session - 2026-09-20T20:23:46.078Z](ses_f3f82cb61ffef4PKqqoa1Qe3ps.md) | 22 | tdd | — | 0 / 5 | 0 | 3 | 0 | — |
-| | **Total: 13 sessões** | 234 | novo-subagente, grilling (3), to-spec (2), tdd (4) | — | 8 / 24 | 6 | 9 | 1 | — |
+| 20/09 17:31 | [New session - 2026-09-20T20:31:54.605Z](ses_f3f7b5712ffex7vbbGtv9LCMLn.md) | 18 | tdd | — | 1 / 3 | 0 | 1 | 2 | — |
+| | **Total: 14 sessões** | 252 | novo-subagente, grilling (3), to-spec (2), tdd (5) | — | 9 / 27 | 6 | 10 | 3 | — |

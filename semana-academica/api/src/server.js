@@ -413,6 +413,8 @@ export function criarServidor(portaDesejada = 3000) {
       res.json(getAtividadeObj(updatedRow));
     });
 
+
+
   return new Promise((resolve) => {
     const server = app.listen(portaDesejada, () => {
       const porta = server.address().port;
