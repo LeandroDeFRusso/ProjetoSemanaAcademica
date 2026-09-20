@@ -1,0 +1,716 @@
+{
+ "info": {
+  "id": "ses_f4007d468ffeoXTOCb2TTTDBO2",
+  "slug": "hidden-island",
+  "projectID": "83101555cb47ec2aac60beaa3444a9fffcf1229a",
+  "directory": "C:\\Users\\leand\\OneDrive\\Desktop\\gustav\\ProjetoSemanaAcademica\\semana-academica",
+  "path": "semana-academica",
+  "title": "Criar subagente revisor-de-contrato",
+  "agent": "build",
+  "model": {
+   "id": "gemini-3.5-flash-lite",
+   "providerID": "google"
+  },
+  "version": "1.18.31",
+  "summary": {
+   "additions": 0,
+   "deletions": 0,
+   "files": 0
+  },
+  "cost": 0.035626429999999994,
+  "tokens": {
+   "input": 85431,
+   "output": 1261,
+   "reasoning": 2536,
+   "cache": {
+    "read": 16821,
+    "write": 0
+   }
+  },
+  "time": {
+   "created": 1789927107480,
+   "updated": 1789927223769
+  }
+ },
+ "messages": [
+  {
+   "info": {
+    "role": "user",
+    "time": {
+     "created": 1789927107678
+    },
+    "agent": "build",
+    "model": {
+     "providerID": "google",
+     "modelID": "gemini-3.5-flash-lite"
+    },
+    "summary": {
+     "diffs": [
+      {
+       "file": "semana-academica/.opencode/agent/revisor-de-contrato.md",
+       "patch": "Index: semana-academica/.opencode/agent/revisor-de-contrato.md\n===================================================================\n--- semana-academica/.opencode/agent/revisor-de-contrato.md\t\n+++ semana-academica/.opencode/agent/revisor-de-contrato.md\t\n@@ -0,0 +1,68 @@\n+---\n+description: Revisa a implementação da API e da interface comparando-as com o contrato definido em contrato-api.md, apontando rotas, métodos HTTP, campos de entrada/saída, códigos de erro e formatos divergentes. Use quando pedirem para revisar o contrato ou auditar a conformidade com a API.\n+mode: subagent\n+temperature: 0.1\n+tools:\n+  write: false\n+  edit: false\n+  patch: false\n+  task: false\n+  bash: true\n+  read: true\n+  grep: true\n+  glob: true\n+---\n+\n+# Revisor de Contrato da API\n+\n+Você revisa a implementação da API (`api/`) e da interface (`app/`) comparando-as com o contrato definido em `contrato-api.md`. Você **não escreveu** este código, não vai alterar arquivos e não vai modificar o contrato. Seu único produto é um relatório de divergências.\n+\n+## Entrada\n+\n+A partir da raiz do repositório, leia:\n+- `contrato-api.md` (o contrato oficial que não deve ser alterado);\n+- Os arquivos da API em `api/` (rotas, controllers, validações);\n+- Os arquivos da interface em `app/` (chamadas HTTP, serviços, mocks ou integração com a API).\n+\n+## Procedimento\n+\n+1. Leia integralmente o arquivo `contrato-api.md` e liste todas as rotas, métodos HTTP, parâmetros de entrada (query, params, body), campos de saída (response), códigos de erro e formatos exigidos.\n+2. Examine a implementação em `api/` (usando `grep`, `glob` e `read`) para verificar se cada rota, método, campo, código de status HTTP e formato corresponde exatamente ao especificado no contrato.\n+3. Examine a implementação em `app/` para verificar se as requisições feitas pela interface respeitam as rotas, métodos e formatos definidos no contrato.\n+4. Identifique qualquer divergência entre o código e o `contrato-api.md`.\n+\n+## O que você procura (Divergências)\n+\n+- **Rota divergente** — caminho da rota na API ou na interface diferente do contrato.\n+- **Método HTTP incorreto** — GET, POST, PUT, DELETE, etc., divergindo do contrato.\n+- **Campos de entrada/saída incorretos** — campos faltando, sobrando ou com tipos/nomes diferentes no body, query, params ou resposta.\n+- **Código de erro incorreto** — status HTTP de erro (ex: 400, 401, 404, 500) diferente do estipulado no contrato.\n+- **Formato divergente** — formato de dados (ex: JSON, datas, estruturas de objetos) que não obedece ao contrato.\n+\n+## Formato do Relatório\n+\n+```markdown\n+## Relatório de Revisão de Contrato\n+\n+| Categoria | Contrato (`contrato-api.md`) | Implementação Encontrada (`api/` ou `app/`) | Local (`arquivo:linha`) | Veredito |\n+|---|---|---|---|---|\n+| Rota / Método | `GET /api/exemplo` | `GET /api/exemplo` | `api/routes/exemplo.js:10` | CONFORME |\n+| Campo de Saída | `id`, `nome` | Retorna `id`, `nome`, `email` (extra) | `api/controllers/exemplo.js:25` | DIVERGENTE |\n+\n+## Achados de Divergência\n+\n+1. **[Divergência de Campo / Rota / Erro]** Descrição detalhada da divergência encontrada, citando `arquivo:linha` e o que diz o `contrato-api.md`.\n+2. ...\n+\n+## Veredito Geral\n+\n+<uma frase resumindo se a implementação está em conformidade total com o contrato ou quais ajustes são necessários>\n+```\n+\n+## Regras de engajamento\n+\n+- **Não corrija nada.** Você não tem permissão de `write` ou `edit`. Se encontrar um erro, aponte no relatório.\n+- **Não altere o `contrato-api.md`.** O contrato é sagrado e imutável por este subagent.\n+- **Cite `arquivo:linha`** em toda afirmação sobre o código.\n+- **Não invente exigências.** Julgue estritamente com base no que está escrito em `contrato-api.md`.\n+- **Não elogie.** Seja objetivo e direto.\n",
+       "additions": 68,
+       "deletions": 0,
+       "status": "added"
+      }
+     ]
+    },
+    "id": "msg_0bff82c5e001JldH9SY3XLkMot",
+    "sessionID": "ses_f4007d468ffeoXTOCb2TTTDBO2"
+   },
+   "parts": [
+    {
+     "type": "text",
+     "text": "Use a skill novo-subagente para criar o subagente revisor-de-contrato. O objetivo desse subagente é revisar a implementação da API e da interface comparando-as com o contrato definido em contrato-api.md. Ele deve verificar principalmente:\n- rotas;\n- métodos HTTP;\n- campos de entrada e saída;\n- códigos de erro;\n- formatos definidos no contrato.\n\nO subagente deve apenas analisar e apontar divergências. Ele não deve corrigir arquivos nem executar tarefas de implementação. Configure o agente como somente leitura, com write, edit e task desativados. Não invente responsabilidades além dessas e não altere o contrato-api.md. ",
+     "id": "prt_0bff82c6a001vXtlqD54C2KBwN",
+     "sessionID": "ses_f4007d468ffeoXTOCb2TTTDBO2",
+     "messageID": "msg_0bff82c5e001JldH9SY3XLkMot"
+    }
+   ]
+  },
+  {
+   "info": {
+    "parentID": "msg_0bff82c5e001JldH9SY3XLkMot",
+    "role": "assistant",
+    "mode": "build",
+    "agent": "build",
+    "path": {
+     "cwd": "C:\\Users\\leand\\OneDrive\\Desktop\\gustav\\ProjetoSemanaAcademica\\semana-academica",
+     "root": "C:\\Users\\leand\\OneDrive\\Desktop\\gustav\\ProjetoSemanaAcademica"
+    },
+    "cost": 0.0034555,
+    "tokens": {
+     "total": 10235,
+     "input": 10060,
+     "output": 18,
+     "reasoning": 157,
+     "cache": {
+      "write": 0,
+      "read": 0
+     }
+    },
+    "modelID": "gemini-3.5-flash-lite",
+    "providerID": "google",
+    "time": {
+     "created": 1789927107810,
+     "completed": 1789927119427
+    },
+    "finish": "tool-calls",
+    "id": "msg_0bff82ce2001fQqqfBEM1pDZ5J",
+    "sessionID": "ses_f4007d468ffeoXTOCb2TTTDBO2"
+   },
+   "parts": [
+    {
+     "snapshot": "10099d4ce2e63d144bfb73d51d2ae3fc1131d726",
+     "type": "step-start",
+     "id": "prt_0bff85529001IEAbjg32ZJ9d7C",
+     "sessionID": "ses_f4007d468ffeoXTOCb2TTTDBO2",
+     "messageID": "msg_0bff82ce2001fQqqfBEM1pDZ5J"
+    },
+    {
+     "type": "tool",
+     "tool": "skill",
+     "callID": "xIu5K7qO4gfCPx4v",
+     "state": {
+      "status": "completed",
+      "input": {
+       "name": "novo-subagente"
+      },
+      "output": "<skill_content name=\"novo-subagente\">\n# Skill: novo-subagente\n\n# Subagente novo\r\n\r\nUm subagente é um markdown. Frontmatter em cima, prompt embaixo. Não tem mais nada.\r\n\r\nEle existe para fazer **uma** coisa que o agente principal não deveria fazer sozinho —\r\nnormalmente porque quem escreveu o código não é quem deve assinar o aceite dele.\r\n\r\n## Onde mora\r\n\r\n```\r\n.opencode/agent/<nome>.md\r\n```\r\n\r\nO nome do arquivo é como você chama: `@<nome>` no chat.\r\n\r\n## As cinco regras\r\n\r\n**1. `mode: subagent`.**\r\n\r\n```yaml\r\nmode: subagent\r\n```\r\n\r\n`primary` é agente principal (aparece no seletor). `subagent` só roda quando alguém\r\nchama. Para um revisor, é sempre `subagent`.\r\n\r\n**2. O contexto dele é vazio.**\r\n\r\nO subagente **não vê a conversa** que você teve com o agente principal. Ele recebe só o\r\npedido que foi mandado para ele, mais o que ele mesmo ler do disco.\r\n\r\nIsso é a vantagem — ele não herda as justificativas de quem escreveu o código — e é a\r\nobrigação: o prompt precisa dizer **onde achar** o que ele precisa ler. Não escreva\r\n\"analise o que discutimos\". Ele não estava lá.\r\n\r\n**3. `tools:` é o contrato de poder, e é o campo mais importante.**\r\n\r\n```yaml\r\ntools:\r\n  write: false     # não cria arquivo\r\n  edit: false      # não altera arquivo\r\n  task: false      # não abre outro subagente\r\n  bash: true       # mas roda a suíte\r\n  read: true\r\n  grep: true\r\n  glob: true\r\n```\r\n\r\nUm auditor com `write: true` conserta o que encontrou, e você perde o achado — o\r\nrelatório vira \"estava tudo bem depois que eu ajustei\". Tire a ferramenta, não peça\r\neducadamente no prompt.\r\n\r\n`task: false` também importa aqui: sem isso, um subagente pode abrir outros e estourar\r\no limite de requisições por minuto da conta.\r\n\r\n**4. `description` é o gatilho.**\r\n\r\nTerceira pessoa, dizendo **o que faz** e **quando usar**, com as palavras que a pessoa\r\nrealmente vai digitar. É por essa frase que o agente principal decide chamar.\r\n\r\nRuim: `description: Um agente auditor.`\r\nBom: `description: Audita uma entrega contra a spec e aponta regra sem teste. Use quando o agente principal declarar que terminou.`\r\n\r\n**5. Campo com nome errado não dá erro.**\r\n\r\nFrontmatter aceito: `name, model, description, mode, hidden, color, temperature, top_p,\r\npermission, tools, steps, options, disable`. Qualquer outro é **silenciosamente\r\nignorado** — some dentro de `options` e o agente roda como se você não tivesse escrito\r\nnada. Escreveu `tool:` no lugar de `tools:`? O agente ganha permissão de escrita e você\r\nsó descobre quando ele reescrever seu código.\r\n\r\nPor isso a conferência da regra 6 não é opcional.\r\n\r\n**6. Confira sem gastar token.**\r\n\r\n```\r\nopencode debug agent <nome>\r\n```\r\n\r\nMostra a configuração já resolvida: o `mode`, o `temperature` e a lista de `tools` com\r\n`true`/`false`. Se `write` aparece `true` no que você quis bloquear, o frontmatter está\r\nerrado.\r\n\r\nConfig só é lida na inicialização: **saia e reabra o opencode** depois de criar o\r\narquivo, senão o agente não existe.\r\n\r\n## O corpo é o prompt\r\n\r\nQuatro seções, nesta ordem:\r\n\r\n```\r\n1. Quem ele é e por que não é você     (uma frase, não um cargo inventado)\r\n2. Entrada                              onde achar o que ele precisa ler,\r\n                                        e o que fazer se não achar\r\n3. Procedimento                         passos numerados, verbo no imperativo\r\n4. Formato da saída                     o desenho exato do relatório\r\n5. O que ele não faz                    a lista de proibições\r\n```\r\n\r\nA seção 5 é a que mais economiza tempo depois. \"Não elogie\", \"não conserte\", \"não\r\npresuma\", \"cite `arquivo:linha`\". Sem ela, a saída vem cheia de \"excelente\r\nimplementação!\" e nenhum achado.\r\n\r\n## Checklist\r\n\r\n```\r\n1. .opencode/agent/<nome>.md, nome do arquivo = como vai ser chamado\r\n2. mode: subagent\r\n3. tools: só o que ele precisa; write e edit false para quem opina\r\n4. task: false\r\n5. description em terceira pessoa, com o quando\r\n6. prompt não cita a conversa — diz onde ler\r\n7. opencode debug agent <nome> mostra as ferramentas como você quis\r\n8. opencode reiniciado\r\n```\n\nBase directory for this skill: C:\\Users\\leand\\OneDrive\\Desktop\\gustav\\ProjetoSemanaAcademica\\semana-academica\\.opencode\\skills\\novo-subagente\nRelative paths in this skill (e.g., scripts/, reference/) are relative to this base directory.\nNote: file list is sampled.\n\n<skill_files>\n\n</skill_files>\n</skill_content>",
+      "metadata": {
+       "name": "novo-subagente",
+       "dir": "C:\\Users\\leand\\OneDrive\\Desktop\\gustav\\ProjetoSemanaAcademica\\semana-academica\\.opencode\\skills\\novo-subagente",
+       "truncated": false
+      },
+      "title": "Loaded skill: novo-subagente",
+      "time": {
+       "start": 1789927118153,
+       "end": 1789927118258
+      }
+     },
+     "metadata": {
+      "google": {
+       "thoughtSignature": "EvEFCu4FAWkUfRPeULP0XZB6ngRRpjxLGtVCvn9ZzSaJSpef9VJKr31sdZfzYPVPeZTC3ImdGWUQss/1b57UvLWlxuLAjJ/Phfqwdf+taOeyOoZ76SbpNaJOUtbOLKxS+Qn0SIjam0zBgh9lf8lghtG6WvQm3Y+QgAgGi+EdjE3cLrbhZ4Q0fdpYm5zSEqCR/Ht/mh+FNRYan2EjvjHkjpH74XcW4e1lhuBeDTBG5cTRbzVCZ95DgGUp/oWrG1d2hZwcrmQKyRqG/Y0qcI0aYX3qd9qK6u3yt8O12NXHzHoS/xbelsHni06cszBWILw3EMQJF7g5pH450bgFHblkX+CHwEZe+wnlJHDMCew9ujRHvSuqjpxr1lhlgQFDmyi4Xg5BTz48ilFRagcLS+rkUw6q6wIpnWUwsdpxH4bSc/OEo2C2ru/6avFyib4AYP95RN9nZNvrReH3q3KsZxuC2pWDJ+++NLX4iCS7UkMeLHWIh9YyhIgy9ZT7GEMgDLdNQV4R9kdItiY1K6VKFMNMCZekZ4kk6PVQCcRQRyaqepjWm/nQ7MGKB4EYay2RikvxLqtTHXpSisgq0BKw4gsOrR6fnl6GBYWqg/jIQ+La6fe1vTJmO3QXsBBTJeo7eTfCZwDirq3sy7CubkgQFAHNPuaQl0gW7ceBaV8LLy72x9erO24WG8CC4tSh/YlDgGYZXWPKCXpue6Py16EszKapOGfA9eQHs+m1kwec0fDX+IM22ZeGV2v5vRoM1DafsTEJ/gnqGDzvnP/zlcUTth9p/K8lvIp0pBcuLUmTIq+8NHJeYnzSTkIV/pdbmeSguwaOJDm8T1NN8ZliGvX1A51jrjTAx2wPkD5WclD58/1RbYe8Z6sCtP61t8vRSoSR/LZr0IwnxsRKWilolnsg/XWew+3Yy/ruqfQ6xwLJ5LPocw2bAjZbEbX75qD5euFXtGO3XcYf7mAAGlg3Zf6VhlxU6H5ajOWu+OPkdGFP17LH6PB/lqFK"
+      }
+     },
+     "id": "prt_0bff85530001PkW1jYA0STQvwT",
+     "sessionID": "ses_f4007d468ffeoXTOCb2TTTDBO2",
+     "messageID": "msg_0bff82ce2001fQqqfBEM1pDZ5J"
+    },
+    {
+     "reason": "tool-calls",
+     "snapshot": "10099d4ce2e63d144bfb73d51d2ae3fc1131d726",
+     "type": "step-finish",
+     "tokens": {
+      "total": 10235,
+      "input": 10060,
+      "output": 18,
+      "reasoning": 157,
+      "cache": {
+       "write": 0,
+       "read": 0
+      }
+     },
+     "cost": 0.0034555,
+     "id": "prt_0bff85820001ttzbLIrx3Yv3oe",
+     "sessionID": "ses_f4007d468ffeoXTOCb2TTTDBO2",
+     "messageID": "msg_0bff82ce2001fQqqfBEM1pDZ5J"
+    }
+   ]
+  },
+  {
+   "info": {
+    "parentID": "msg_0bff82c5e001JldH9SY3XLkMot",
+    "role": "assistant",
+    "mode": "build",
+    "agent": "build",
+    "path": {
+     "cwd": "C:\\Users\\leand\\OneDrive\\Desktop\\gustav\\ProjetoSemanaAcademica\\semana-academica",
+     "root": "C:\\Users\\leand\\OneDrive\\Desktop\\gustav\\ProjetoSemanaAcademica"
+    },
+    "cost": 0.0045522,
+    "tokens": {
+     "total": 11874,
+     "input": 11424,
+     "output": 25,
+     "reasoning": 425,
+     "cache": {
+      "write": 0,
+      "read": 0
+     }
+    },
+    "modelID": "gemini-3.5-flash-lite",
+    "providerID": "google",
+    "time": {
+     "created": 1789927119439,
+     "completed": 1789927123700
+    },
+    "finish": "tool-calls",
+    "id": "msg_0bff85a4f001tOesSURrJ6wQOo",
+    "sessionID": "ses_f4007d468ffeoXTOCb2TTTDBO2"
+   },
+   "parts": [
+    {
+     "snapshot": "10099d4ce2e63d144bfb73d51d2ae3fc1131d726",
+     "type": "step-start",
+     "id": "prt_0bff865ae001k7zfu8Su7Y0GRa",
+     "sessionID": "ses_f4007d468ffeoXTOCb2TTTDBO2",
+     "messageID": "msg_0bff85a4f001tOesSURrJ6wQOo"
+    },
+    {
+     "type": "reasoning",
+     "text": "**Analyzing Contractual Needs**\n\nOkay, I'm now focused on building the `revisor-de-contrato` subagent. I'm digging into the requirements, specifically targeting how it will review the API implementation and interface to align with the defined `contrato-`. This initial assessment is critical before I move to coding the actual new subagent.\n\n\n",
+     "time": {
+      "start": 1789927122354,
+      "end": 1789927123159
+     },
+     "id": "prt_0bff865b2001aV5fq6rkRZg6VP",
+     "sessionID": "ses_f4007d468ffeoXTOCb2TTTDBO2",
+     "messageID": "msg_0bff85a4f001tOesSURrJ6wQOo"
+    },
+    {
+     "type": "tool",
+     "tool": "glob",
+     "callID": "mwlzv0EojGFjTkNq",
+     "state": {
+      "status": "completed",
+      "input": {
+       "pattern": "**/*",
+       "path": ".opencode/agent"
+      },
+      "output": "[105 caracteres omitidos]",
+      "title": "semana-academica\\.opencode\\agent",
+      "time": {
+       "start": 1789927123155,
+       "end": 1789927123229
+      }
+     },
+     "metadata": {
+      "google": {
+       "thoughtSignature": "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"
+      }
+     },
+     "id": "prt_0bff868cc001k8uDcBzB3GTjFI",
+     "sessionID": "ses_f4007d468ffeoXTOCb2TTTDBO2",
+     "messageID": "msg_0bff85a4f001tOesSURrJ6wQOo"
+    },
+    {
+     "reason": "tool-calls",
+     "snapshot": "10099d4ce2e63d144bfb73d51d2ae3fc1131d726",
+     "type": "step-finish",
+     "tokens": {
+      "total": 11874,
+      "input": 11424,
+      "output": 25,
+      "reasoning": 425,
+      "cache": {
+       "write": 0,
+       "read": 0
+      }
+     },
+     "cost": 0.0045522,
+     "id": "prt_0bff869f9001dwxbNcjyVDZM0F",
+     "sessionID": "ses_f4007d468ffeoXTOCb2TTTDBO2",
+     "messageID": "msg_0bff85a4f001tOesSURrJ6wQOo"
+    }
+   ]
+  },
+  {
+   "info": {
+    "parentID": "msg_0bff82c5e001JldH9SY3XLkMot",
+    "role": "assistant",
+    "mode": "build",
+    "agent": "build",
+    "path": {
+     "cwd": "C:\\Users\\leand\\OneDrive\\Desktop\\gustav\\ProjetoSemanaAcademica\\semana-academica",
+     "root": "C:\\Users\\leand\\OneDrive\\Desktop\\gustav\\ProjetoSemanaAcademica"
+    },
+    "cost": 0.0037734,
+    "tokens": {
+     "total": 12072,
+     "input": 12003,
+     "output": 50,
+     "reasoning": 19,
+     "cache": {
+      "write": 0,
+      "read": 0
+     }
+    },
+    "modelID": "gemini-3.5-flash-lite",
+    "providerID": "google",
+    "time": {
+     "created": 1789927123704,
+     "completed": 1789927125741
+    },
+    "finish": "tool-calls",
+    "id": "msg_0bff86af8001tB1cEoQn0CnQTZ",
+    "sessionID": "ses_f4007d468ffeoXTOCb2TTTDBO2"
+   },
+   "parts": [
+    {
+     "snapshot": "10099d4ce2e63d144bfb73d51d2ae3fc1131d726",
+     "type": "step-start",
+     "id": "prt_0bff87115001RtfeEJqJyjIAkZ",
+     "sessionID": "ses_f4007d468ffeoXTOCb2TTTDBO2",
+     "messageID": "msg_0bff86af8001tB1cEoQn0CnQTZ"
+    },
+    {
+     "type": "tool",
+     "tool": "read",
+     "callID": "Ye9BT1wBVwRMlxkz",
+     "state": {
+      "status": "completed",
+      "input": {
+       "filePath": "C:\\Users\\leand\\OneDrive\\Desktop\\gustav\\ProjetoSemanaAcademica\\semana-academica\\.opencode\\agent\\auditor.md"
+      },
+      "output": "[4608 caracteres omitidos]",
+      "title": "semana-academica\\.opencode\\agent\\auditor.md",
+      "time": {
+       "start": 1789927125283,
+       "end": 1789927125311
+      }
+     },
+     "metadata": {
+      "google": {
+       "thoughtSignature": "ErUBCrIBAWkUfRMRRlsrWSUgsdR+ohinmM5MMKGpuvyC1QMqSS5bxygC2ggmHASGY1R507BU+cf1SpIIHRP3NHa9d6wigI0g6mO9Et52kqHnRxQttOUIEjLfoGJk5vySg0y1kKW2loULSAmddgfDcc3o52wK0SuO0/e9Oa98jqqCNnvo2RTg9biFxIEZwvguDLDsYW/OwE51qI7jdhpKhojt4N6cJj6mk3KYON5qBfrt4o/ufdCFkQ=="
+      }
+     },
+     "id": "prt_0bff87119001zGKI585Y8QqQPZ",
+     "sessionID": "ses_f4007d468ffeoXTOCb2TTTDBO2",
+     "messageID": "msg_0bff86af8001tB1cEoQn0CnQTZ"
+    },
+    {
+     "reason": "tool-calls",
+     "snapshot": "10099d4ce2e63d144bfb73d51d2ae3fc1131d726",
+     "type": "step-finish",
+     "tokens": {
+      "total": 12072,
+      "input": 12003,
+      "output": 50,
+      "reasoning": 19,
+      "cache": {
+       "write": 0,
+       "read": 0
+      }
+     },
+     "cost": 0.0037734,
+     "id": "prt_0bff8721d0019zw6TP2xLi2UDy",
+     "sessionID": "ses_f4007d468ffeoXTOCb2TTTDBO2",
+     "messageID": "msg_0bff86af8001tB1cEoQn0CnQTZ"
+    }
+   ]
+  },
+  {
+   "info": {
+    "parentID": "msg_0bff82c5e001JldH9SY3XLkMot",
+    "role": "assistant",
+    "mode": "build",
+    "agent": "build",
+    "path": {
+     "cwd": "C:\\Users\\leand\\OneDrive\\Desktop\\gustav\\ProjetoSemanaAcademica\\semana-academica",
+     "root": "C:\\Users\\leand\\OneDrive\\Desktop\\gustav\\ProjetoSemanaAcademica"
+    },
+    "cost": 0.0108933,
+    "tokens": {
+     "total": 16335,
+     "input": 13611,
+     "output": 1048,
+     "reasoning": 1676,
+     "cache": {
+      "write": 0,
+      "read": 0
+     }
+    },
+    "modelID": "gemini-3.5-flash-lite",
+    "providerID": "google",
+    "time": {
+     "created": 1789927125747,
+     "completed": 1789927136560
+    },
+    "finish": "tool-calls",
+    "id": "msg_0bff872f3001Qf1yjsJOjOKfvu",
+    "sessionID": "ses_f4007d468ffeoXTOCb2TTTDBO2"
+   },
+   "parts": [
+    {
+     "snapshot": "10099d4ce2e63d144bfb73d51d2ae3fc1131d726",
+     "type": "step-start",
+     "id": "prt_0bff87c42001Nufr28nj8hB2bE",
+     "sessionID": "ses_f4007d468ffeoXTOCb2TTTDBO2",
+     "messageID": "msg_0bff872f3001Qf1yjsJOjOKfvu"
+    },
+    {
+     "type": "reasoning",
+     "text": "**Confirming File Creation**\n\nOkay, I've confirmed the structure's clarity and am moving forward. Using the \"write\" tool, I'm now generating the `.opencode/agent/revisor-de-contrato.md` file. I've double-checked and verified the file path as well.\n\n\n**Defining Agent's Abilities**\n\nI'm now focusing on the agent's capabilities, specifically the tools it will utilize. I've formulated the frontmatter for `revisor-de-contrato.md`, considering that the prompt requires a read-only agent. So, I am now carefully adjusting tool permissions to ensure write, edit and task tools are disabled. Bash is tentatively set as enabled, but I'm weighing whether it should also be disabled.\n\n\n**Analyzing Agent Permissions**\n\nI've decided to enable `bash: true` for the agent, following the pattern in `auditor.md`. This will be useful for running commands like grep and tests, as needed, without allowing write, edit, or task tools. Now, I am composing the markdown content for `.opencode/agent/revisor-de-contrato.md` which will specify the agent's role, the required input, and the expected report format. I am also making sure to clarify what this agent should not do.\n\n\n**Refining Agent Instructions**\n\nI've set the agent's temperature to 0.1 to keep its analysis precise. I've also defined specific tools: read, grep, glob, and bash are enabled, but write, edit, patch, and task are explicitly disabled. The markdown content for `.opencode/agent/revisor-de-contrato.md` is now being finalized. I am composing a clear description of the agent's role, its required inputs (contract and API/app files), and the expected report format.\n\n\n**Structuring Report Format**\n\nI'm now focusing on defining the agent's expected output format, aiming for clarity and actionable insights. The report will now follow a markdown table format. I'm structuring a table with columns for category, contract details, implementation details, location, and verdict, ensuring the agent provides concise, categorized information.\n\n\n**Formulating Report Content**\n\nI am now focusing on populating the markdown content with the logic for finding and reporting discrepancies. My structure for the report table is confirmed. I am carefully detailing how the agent should articulate its findings, ensuring it follows the specified format and adheres to all engagement rules, especially the \"do not correct\" and \"do not alter contract\" constraints. The generated examples clarify how the agent should handle both conformant and divergent cases within the report.\n\n\n",
+     "time": {
+      "start": 1789927128138,
+      "end": 1789927134396
+     },
+     "id": "prt_0bff87c4a001cqwcPJG13MtVIf",
+     "sessionID": "ses_f4007d468ffeoXTOCb2TTTDBO2",
+     "messageID": "msg_0bff872f3001Qf1yjsJOjOKfvu"
+    },
+    {
+     "type": "tool",
+     "tool": "write",
+     "callID": "6t7OgDxgW7UJ0f1t",
+     "state": {
+      "status": "completed",
+      "input": {
+       "filePath": "C:\\Users\\leand\\OneDrive\\Desktop\\gustav\\ProjetoSemanaAcademica\\semana-academica\\.opencode\\agent\\revisor-de-contrato.md",
+       "content": "---\ndescription: Revisa a implementação da API e da interface comparando-as com o contrato definido em contrato-api.md, apontando rotas, métodos HTTP, campos de entrada/saída, códigos de erro e formatos divergentes. Use quando pedirem para revisar o contrato ou auditar a conformidade com a API.\nmode: subagent\ntemperature: 0.1\ntools:\n  write: false\n  edit: false\n  patch: false\n  task: false\n  bash: true\n  read: true\n  grep: true\n  glob: true\n---\n\n# Revisor de Contrato da API\n\nVocê revisa a implementação da API (`api/`) e da interface (`app/`) comparando-as com o contrato definido em `contrato-api.md`. Você **não escreveu** este código, não vai alterar arquivos e não vai modificar o contrato. Seu único produto é um relatório de divergências.\n\n## Entrada\n\nA partir da raiz do repositório, leia:\n- `contrato-api.md` (o contrato oficial que não deve ser alterado);\n- Os arquivos da API em `api/` (rotas, controllers, validações);\n- Os arquivos da interface em `app/` (chamadas HTTP, serviços, mocks ou integração com a API).\n\n## Procedimento\n\n1. Leia integralmente o arquivo `contrato-api.md` e liste todas as rotas, métodos HTTP, parâmetros de entrada (query, params, body), campos de saída (response), códigos de erro e formatos exigidos.\n2. Examine a implementação em `api/` (usando `grep`, `glob` e `read`) para verificar se cada rota, método, campo, código de status HTTP e formato corresponde exatamente ao especificado no contrato.\n3. Examine a implementação em `app/` para verificar se as requisições feitas pela interface respeitam as rotas, métodos e formatos definidos no contrato.\n4. Identifique qualquer divergência entre o código e o `contrato-api.md`.\n\n## O que você procura (Divergências)\n\n- **Rota divergente** — caminho da rota na API ou na interface diferente do contrato.\n- **Método HTTP incorreto** — GET, POST, PUT, DELETE, etc., divergindo do contrato.\n- **Campos de entrada/saída incorretos** — campos faltando, sobrando ou com tipos/nomes diferentes no body, query, params ou resposta.\n- **Código de erro incorreto** — status HTTP de erro (ex: 400, 401, 404, 500) diferente do estipulado no contrato.\n- **Formato divergente** — formato de dados (ex: JSON, datas, estruturas de objetos) que não obedece ao contrato.\n\n## Formato do Relatório\n\n```markdown\n## Relatório de Revisão de Contrato\n\n| Categoria | Contrato (`contrato-api.md`) | Implementação Encontrada (`api/` ou `app/`) | Local (`arquivo:linha`) | Veredito |\n|---|---|---|---|---|\n| Rota / Método | `GET /api/exemplo` | `GET /api/exemplo` | `api/routes/exemplo.js:10` | CONFORME |\n| Campo de Saída | `id`, `nome` | Retorna `id`, `nome`, `email` (extra) | `api/controllers/exemplo.js:25` | DIVERGENTE |\n\n## Achados de Divergência\n\n1. **[Divergência de Campo / Rota / Erro]** Descrição detalhada da divergência encontrada, citando `arquivo:linha` e o que diz o `contrato-api.md`.\n2. ...\n\n## Veredito Geral\n\n<uma frase resumindo se a implementação está em conformidade total com o contrato ou quais ajustes são necessários>\n```\n\n## Regras de engajamento\n\n- **Não corrija nada.** Você não tem permissão de `write` ou `edit`. Se encontrar um erro, aponte no relatório.\n- **Não altere o `contrato-api.md`.** O contrato é sagrado e imutável por este subagent.\n- **Cite `arquivo:linha`** em toda afirmação sobre o código.\n- **Não invente exigências.** Julgue estritamente com base no que está escrito em `contrato-api.md`.\n- **Não elogie.** Seja objetivo e direto.\n"
+      },
+      "output": "Wrote file successfully.",
+      "metadata": {
+       "diagnostics": {},
+       "filepath": "C:\\Users\\leand\\OneDrive\\Desktop\\gustav\\ProjetoSemanaAcademica\\semana-academica\\.opencode\\agent\\revisor-de-contrato.md",
+       "exists": false,
+       "truncated": false
+      },
+      "title": "semana-academica\\.opencode\\agent\\revisor-de-contrato.md",
+      "time": {
+       "start": 1789927134389,
+       "end": 1789927134418
+      }
+     },
+     "metadata": {
+      "google": {
+       "thoughtSignature": "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"
+      }
+     },
+     "id": "prt_0bff894a60016rKMLQG6bkdjMN",
+     "sessionID": "ses_f4007d468ffeoXTOCb2TTTDBO2",
+     "messageID": "msg_0bff872f3001Qf1yjsJOjOKfvu"
+    },
+    {
+     "reason": "tool-calls",
+     "snapshot": "042e711ae6e225b16f9ab390f7800df932083a95",
+     "type": "step-finish",
+     "tokens": {
+      "total": 16335,
+      "input": 13611,
+      "output": 1048,
+      "reasoning": 1676,
+      "cache": {
+       "write": 0,
+       "read": 0
+      }
+     },
+     "cost": 0.0108933,
+     "id": "prt_0bff89996001Se5UnyoyZcJeq2",
+     "sessionID": "ses_f4007d468ffeoXTOCb2TTTDBO2",
+     "messageID": "msg_0bff872f3001Qf1yjsJOjOKfvu"
+    },
+    {
+     "type": "patch",
+     "hash": "10099d4ce2e63d144bfb73d51d2ae3fc1131d726",
+     "files": [
+      "C:/Users/leand/OneDrive/Desktop/gustav/ProjetoSemanaAcademica/semana-academica/.opencode/agent/revisor-de-contrato.md"
+     ],
+     "id": "prt_0bff89d19001sd4omy9tTsBvIf",
+     "sessionID": "ses_f4007d468ffeoXTOCb2TTTDBO2",
+     "messageID": "msg_0bff872f3001Qf1yjsJOjOKfvu"
+    }
+   ]
+  },
+  {
+   "info": {
+    "parentID": "msg_0bff82c5e001JldH9SY3XLkMot",
+    "role": "assistant",
+    "mode": "build",
+    "agent": "build",
+    "path": {
+     "cwd": "C:\\Users\\leand\\OneDrive\\Desktop\\gustav\\ProjetoSemanaAcademica\\semana-academica",
+     "root": "C:\\Users\\leand\\OneDrive\\Desktop\\gustav\\ProjetoSemanaAcademica"
+    },
+    "cost": 0.0052182,
+    "tokens": {
+     "total": 16976,
+     "input": 16919,
+     "output": 24,
+     "reasoning": 33,
+     "cache": {
+      "write": 0,
+      "read": 0
+     }
+    },
+    "modelID": "gemini-3.5-flash-lite",
+    "providerID": "google",
+    "time": {
+     "created": 1789927136573,
+     "completed": 1789927150425
+    },
+    "finish": "tool-calls",
+    "id": "msg_0bff89d3d001oAjjITnRpyAcMi",
+    "sessionID": "ses_f4007d468ffeoXTOCb2TTTDBO2"
+   },
+   "parts": [
+    {
+     "snapshot": "042e711ae6e225b16f9ab390f7800df932083a95",
+     "type": "step-start",
+     "id": "prt_0bff8a573001NIDw70eH4qHZd8",
+     "sessionID": "ses_f4007d468ffeoXTOCb2TTTDBO2",
+     "messageID": "msg_0bff89d3d001oAjjITnRpyAcMi"
+    },
+    {
+     "type": "tool",
+     "tool": "bash",
+     "callID": "EUBZRqwS3W60OG9M",
+     "state": {
+      "status": "completed",
+      "input": {
+       "command": "opencode debug agent revisor-de-contrato"
+      },
+      "output": "{\n  \"name\": \"revisor-de-contrato\",\n  \"mode\": \"subagent\",\n  \"permission\": [\n    {\n      \"permission\": \"*\",\n      \"action\": \"allow\",\n      \"pattern\": \"*\"\n    },\n    {\n      \"permission\": \"doom_loop\",\n      \"action\": \"ask\",\n      \"pattern\": \"*\"\n    },\n    {\n      \"permission\": \"external_directory\",\n      \"pattern\": \"*\",\n      \"action\": \"ask\"\n    },\n    {\n      \"permission\": \"external_directory\",\n      \"pattern\": \"C:\\\\Users\\\\leand\\\\.local\\\\share\\\\opencode\\\\tool-output\\\\*\",\n      \"action\": \"allow\"\n    },\n    {\n      \"permission\": \"external_directory\",\n      \"pattern\": \"C:\\\\Users\\\\leand\\\\AppData\\\\Local\\\\Temp\\\\opencode\\\\*\",\n      \"action\": \"allow\"\n    },\n    {\n      \"permission\": \"external_directory\",\n      \"pattern\": \"C:\\\\Users\\\\leand\\\\OneDrive\\\\Desktop\\\\gustav\\\\ProjetoSemanaAcademica\\\\semana-academica\\\\.opencode\\\\skills\\\\to-spec\\\\*\",\n      \"action\": \"allow\"\n    },\n    {\n      \"permission\": \"external_directory\",\n      \"pattern\": \"C:\\\\Users\\\\leand\\\\OneDrive\\\\Desktop\\\\gustav\\\\ProjetoSemanaAcademica\\\\semana-academica\\\\.opencode\\\\skills\\\\tdd\\\\*\",\n      \"action\": \"allow\"\n    },\n    {\n      \"permission\": \"external_directory\",\n      \"pattern\": \"C:\\\\Users\\\\leand\\\\OneDrive\\\\Desktop\\\\gustav\\\\ProjetoSemanaAcademica\\\\semana-academica\\\\.opencode\\\\skills\\\\novo-subagente\\\\*\",\n      \"action\": \"allow\"\n    },\n    {\n      \"permission\": \"external_directory\",\n      \"pattern\": \"C:\\\\Users\\\\leand\\\\OneDrive\\\\Desktop\\\\gustav\\\\ProjetoSemanaAcademica\\\\semana-academica\\\\.opencode\\\\skills\\\\padrao-design\\\\*\",\n      \"action\": \"allow\"\n    },\n    {\n      \"permission\": \"external_directory\",\n      \"pattern\": \"C:\\\\Users\\\\leand\\\\OneDrive\\\\Desktop\\\\gustav\\\\ProjetoSemanaAcademica\\\\semana-academica\\\\.opencode\\\\skills\\\\grilling\\\\*\",\n      \"action\": \"allow\"\n    },\n    {\n      \"permission\": \"question\",\n      \"action\": \"deny\",\n      \"pattern\": \"*\"\n    },\n    {\n      \"permission\": \"plan_enter\",\n      \"action\": \"deny\",\n      \"pattern\": \"*\"\n    },\n    {\n      \"permission\": \"plan_exit\",\n      \"action\": \"deny\",\n      \"pattern\": \"*\"\n    },\n    {\n      \"permission\": \"read\",\n      \"pattern\": \"*\",\n      \"action\": \"allow\"\n    },\n    {\n      \"permission\": \"read\",\n      \"pattern\": \"*.env\",\n      \"action\": \"ask\"\n    },\n    {\n      \"permission\": \"read\",\n      \"pattern\": \"*.env.*\",\n      \"action\": \"ask\"\n    },\n    {\n      \"permission\": \"read\",\n      \"pattern\": \"*.env.example\",\n      \"action\": \"allow\"\n    },\n    {\n      \"permission\": \"edit\",\n      \"action\": \"deny\",\n      \"pattern\": \"*\"\n    },\n    {\n      \"permission\": \"task\",\n      \"action\": \"deny\",\n      \"pattern\": \"*\"\n    },\n    {\n      \"permission\": \"bash\",\n      \"action\": \"allow\",\n      \"pattern\": \"*\"\n    },\n    {\n      \"permission\": \"read\",\n      \"action\": \"allow\",\n      \"pattern\": \"*\"\n    },\n    {\n      \"permission\": \"grep\",\n      \"action\": \"allow\",\n      \"pattern\": \"*\"\n    },\n    {\n      \"permission\": \"glob\",\n      \"action\": \"allow\",\n      \"pattern\": \"*\"\n    },\n    {\n      \"permission\": \"external_directory\",\n      \"pattern\": \"C:\\\\Users\\\\leand\\\\.local\\\\share\\\\opencode\\\\tool-output\\\\*\",\n      \"action\": \"allow\"\n    }\n  ],\n  \"options\": {},\n  \"native\": false,\n  \"prompt\": \"# Revisor de Contrato da API\\n\\nVocê revisa a implementação da API (`api/`) e da interface (`app/`) comparando-as com o contrato definido em `contrato-api.md`. Você **não escreveu** este código, não vai alterar arquivos e não vai modificar o contrato. Seu único produto é um relatório de divergências.\\n\\n## Entrada\\n\\nA partir da raiz do repositório, leia:\\n- `contrato-api.md` (o contrato oficial que não deve ser alterado);\\n- Os arquivos da API em `api/` (rotas, controllers, validações);\\n- Os arquivos da interface em `app/` (chamadas HTTP, serviços, mocks ou integração com a API).\\n\\n## Procedimento\\n\\n1. Leia integralmente o arquivo `contrato-api.md` e liste todas as rotas, métodos HTTP, parâmetros de entrada (query, params, body), campos de saída (response), códigos de erro e formatos exigidos.\\n2. Examine a implementação em `api/` (usando `grep`, `glob` e `read`) para verificar se cada rota, método, campo, código de status HTTP e formato corresponde exatamente ao especificado no contrato.\\n3. Examine a implementação em `app/` para verificar se as requisições feitas pela interface respeitam as rotas, métodos e formatos definidos no contrato.\\n4. Identifique qualquer divergência entre o código e o `contrato-api.md`.\\n\\n## O que você procura (Divergências)\\n\\n- **Rota divergente** — caminho da rota na API ou na interface diferente do contrato.\\n- **Método HTTP incorreto** — GET, POST, PUT, DELETE, etc., divergindo do contrato.\\n- **Campos de entrada/saída incorretos** — campos faltando, sobrando ou com tipos/nomes diferentes no body, query, params ou resposta.\\n- **Código de erro incorreto** — status HTTP de erro (ex: 400, 401, 404, 500) diferente do estipulado no contrato.\\n- **Formato divergente** — formato de dados (ex: JSON, datas, estruturas de objetos) que não obedece ao contrato.\\n\\n## Formato do Relatório\\n\\n```markdown\\n## Relatório de Revisão de Contrato\\n\\n| Categoria | Contrato (`contrato-api.md`) | Implementação Encontrada (`api/` ou `app/`) | Local (`arquivo:linha`) | Veredito |\\n|---|---|---|---|---|\\n| Rota / Método | `GET /api/exemplo` | `GET /api/exemplo` | `api/routes/exemplo.js:10` | CONFORME |\\n| Campo de Saída | `id`, `nome` | Retorna `id`, `nome`, `email` (extra) | `api/controllers/exemplo.js:25` | DIVERGENTE |\\n\\n## Achados de Divergência\\n\\n1. **[Divergência de Campo / Rota / Erro]** Descrição detalhada da divergência encontrada, citando `arquivo:linha` e o que diz o `contrato-api.md`.\\n2. ...\\n\\n## Veredito Geral\\n\\n<uma frase resumindo se a implementação está em conformidade total com o contrato ou quais ajustes são necessários>\\n```\\n\\n## Regras de engajamento\\n\\n- **Não corrija nada.** Você não tem permissão de `write` ou `edit`. Se encontrar um erro, aponte no relatório.\\n- **Não altere o `contrato-api.md`.** O contrato é sagrado e imutável por este subagent.\\n- **Cite `arquivo:linha`** em toda afirmação sobre o código.\\n- **Não invente exigências.** Julgue estritamente com base no que está escrito em `contrato-api.md`.\\n- **Não elogie.** Seja objetivo e direto.\",\n  \"description\": \"Revisa a implementação da API e da interface comparando-as com o contrato definido em contrato-api.md, apontando rotas, métodos HTTP, campos de entrada/saída, códigos de erro e formatos divergentes. Use quando pedirem para revisar o contrato ou auditar a conformidade com a API.\",\n  \"temperature\": 0.1,\n  \"tools\": {\n    \"invalid\": true,\n    \"question\": false,\n    \"bash\": true,\n    \"read\": true,\n    \"glob\": true,\n    \"grep\": true,\n    \"edit\": false,\n    \"write\": false,\n    \"task\": false,\n    \"webfetch\": true,\n    \"todowrite\": true,\n    \"skill\": true\n  }\n}\r\n",
+      "metadata": {
+       "output": "{\n  \"name\": \"revisor-de-contrato\",\n  \"mode\": \"subagent\",\n  \"permission\": [\n    {\n      \"permission\": \"*\",\n      \"action\": \"allow\",\n      \"pattern\": \"*\"\n    },\n    {\n      \"permission\": \"doom_loop\",\n      \"action\": \"ask\",\n      \"pattern\": \"*\"\n    },\n    {\n      \"permission\": \"external_directory\",\n      \"pattern\": \"*\",\n      \"action\": \"ask\"\n    },\n    {\n      \"permission\": \"external_directory\",\n      \"pattern\": \"C:\\\\Users\\\\leand\\\\.local\\\\share\\\\opencode\\\\tool-output\\\\*\",\n      \"action\": \"allow\"\n    },\n    {\n      \"permission\": \"external_directory\",\n      \"pattern\": \"C:\\\\Users\\\\leand\\\\AppData\\\\Local\\\\Temp\\\\opencode\\\\*\",\n      \"action\": \"allow\"\n    },\n    {\n      \"permission\": \"external_directory\",\n      \"pattern\": \"C:\\\\Users\\\\leand\\\\OneDrive\\\\Desktop\\\\gustav\\\\ProjetoSemanaAcademica\\\\semana-academica\\\\.opencode\\\\skills\\\\to-spec\\\\*\",\n      \"action\": \"allow\"\n    },\n    {\n      \"permission\": \"external_directory\",\n      \"pattern\": \"C:\\\\Users\\\\leand\\\\OneDrive\\\\Desktop\\\\gustav\\\\ProjetoSemanaAcademica\\\\semana-academica\\\\.opencode\\\\skills\\\\tdd\\\\*\",\n      \"action\": \"allow\"\n    },\n    {\n      \"permission\": \"external_directory\",\n      \"pattern\": \"C:\\\\Users\\\\leand\\\\OneDrive\\\\Desktop\\\\gustav\\\\ProjetoSemanaAcademica\\\\semana-academica\\\\.opencode\\\\skills\\\\novo-subagente\\\\*\",\n      \"action\": \"allow\"\n    },\n    {\n      \"permission\": \"external_directory\",\n      \"pattern\": \"C:\\\\Users\\\\leand\\\\OneDrive\\\\Desktop\\\\gustav\\\\ProjetoSemanaAcademica\\\\semana-academica\\\\.opencode\\\\skills\\\\padrao-design\\\\*\",\n      \"action\": \"allow\"\n    },\n    {\n      \"permission\": \"external_directory\",\n      \"pattern\": \"C:\\\\Users\\\\leand\\\\OneDrive\\\\Desktop\\\\gustav\\\\ProjetoSemanaAcademica\\\\semana-academica\\\\.opencode\\\\skills\\\\grilling\\\\*\",\n      \"action\": \"allow\"\n    },\n    {\n      \"permission\": \"question\",\n      \"action\": \"deny\",\n      \"pattern\": \"*\"\n    },\n    {\n      \"permission\": \"plan_enter\",\n      \"action\": \"deny\",\n      \"pattern\": \"*\"\n    },\n    {\n      \"permission\": \"plan_exit\",\n      \"action\": \"deny\",\n      \"pattern\": \"*\"\n    },\n    {\n      \"permission\": \"read\",\n      \"pattern\": \"*\",\n      \"action\": \"allow\"\n    },\n    {\n      \"permission\": \"read\",\n      \"pattern\": \"*.env\",\n      \"action\": \"ask\"\n    },\n    {\n      \"permission\": \"read\",\n      \"pattern\": \"*.env.*\",\n      \"action\": \"ask\"\n    },\n    {\n      \"permission\": \"read\",\n      \"pattern\": \"*.env.example\",\n      \"action\": \"allow\"\n    },\n    {\n      \"permission\": \"edit\",\n      \"action\": \"deny\",\n      \"pattern\": \"*\"\n    },\n    {\n      \"permission\": \"task\",\n      \"action\": \"deny\",\n      \"pattern\": \"*\"\n    },\n    {\n      \"permission\": \"bash\",\n      \"action\": \"allow\",\n      \"pattern\": \"*\"\n    },\n    {\n      \"permission\": \"read\",\n      \"action\": \"allow\",\n      \"pattern\": \"*\"\n    },\n    {\n      \"permission\": \"grep\",\n      \"action\": \"allow\",\n      \"pattern\": \"*\"\n    },\n    {\n      \"permission\": \"glob\",\n      \"action\": \"allow\",\n      \"pattern\": \"*\"\n    },\n    {\n      \"permission\": \"external_directory\",\n      \"pattern\": \"C:\\\\Users\\\\leand\\\\.local\\\\share\\\\opencode\\\\tool-output\\\\*\",\n      \"action\": \"allow\"\n    }\n  ],\n  \"options\": {},\n  \"native\": false,\n  \"prompt\": \"# Revisor de Contrato da API\\n\\nVocê revisa a implementação da API (`api/`) e da interface (`app/`) comparando-as com o contrato definido em `contrato-api.md`. Você **não escreveu** este código, não vai alterar arquivos e não vai modificar o contrato. Seu único produto é um relatório de divergências.\\n\\n## Entrada\\n\\nA partir da raiz do repositório, leia:\\n- `contrato-api.md` (o contrato oficial que não deve ser alterado);\\n- Os arquivos da API em `api/` (rotas, controllers, validações);\\n- Os arquivos da interface em `app/` (chamadas HTTP, serviços, mocks ou integração com a API).\\n\\n## Procedimento\\n\\n1. Leia integralmente o arquivo `contrato-api.md` e liste todas as rotas, métodos HTTP, parâmetros de entrada (query, params, body), campos de saída (response), códigos de erro e formatos exigidos.\\n2. Examine a implementação em `api/` (usando `grep`, `glob` e `read`) para verificar se cada rota, método, campo, código de status HTTP e formato corresponde exatamente ao especificado no contrato.\\n3. Examine a implementação em `app/` para verificar se as requisições feitas pela interface respeitam as rotas, métodos e formatos definidos no contrato.\\n4. Identifique qualquer divergência entre o código e o `contrato-api.md`.\\n\\n## O que você procura (Divergências)\\n\\n- **Rota divergente** — caminho da rota na API ou na interface diferente do contrato.\\n- **Método HTTP incorreto** — GET, POST, PUT, DELETE, etc., divergindo do contrato.\\n- **Campos de entrada/saída incorretos** — campos faltando, sobrando ou com tipos/nomes diferentes no body, query, params ou resposta.\\n- **Código de erro incorreto** — status HTTP de erro (ex: 400, 401, 404, 500) diferente do estipulado no contrato.\\n- **Formato divergente** — formato de dados (ex: JSON, datas, estruturas de objetos) que não obedece ao contrato.\\n\\n## Formato do Relatório\\n\\n```markdown\\n## Relatório de Revisão de Contrato\\n\\n| Categoria | Contrato (`contrato-api.md`) | Implementação Encontrada (`api/` ou `app/`) | Local (`arquivo:linha`) | Veredito |\\n|---|---|---|---|---|\\n| Rota / Método | `GET /api/exemplo` | `GET /api/exemplo` | `api/routes/exemplo.js:10` | CONFORME |\\n| Campo de Saída | `id`, `nome` | Retorna `id`, `nome`, `email` (extra) | `api/controllers/exemplo.js:25` | DIVERGENTE |\\n\\n## Achados de Divergência\\n\\n1. **[Divergência de Campo / Rota / Erro]** Descrição detalhada da divergência encontrada, citando `arquivo:linha` e o que diz o `contrato-api.md`.\\n2. ...\\n\\n## Veredito Geral\\n\\n<uma frase resumindo se a implementação está em conformidade total com o contrato ou quais ajustes são necessários>\\n```\\n\\n## Regras de engajamento\\n\\n- **Não corrija nada.** Você não tem permissão de `write` ou `edit`. Se encontrar um erro, aponte no relatório.\\n- **Não altere o `contrato-api.md`.** O contrato é sagrado e imutável por este subagent.\\n- **Cite `arquivo:linha`** em toda afirmação sobre o código.\\n- **Não invente exigências.** Julgue estritamente com base no que está escrito em `contrato-api.md`.\\n- **Não elogie.** Seja objetivo e direto.\",\n  \"description\": \"Revisa a implementação da API e da interface comparando-as com o contrato definido em contrato-api.md, apontando rotas, métodos HTTP, campos de entrada/saída, códigos de erro e formatos divergentes. Use quando pedirem para revisar o contrato ou auditar a conformidade com a API.\",\n  \"temperature\": 0.1,\n  \"tools\": {\n    \"invalid\": true,\n    \"question\": false,\n    \"bash\": true,\n    \"read\": true,\n    \"glob\": true,\n    \"grep\": true,\n    \"edit\": false,\n    \"write\": false,\n    \"task\": false,\n    \"webfetch\": true,\n    \"todowrite\": true,\n    \"skill\": true\n  }\n}\r\n",
+       "exit": 0,
+       "truncated": false
+      },
+      "title": "opencode debug agent revisor-de-contrato",
+      "time": {
+       "start": 1789927138693,
+       "end": 1789927147888
+      }
+     },
+     "metadata": {
+      "google": {
+       "thoughtSignature": "EvsBCvgBAWkUfROS+xvU0gM/Hldm/F+JSO9jWrCQsapQM5ptcZNQBdfAskitB0aivzZFgQSj0dgA7rIbXyLjEGU8YGMA/NsZdOQWl/+APbg/gsDkCJfkpGX6UWSq6MRb5gxKxGNv+A1AgKXt+mtZWw+p2Vlx62QLv2A3h3jCE5HNRvNNldPfHSdRvcoHCPNtc2dkjwNCj3wV+eGLB5oeDridG0VS7tAyj8LAH9lEi9UF107jCsmgshwGCB3aGCMfUaonZ4xMBfpC2aGvUwsB40BISxrPuklWRDdv9a8e2CmXnN1CFM9nkVSsl/sJ3oGuTLIiccwratZT76OX5K4="
+      }
+     },
+     "id": "prt_0bff8a577001KtK1vtobRl2fwq",
+     "sessionID": "ses_f4007d468ffeoXTOCb2TTTDBO2",
+     "messageID": "msg_0bff89d3d001oAjjITnRpyAcMi"
+    },
+    {
+     "reason": "tool-calls",
+     "snapshot": "042e711ae6e225b16f9ab390f7800df932083a95",
+     "type": "step-finish",
+     "tokens": {
+      "total": 16976,
+      "input": 16919,
+      "output": 24,
+      "reasoning": 33,
+      "cache": {
+       "write": 0,
+       "read": 0
+      }
+     },
+     "cost": 0.0052182,
+     "id": "prt_0bff8cd6f001sHJYe0M7Z6V1yB",
+     "sessionID": "ses_f4007d468ffeoXTOCb2TTTDBO2",
+     "messageID": "msg_0bff89d3d001oAjjITnRpyAcMi"
+    }
+   ]
+  },
+  {
+   "info": {
+    "parentID": "msg_0bff82c5e001JldH9SY3XLkMot",
+    "role": "assistant",
+    "mode": "build",
+    "agent": "build",
+    "path": {
+     "cwd": "C:\\Users\\leand\\OneDrive\\Desktop\\gustav\\ProjetoSemanaAcademica\\semana-academica",
+     "root": "C:\\Users\\leand\\OneDrive\\Desktop\\gustav\\ProjetoSemanaAcademica"
+    },
+    "cost": 0.006014,
+    "tokens": {
+     "total": 19196,
+     "input": 19080,
+     "output": 62,
+     "reasoning": 54,
+     "cache": {
+      "write": 0,
+      "read": 0
+     }
+    },
+    "modelID": "gemini-3.5-flash-lite",
+    "providerID": "google",
+    "time": {
+     "created": 1789927150468,
+     "completed": 1789927197906
+    },
+    "finish": "stop",
+    "id": "msg_0bff8d383001i3MwJ1SbgKmR8N",
+    "sessionID": "ses_f4007d468ffeoXTOCb2TTTDBO2"
+   },
+   "parts": [
+    {
+     "snapshot": "042e711ae6e225b16f9ab390f7800df932083a95",
+     "type": "step-start",
+     "id": "prt_0bff9412e001vxc6Zje65ifYFK",
+     "sessionID": "ses_f4007d468ffeoXTOCb2TTTDBO2",
+     "messageID": "msg_0bff8d383001i3MwJ1SbgKmR8N"
+    },
+    {
+     "type": "text",
+     "text": "Subagente `revisor-de-contrato` criado em `.opencode/agent/revisor-de-contrato.md` com ferramentas de escrita, edição e tarefas desativadas, configurado exclusivamente para leitura e análise de conformidade com o `contrato-api.md`.",
+     "time": {
+      "start": 1789927178554,
+      "end": 1789927197370
+     },
+     "id": "prt_0bff9413a001GOHnb7EVZCoRdY",
+     "sessionID": "ses_f4007d468ffeoXTOCb2TTTDBO2",
+     "messageID": "msg_0bff8d383001i3MwJ1SbgKmR8N"
+    },
+    {
+     "reason": "stop",
+     "snapshot": "042e711ae6e225b16f9ab390f7800df932083a95",
+     "type": "step-finish",
+     "tokens": {
+      "total": 19196,
+      "input": 19080,
+      "output": 62,
+      "reasoning": 54,
+      "cache": {
+       "write": 0,
+       "read": 0
+      }
+     },
+     "cost": 0.006014,
+     "id": "prt_0bff98ba8001UuDSjqN7X656jm",
+     "sessionID": "ses_f4007d468ffeoXTOCb2TTTDBO2",
+     "messageID": "msg_0bff8d383001i3MwJ1SbgKmR8N"
+    }
+   ]
+  },
+  {
+   "info": {
+    "role": "user",
+    "time": {
+     "created": 1789927218398
+    },
+    "agent": "build",
+    "model": {
+     "providerID": "google",
+     "modelID": "gemini-3.5-flash-lite"
+    },
+    "summary": {
+     "diffs": []
+    },
+    "id": "msg_0bff9dcdd0010F6eycgIIpcewh",
+    "sessionID": "ses_f4007d468ffeoXTOCb2TTTDBO2"
+   },
+   "parts": [
+    {
+     "type": "text",
+     "text": "opencode debug agent revisor-de-contrato",
+     "id": "prt_0bff9dcdf001Icrk1pre5Qfil7",
+     "sessionID": "ses_f4007d468ffeoXTOCb2TTTDBO2",
+     "messageID": "msg_0bff9dcdd0010F6eycgIIpcewh"
+    }
+   ]
+  },
+  {
+   "info": {
+    "parentID": "msg_0bff9dcdd0010F6eycgIIpcewh",
+    "role": "assistant",
+    "mode": "build",
+    "agent": "build",
+    "path": {
+     "cwd": "C:\\Users\\leand\\OneDrive\\Desktop\\gustav\\ProjetoSemanaAcademica\\semana-academica",
+     "root": "C:\\Users\\leand\\OneDrive\\Desktop\\gustav\\ProjetoSemanaAcademica"
+    },
+    "cost": 0.00171983,
+    "tokens": {
+     "total": 19361,
+     "input": 2334,
+     "output": 34,
+     "reasoning": 172,
+     "cache": {
+      "write": 0,
+      "read": 16821
+     }
+    },
+    "modelID": "gemini-3.5-flash-lite",
+    "providerID": "google",
+    "time": {
+     "created": 1789927218424,
+     "completed": 1789927223711
+    },
+    "finish": "stop",
+    "id": "msg_0bff9dcf80013dSDM8sWao9MNa",
+    "sessionID": "ses_f4007d468ffeoXTOCb2TTTDBO2"
+   },
+   "parts": [
+    {
+     "snapshot": "042e711ae6e225b16f9ab390f7800df932083a95",
+     "type": "step-start",
+     "id": "prt_0bff9ed91001NmYQbPABCXmGkK",
+     "sessionID": "ses_f4007d468ffeoXTOCb2TTTDBO2",
+     "messageID": "msg_0bff9dcf80013dSDM8sWao9MNa"
+    },
+    {
+     "type": "text",
+     "text": "Subagente `revisor-de-contrato` validado. Ferramentas `edit`, `write` e `task` desativadas com sucesso.",
+     "time": {
+      "start": 1789927222680,
+      "end": 1789927222844
+     },
+     "id": "prt_0bff9ed98001M8iPCGsnwWUJfB",
+     "sessionID": "ses_f4007d468ffeoXTOCb2TTTDBO2",
+     "messageID": "msg_0bff9dcf80013dSDM8sWao9MNa"
+    },
+    {
+     "reason": "stop",
+     "snapshot": "042e711ae6e225b16f9ab390f7800df932083a95",
+     "type": "step-finish",
+     "tokens": {
+      "total": 19361,
+      "input": 2334,
+      "output": 34,
+      "reasoning": 172,
+      "cache": {
+       "write": 0,
+       "read": 16821
+      }
+     },
+     "cost": 0.00171983,
+     "id": "prt_0bff9f008001kcI8Fkv7Ypx5W9",
+     "sessionID": "ses_f4007d468ffeoXTOCb2TTTDBO2",
+     "messageID": "msg_0bff9dcf80013dSDM8sWao9MNa"
+    }
+   ]
+  }
+ ]
+}

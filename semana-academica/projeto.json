@@ -1,0 +1,9 @@
+{
+  "stack": "Node.js + Express + SQLite (API); Vue.js (interface web)",
+  "api": {
+    "pasta": "api",
+    "instalar": "npm install",
+    "iniciar": "npm start"
+  },
+  "testes": ["npm test"]
+}
