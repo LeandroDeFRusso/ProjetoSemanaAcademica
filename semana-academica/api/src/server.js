@@ -317,7 +317,7 @@ export function criarServidor(portaDesejada = 3000) {
 
       const sala = db.prepare('SELECT * FROM salas WHERE id = ?').get(salaId);
       if (!sala) {
-        return res.status(422).json({ erro: 'SALA_INEXISTENTE', mensagem: 'Sala não encontrada' });
+        return res.status(404).json({ erro: 'NAO_ENCONTRADO', mensagem: 'Sala não encontrada' });
       }
       if (vagas === undefined || vagas === null || vagas < 1 || vagas > sala.capacidade) {
         return res.status(422).json({ erro: 'VAGAS_ACIMA_DA_CAPACIDADE', mensagem: 'Vagas acima da capacidade ou inválidas' });
