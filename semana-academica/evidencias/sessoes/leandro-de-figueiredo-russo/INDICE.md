@@ -28,4 +28,12 @@ Requisições são chamadas ao modelo: cada passo do agente é uma. Skills conta
 | 20/09 17:31 | [New session - 2026-09-20T20:31:54.605Z](ses_f3f7b5712ffex7vbbGtv9LCMLn.md) | 18 | tdd | — | 1 / 3 | 0 | 1 | 2 | — |
 | 20/09 17:37 | [New session - 2026-09-20T20:37:51.669Z](ses_f3f75e44affekhHXj9KsE85mXe.md) | 9 | — | auditor | 0 / 0 | 0 | 0 | 0 | — |
 | 20/09 17:58 | [New session - 2026-09-20T20:58:45.895Z](ses_f3f62c0f8ffesokWJyxV4kJTYy.md) | 37 | tdd | — | 0 / 8 | 0 | 7 | 0 | — |
-| | **Total: 16 sessões** | 298 | novo-subagente, grilling (3), to-spec (2), tdd (6) | auditor | 9 / 35 | 6 | 17 | 3 | — |
+| 20/09 18:14 | [New session - 2026-09-20T21:14:15.300Z](ses_f3f54927bffe7BCRhs5DzdYaE1.md) | 4 | — | auditor | 0 / 0 | 0 | 0 | 0 | — |
+| 20/09 18:17 | [New session - 2026-09-20T21:17:25.326Z](ses_f3f51ac31ffeIp0XplJmzM5t9B.md) | 39 | — | — | 2 / 3 | 0 | 1 | 0 | — |
+| 20/09 18:51 | [New session - 2026-09-20T21:51:07.986Z](ses_f3f32cf2dffegGvRVtEysV7uax.md) | 4 | — | auditor | 0 / 0 | 0 | 0 | 0 | — |
+| 20/09 18:55 | [New session - 2026-09-20T21:55:55.889Z](ses_f3f2e6a8effeUmyOx2dQ1Fu0FG.md) | 0 | — | — | 0 / 0 | 0 | 0 | 0 | — |
+| 20/09 19:04 | [New session - 2026-09-20T22:04:39.980Z](ses_f3f266b53ffesNncKcXFp8qO9L.md) | 0 | — | — | 0 / 0 | 0 | 0 | 0 | — |
+| 20/09 19:42 | [New session - 2026-09-20T22:42:10.474Z](ses_f3f041455ffePKJo1Q000RkkMg.md) | 3 | — | auditor | 0 / 0 | 0 | 0 | 0 | — |
+| 20/09 20:01 | [New session - 2026-09-20T23:01:11.323Z](ses_f3ef2abe4ffeygzRR93b4c9xUk.md) | 5 | — | auditor | 0 / 0 | 0 | 0 | 0 | — |
+| 20/09 20:04 | [New session - 2026-09-20T23:04:49.438Z](ses_f3eef57e1ffeGumNM9eEi2z6M4.md) | 56 | front-end | — | 7 / 5 | 2 | 1 | 3 | — |
+| | **Total: 24 sessões** | 409 | novo-subagente, grilling (3), to-spec (2), tdd (6), front-end | auditor (5) | 18 / 43 | 8 | 19 | 6 | — |
