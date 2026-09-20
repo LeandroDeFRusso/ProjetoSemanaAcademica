@@ -277,3 +277,181 @@ test('POST /atividades com sucesso calcula cargaHorariaMinutos corretamente e ig
     app.close();
   }
 });
+
+test('POST /atividades com encontro de 5 horas retorna 422 ENCONTRO_INVALIDO', async () => {
+  process.env.MODO_TESTE = '1';
+  const { app, porta } = await criarServidor(0);
+
+  try {
+    await fetch(`http://localhost:${porta}/_teste/reset`, { method: 'POST' });
+
+    const res = await fetch(`http://localhost:${porta}/atividades`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Usuario': 'org-ana'
+      },
+      body: JSON.stringify({
+        titulo: 'Palestra Longa Demaiss',
+        tipo: 'palestra',
+        salaId: 'auditorio',
+        vagas: 100,
+        encontros: [
+          { inicio: '2026-10-19T10:00:00-03:00', fim: '2026-10-19T15:00:00-03:00' }
+        ]
+      })
+    });
+
+    assert.equal(res.status, 422);
+    const body = await res.json();
+    assert.equal(body.erro, 'ENCONTRO_INVALIDO');
+  } finally {
+    app.close();
+  }
+});
+
+test('POST /atividades com encontro cruzando a meia-noite retorna 422 ENCONTRO_INVALIDO', async () => {
+  process.env.MODO_TESTE = '1';
+  const { app, porta } = await criarServidor(0);
+
+  try {
+    await fetch(`http://localhost:${porta}/_teste/reset`, { method: 'POST' });
+
+    const res = await fetch(`http://localhost:${porta}/atividades`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Usuario': 'org-ana'
+      },
+      body: JSON.stringify({
+        titulo: 'Palestra Meia Noite',
+        tipo: 'palestra',
+        salaId: 'auditorio',
+        vagas: 100,
+        encontros: [
+          { inicio: '2026-10-19T23:00:00-03:00', fim: '2026-10-20T01:00:00-03:00' }
+        ]
+      })
+    });
+
+    assert.equal(res.status, 422);
+    const body = await res.json();
+    assert.equal(body.erro, 'ENCONTRO_INVALIDO');
+  } finally {
+    app.close();
+  }
+});
+
+test('POST /atividades com encontros sobrepostos na mesma atividade retorna 422 ENCONTRO_INVALIDO', async () => {
+  process.env.MODO_TESTE = '1';
+  const { app, porta } = await criarServidor(0);
+
+  try {
+    await fetch(`http://localhost:${porta}/_teste/reset`, { method: 'POST' });
+
+    const res = await fetch(`http://localhost:${porta}/atividades`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Usuario': 'org-ana'
+      },
+      body: JSON.stringify({
+        titulo: 'Minicurso Sobreposto',
+        tipo: 'minicurso',
+        salaId: 'sala-101',
+        vagas: 30,
+        encontros: [
+          { inicio: '2026-10-19T10:00:00-03:00', fim: '2026-10-19T12:00:00-03:00' },
+          { inicio: '2026-10-19T11:00:00-03:00', fim: '2026-10-19T13:00:00-03:00' }
+        ]
+      })
+    });
+
+    assert.equal(res.status, 422);
+    const body = await res.json();
+    assert.equal(body.erro, 'ENCONTRO_INVALIDO');
+  } finally {
+    app.close();
+  }
+});
+
+test('POST /atividades com vagas <= 0 retorna 422 VAGAS_ACIMA_DA_CAPACIDADE', async () => {
+  process.env.MODO_TESTE = '1';
+  const { app, porta } = await criarServidor(0);
+
+  try {
+    await fetch(`http://localhost:${porta}/_teste/reset`, { method: 'POST' });
+
+    const res = await fetch(`http://localhost:${porta}/atividades`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Usuario': 'org-ana'
+      },
+      body: JSON.stringify({
+        titulo: 'Palestra Vagas Zero',
+        tipo: 'palestra',
+        salaId: 'auditorio',
+        vagas: 0,
+        encontros: [
+          { inicio: '2026-10-19T10:00:00-03:00', fim: '2026-10-19T12:00:00-03:00' }
+        ]
+      })
+    });
+
+    assert.equal(res.status, 422);
+    const body = await res.json();
+    assert.equal(body.erro, 'VAGAS_ACIMA_DA_CAPACIDADE');
+  } finally {
+    app.close();
+  }
+});
+
+test('POST /atividades com horário conflitante em sala cuja atividade existente está cancelada permite criar (201)', async () => {
+  process.env.MODO_TESTE = '1';
+  const { app, porta } = await criarServidor(0);
+
+  try {
+    await fetch(`http://localhost:${porta}/_teste/reset`, { method: 'POST' });
+
+    // Inserir atividade cancelada no mesmo horário e sala
+    await fetch(`http://localhost:${porta}/_teste/atividades`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        id: 'atv_canc_conf',
+        titulo: 'Palestra Cancelada',
+        tipo: 'palestra',
+        salaId: 'auditorio',
+        vagas: 100,
+        encontros: [
+          { id: 'enc_c_conf', inicio: '2026-10-19T10:00:00-03:00', fim: '2026-10-19T12:00:00-03:00' }
+        ],
+        cancelada: 1
+      })
+    });
+
+    const res = await fetch(`http://localhost:${porta}/atividades`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Usuario': 'org-ana'
+      },
+      body: JSON.stringify({
+        titulo: 'Nova Palestra No Mesmo Horario',
+        tipo: 'palestra',
+        salaId: 'auditorio',
+        vagas: 100,
+        encontros: [
+          { inicio: '2026-10-19T10:00:00-03:00', fim: '2026-10-19T12:00:00-03:00' }
+        ]
+      })
+    });
+
+    assert.equal(res.status, 201);
+    const body = await res.json();
+    assert.ok(body.id);
+  } finally {
+    app.close();
+  }
+});

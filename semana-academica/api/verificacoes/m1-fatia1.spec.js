@@ -124,3 +124,39 @@ test('GET /atividades filtra por dia e tipo, ordena por R10 e calcula situacao p
     app.close();
   }
 });
+
+test('GET /atividades inclui atividades canceladas na listagem (R10)', async () => {
+  process.env.MODO_TESTE = '1';
+  const { app, porta } = await criarServidor(0);
+  
+  try {
+    await fetch(`http://localhost:${porta}/_teste/reset`, { method: 'POST' });
+
+    await fetch(`http://localhost:${porta}/_teste/atividades`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        id: 'atv_canc_list',
+        titulo: 'Palestra Cancelada na Lista',
+        tipo: 'palestra',
+        salaId: 'auditorio',
+        vagas: 100,
+        encontros: [
+          { id: 'enc_cl', inicio: '2026-10-19T10:00:00-03:00', fim: '2026-10-19T12:00:00-03:00' }
+        ],
+        cancelada: 1
+      })
+    });
+
+    const res = await fetch(`http://localhost:${porta}/atividades`, {
+      headers: { 'X-Usuario': 'org-ana' }
+    });
+    assert.equal(res.status, 200);
+    const lista = await res.json();
+    const encontrada = lista.find(a => a.id === 'atv_canc_list');
+    assert.ok(encontrada);
+    assert.equal(encontrada.situacao, 'cancelada');
+  } finally {
+    app.close();
+  }
+});
