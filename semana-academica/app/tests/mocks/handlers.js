@@ -1,6 +1,19 @@
 import { http, HttpResponse } from 'msw';
 
 export const handlers = [
+  http.get('/inscricoes', () => {
+    return HttpResponse.json([
+      {
+        id: 'ins_1',
+        atividadeId: 'atv_1',
+        participanteId: 'p-carla',
+        status: 'confirmada',
+        posicaoNaEspera: null,
+        convocadaAte: null,
+        criadaEm: '2026-10-19T08:00:00-03:00'
+      }
+    ]);
+  }),
   http.get('/atividades/:id', ({ params }) => {
     return HttpResponse.json({
       id: params.id,
