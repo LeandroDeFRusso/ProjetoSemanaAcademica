@@ -169,6 +169,7 @@ export function criarServidor(portaDesejada = 3000) {
     if (req.path.startsWith('/_teste/') || req.path.startsWith('/certificados/')) {
       return next();
     }
+    processarExpiracoesEConvocacoes(db);
     const usuarioId = req.headers['x-usuario'];
     if (!usuarioId) {
       return res.status(401).json({ erro: 'USUARIO_DESCONHECIDO', mensagem: 'Usuário não identificado' });
@@ -612,11 +613,76 @@ export function criarServidor(portaDesejada = 3000) {
       });
     });
 
+  function formatarDataIso(ms) {
+    const msLocal = ms - (3 * 3600 * 1000);
+    const dUtc = new Date(msLocal);
+    const pad = (n) => String(n).padStart(2, '0');
+    const yyyy = dUtc.getUTCFullYear();
+    const mm = pad(dUtc.getUTCMonth() + 1);
+    const dd = pad(dUtc.getUTCDate());
+    const hh = pad(dUtc.getUTCHours());
+    const min = pad(dUtc.getUTCMinutes());
+    const ss = pad(dUtc.getUTCSeconds());
+    return `${yyyy}-${mm}-${dd}T${hh}:${min}:${ss}-03:00`;
+  }
+
+  function atualizarPosicoesEspera(db, atividadeId) {
+    const esperaRows = db.prepare("SELECT id FROM inscricoes WHERE atividadeId = ? AND status = 'em_espera' ORDER BY posicaoNaEspera ASC, criadaEm ASC").all(atividadeId);
+    const stmtUpdate = db.prepare('UPDATE inscricoes SET posicaoNaEspera = ? WHERE id = ?');
+    esperaRows.forEach((row, index) => {
+      stmtUpdate.run(index + 1, row.id);
+    });
+  }
+
+  function liberarVagaEConvocar(db, atividadeId, tempoLiberacaoOverride = null) {
+    const atividade = db.prepare('SELECT * FROM atividades WHERE id = ?').get(atividadeId);
+    if (!atividade) return;
+
+    const encontros = db.prepare('SELECT * FROM encontros WHERE atividadeId = ? ORDER BY inicio ASC').all(atividadeId);
+    if (encontros.length === 0) return;
+
+    const relogioRow = db.prepare('SELECT valor FROM sistema WHERE chave = ?').get('relogio');
+    const agoraMs = tempoLiberacaoOverride !== null ? tempoLiberacaoOverride : new Date(relogioRow ? relogioRow.valor : Date.now()).getTime();
+    const primeiroInicioMs = new Date(encontros[0].inicio).getTime();
+    const fechamentoMs = primeiroInicioMs - 30 * 60 * 1000;
+
+    if (agoraMs >= fechamentoMs) {
+      return;
+    }
+
+    const ocupadas = getAtividadeOcupadas(atividadeId);
+    if (ocupadas < atividade.vagas) {
+      const primeiroEspera = db.prepare("SELECT * FROM inscricoes WHERE atividadeId = ? AND status = 'em_espera' ORDER BY posicaoNaEspera ASC, criadaEm ASC LIMIT 1").get(atividadeId);
+      if (primeiroEspera) {
+        const prazoMs = Math.min(agoraMs + 2 * 60 * 60 * 1000, fechamentoMs);
+        const convocadaAte = formatarDataIso(prazoMs);
+
+        db.prepare("UPDATE inscricoes SET status = 'convocada', posicaoNaEspera = NULL, convocadaAte = ? WHERE id = ?").run(convocadaAte, primeiroEspera.id);
+        atualizarPosicoesEspera(db, atividadeId);
+      }
+    }
+  }
+
+  function processarExpiracoesEConvocacoes(db) {
+    const relogioRow = db.prepare('SELECT valor FROM sistema WHERE chave = ?').get('relogio');
+    const agoraMs = new Date(relogioRow ? relogioRow.valor : Date.now()).getTime();
+
+    const expiradas = db.prepare("SELECT * FROM inscricoes WHERE status = 'convocada' AND convocadaAte IS NOT NULL").all();
+    for (const inc of expiradas) {
+      const ateMs = new Date(inc.convocadaAte).getTime();
+      if (agoraMs >= ateMs) {
+        db.prepare("UPDATE inscricoes SET status = 'expirada', posicaoNaEspera = NULL, convocadaAte = NULL WHERE id = ?").run(inc.id);
+        liberarVagaEConvocar(db, inc.atividadeId, ateMs);
+      }
+    }
+  }
+
     // POST /inscricoes/:id/cancelamento
     app.post('/inscricoes/:id/cancelamento', (req, res) => {
       if (req.usuario.papel !== 'participante') {
         return res.status(403).json({ erro: 'SOMENTE_PARTICIPANTE', mensagem: 'Apenas participante' });
       }
+      processarExpiracoesEConvocacoes(db);
       const inscricao = db.prepare('SELECT * FROM inscricoes WHERE id = ?').get(req.params.id);
       if (!inscricao) {
         return res.status(404).json({ erro: 'NAO_ENCONTRADO', mensagem: 'Inscrição não encontrada' });
@@ -640,7 +706,89 @@ export function criarServidor(portaDesejada = 3000) {
         }
       }
 
+      const statusAntigo = inscricao.status;
       db.prepare("UPDATE inscricoes SET status = 'cancelada', posicaoNaEspera = NULL, convocadaAte = NULL WHERE id = ?").run(inscricao.id);
+
+      if (statusAntigo === 'confirmada' || statusAntigo === 'convocada') {
+        liberarVagaEConvocar(db, inscricao.atividadeId);
+      }
+
+      const atualizada = db.prepare('SELECT * FROM inscricoes WHERE id = ?').get(inscricao.id);
+      res.json({
+        id: atualizada.id,
+        atividadeId: atualizada.atividadeId,
+        participanteId: atualizada.participanteId,
+        status: atualizada.status,
+        posicaoNaEspera: atualizada.posicaoNaEspera,
+        convocadaAte: atualizada.convocadaAte,
+        criadaEm: atualizada.criadaEm
+      });
+    });
+
+    // POST /inscricoes/:id/confirmacao
+    app.post('/inscricoes/:id/confirmacao', (req, res) => {
+      if (req.usuario.papel !== 'participante') {
+        return res.status(403).json({ erro: 'SOMENTE_PARTICIPANTE', mensagem: 'Apenas participante' });
+      }
+      processarExpiracoesEConvocacoes(db);
+
+      const inscricao = db.prepare('SELECT * FROM inscricoes WHERE id = ?').get(req.params.id);
+      if (!inscricao || inscricao.participanteId !== req.usuario.id) {
+        return res.status(404).json({ erro: 'NAO_ENCONTRADO', mensagem: 'Inscrição não encontrada' });
+      }
+
+      if (inscricao.status === 'expirada') {
+        return res.status(422).json({ erro: 'CONVOCACAO_EXPIRADA', mensagem: 'Convocação expirada' });
+      }
+      if (inscricao.status !== 'convocada') {
+        return res.status(422).json({ erro: 'SEM_CONVOCACAO', mensagem: 'Inscrição não está convocada' });
+      }
+
+      const relogioRow = db.prepare('SELECT valor FROM sistema WHERE chave = ?').get('relogio');
+      const agoraMs = new Date(relogioRow ? relogioRow.valor : Date.now()).getTime();
+      if (inscricao.convocadaAte) {
+        const ateMs = new Date(inscricao.convocadaAte).getTime();
+        if (agoraMs > ateMs) {
+          return res.status(422).json({ erro: 'CONVOCACAO_EXPIRADA', mensagem: 'Convocação expirada' });
+        }
+      }
+
+      const atividade = db.prepare('SELECT * FROM atividades WHERE id = ?').get(inscricao.atividadeId);
+
+      const novosEncontros = db.prepare('SELECT inicio, fim FROM encontros WHERE atividadeId = ?').all(atividade.id);
+      const encontrosAtivos = db.prepare(`
+        SELECT e.inicio, e.fim 
+        FROM inscricoes i
+        JOIN encontros e ON i.atividadeId = e.atividadeId
+        WHERE i.participanteId = ? AND i.status IN ('confirmada', 'convocada') AND i.id != ?
+      `).all(req.usuario.id, inscricao.id);
+
+      for (const novo of novosEncontros) {
+        const novoInicio = new Date(novo.inicio).getTime();
+        const novoFim = new Date(novo.fim).getTime();
+        for (const ativo of encontrosAtivos) {
+          const ativoInicio = new Date(ativo.inicio).getTime();
+          const ativoFim = new Date(ativo.fim).getTime();
+          if (novoInicio < ativoFim && novoFim > ativoInicio) {
+            return res.status(409).json({ erro: 'CONFLITO_DE_HORARIO', mensagem: 'Conflito de horário' });
+          }
+        }
+      }
+
+      if (atividade.tipo === 'minicurso') {
+        const minicursosAtivos = db.prepare(`
+          SELECT COUNT(*) as cnt 
+          FROM inscricoes i
+          JOIN atividades a ON i.atividadeId = a.id
+          WHERE i.participanteId = ? AND a.tipo = 'minicurso' AND i.status IN ('confirmada', 'convocada') AND i.id != ?
+        `).get(req.usuario.id, inscricao.id);
+
+        if (minicursosAtivos && minicursosAtivos.cnt >= 3) {
+          return res.status(422).json({ erro: 'LIMITE_DE_MINICURSOS', mensagem: 'Limite de minicursos atingido' });
+        }
+      }
+
+      db.prepare("UPDATE inscricoes SET status = 'confirmada', posicaoNaEspera = NULL, convocadaAte = NULL WHERE id = ?").run(inscricao.id);
 
       const atualizada = db.prepare('SELECT * FROM inscricoes WHERE id = ?').get(inscricao.id);
       res.json({
