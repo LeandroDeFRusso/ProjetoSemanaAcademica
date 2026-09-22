@@ -612,6 +612,48 @@ export function criarServidor(portaDesejada = 3000) {
       });
     });
 
+    // POST /inscricoes/:id/cancelamento
+    app.post('/inscricoes/:id/cancelamento', (req, res) => {
+      if (req.usuario.papel !== 'participante') {
+        return res.status(403).json({ erro: 'SOMENTE_PARTICIPANTE', mensagem: 'Apenas participante' });
+      }
+      const inscricao = db.prepare('SELECT * FROM inscricoes WHERE id = ?').get(req.params.id);
+      if (!inscricao) {
+        return res.status(404).json({ erro: 'NAO_ENCONTRADO', mensagem: 'Inscrição não encontrada' });
+      }
+      if (inscricao.participanteId !== req.usuario.id) {
+        return res.status(404).json({ erro: 'NAO_ENCONTRADO', mensagem: 'Inscrição não encontrada' });
+      }
+      if (inscricao.status === 'cancelada' || inscricao.status === 'expirada') {
+        return res.status(422).json({ erro: 'INSCRICAO_INATIVA', mensagem: 'Inscrição inativa' });
+      }
+      const atividade = db.prepare('SELECT * FROM atividades WHERE id = ?').get(inscricao.atividadeId);
+      if (atividade) {
+        const encontros = db.prepare('SELECT * FROM encontros WHERE atividadeId = ? ORDER BY inicio ASC').all(atividade.id);
+        if (encontros.length > 0) {
+          const relogioRow = db.prepare('SELECT valor FROM sistema WHERE chave = ?').get('relogio');
+          const agoraMs = new Date(relogioRow ? relogioRow.valor : Date.now()).getTime();
+          const primeiroInicioMs = new Date(encontros[0].inicio).getTime();
+          if (agoraMs >= primeiroInicioMs) {
+            return res.status(422).json({ erro: 'ATIVIDADE_JA_INICIADA', mensagem: 'Atividade já iniciada' });
+          }
+        }
+      }
+
+      db.prepare("UPDATE inscricoes SET status = 'cancelada', posicaoNaEspera = NULL, convocadaAte = NULL WHERE id = ?").run(inscricao.id);
+
+      const atualizada = db.prepare('SELECT * FROM inscricoes WHERE id = ?').get(inscricao.id);
+      res.json({
+        id: atualizada.id,
+        atividadeId: atualizada.atividadeId,
+        participanteId: atualizada.participanteId,
+        status: atualizada.status,
+        posicaoNaEspera: atualizada.posicaoNaEspera,
+        convocadaAte: atualizada.convocadaAte,
+        criadaEm: atualizada.criadaEm
+      });
+    });
+
 
 
   return new Promise((resolve) => {
