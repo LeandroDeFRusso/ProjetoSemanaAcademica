@@ -27,4 +27,5 @@ Requisições são chamadas ao modelo: cada passo do agente é uma. Skills conta
 | 21/09 22:36 | [Fatia 2: Telas de inscrições e espera](ses_f393e549fffe0i671Oc8VRzx59.md) | 39 | tdd, front-end | — | 4 / 2 | 0 | 0 | 0 | — |
 | 21/09 23:00 | [Fatia 3: telas de inscrição e minhas inscrições](ses_f39280493ffeP4ETo9fkhkswl3.md) | 19 | tdd, front-end | — | 2 / 0 | 0 | 0 | 0 | — |
 | 21/09 23:09 | [Desenvolvimento Fatia 4: Inscrições e Status](ses_f392030fbffe9m11g671kwO6u6.md) | 16 | front-end | — | 1 / 0 | 0 | 0 | 0 | — |
-| | **Total: 15 sessões** | 340 | grilling, to-spec, tdd (6), front-end (4), padrao-design | auditor (2) | 32 / 26 | 5 | 9 | 1 | — |
+| 21/09 23:21 | [Auditoria de contrato-api.md na api e app](ses_f3914888bffejDK1zHYAS1xfZj.md) | 13 | — | — | 0 / 0 | 0 | 0 | 0 | — |
+| | **Total: 16 sessões** | 353 | grilling, to-spec, tdd (6), front-end (4), padrao-design | auditor (2) | 32 / 26 | 5 | 9 | 1 | — |

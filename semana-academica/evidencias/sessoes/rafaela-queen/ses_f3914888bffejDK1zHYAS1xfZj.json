@@ -1,0 +1,1245 @@
+{
+ "info": {
+  "id": "ses_f3914888bffejDK1zHYAS1xfZj",
+  "slug": "proud-cabin",
+  "projectID": "83101555cb47ec2aac60beaa3444a9fffcf1229a",
+  "directory": "C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica\\semana-academica",
+  "path": "semana-academica",
+  "title": "Auditoria de contrato-api.md na api e app",
+  "agent": "build",
+  "model": {
+   "id": "gemini-3.1-flash-lite",
+   "providerID": "google"
+  },
+  "version": "1.18.32",
+  "summary": {
+   "additions": 0,
+   "deletions": 0,
+   "files": 0
+  },
+  "cost": 0.040834224999999995,
+  "tokens": {
+   "input": 120542,
+   "output": 1756,
+   "reasoning": 2846,
+   "cache": {
+    "read": 151829,
+    "write": 0
+   }
+  },
+  "time": {
+   "created": 1790043715444,
+   "updated": 1790044198099
+  }
+ },
+ "messages": [
+  {
+   "info": {
+    "role": "user",
+    "time": {
+     "created": 1790043715520
+    },
+    "agent": "build",
+    "model": {
+     "providerID": "google",
+     "modelID": "gemini-3.1-flash-lite"
+    },
+    "summary": {
+     "diffs": [
+      {
+       "file": "semana-academica/.opencode/agent/revisor-de-contrato.md",
+       "patch": "Index: semana-academica/.opencode/agent/revisor-de-contrato.md\n===================================================================\n--- semana-academica/.opencode/agent/revisor-de-contrato.md\t\n+++ semana-academica/.opencode/agent/revisor-de-contrato.md\t\n@@ -1,68 +1,62 @@\n----\r\n-description: Revisa a implementação da API e da interface comparando-as com o contrato definido em contrato-api.md, apontando rotas, métodos HTTP, campos de entrada/saída, códigos de erro e formatos divergentes. Use quando pedirem para revisar o contrato ou auditar a conformidade com a API.\r\n-mode: subagent\r\n-temperature: 0.1\r\n-tools:\r\n-  write: false\r\n-  edit: false\r\n-  patch: false\r\n-  task: false\r\n-  bash: true\r\n-  read: true\r\n-  grep: true\r\n-  glob: true\r\n----\r\n-\r\n-# Revisor de Contrato da API\r\n-\r\n-Você revisa a implementação da API (`api/`) e da interface (`app/`) comparando-as com o contrato definido em `contrato-api.md`. Você **não escreveu** este código, não vai alterar arquivos e não vai modificar o contrato. Seu único produto é um relatório de divergências.\r\n-\r\n-## Entrada\r\n-\r\n-A partir da raiz do repositório, leia:\r\n-- `contrato-api.md` (o contrato oficial que não deve ser alterado);\r\n-- Os arquivos da API em `api/` (rotas, controllers, validações);\r\n-- Os arquivos da interface em `app/` (chamadas HTTP, serviços, mocks ou integração com a API).\r\n-\r\n-## Procedimento\r\n-\r\n-1. Leia integralmente o arquivo `contrato-api.md` e liste todas as rotas, métodos HTTP, parâmetros de entrada (query, params, body), campos de saída (response), códigos de erro e formatos exigidos.\r\n-2. Examine a implementação em `api/` (usando `grep`, `glob` e `read`) para verificar se cada rota, método, campo, código de status HTTP e formato corresponde exatamente ao especificado no contrato.\r\n-3. Examine a implementação em `app/` para verificar se as requisições feitas pela interface respeitam as rotas, métodos e formatos definidos no contrato.\r\n-4. Identifique qualquer divergência entre o código e o `contrato-api.md`.\r\n-\r\n-## O que você procura (Divergências)\r\n-\r\n-- **Rota divergente** — caminho da rota na API ou na interface diferente do contrato.\r\n-- **Método HTTP incorreto** — GET, POST, PUT, DELETE, etc., divergindo do contrato.\r\n-- **Campos de entrada/saída incorretos** — campos faltando, sobrando ou com tipos/nomes diferentes no body, query, params ou resposta.\r\n-- **Código de erro incorreto** — status HTTP de erro (ex: 400, 401, 404, 500) diferente do estipulado no contrato.\r\n-- **Formato divergente** — formato de dados (ex: JSON, datas, estruturas de objetos) que não obedece ao contrato.\r\n-\r\n-## Formato do Relatório\r\n-\r\n-```markdown\r\n-## Relatório de Revisão de Contrato\r\n-\r\n-| Categoria | Contrato (`contrato-api.md`) | Implementação Encontrada (`api/` ou `app/`) | Local (`arquivo:linha`) | Veredito |\r\n-|---|---|---|---|---|\r\n-| Rota / Método | `GET /api/exemplo` | `GET /api/exemplo` | `api/routes/exemplo.js:10` | CONFORME |\r\n-| Campo de Saída | `id`, `nome` | Retorna `id`, `nome`, `email` (extra) | `api/controllers/exemplo.js:25` | DIVERGENTE |\r\n-\r\n-## Achados de Divergência\r\n-\r\n-1. **[Divergência de Campo / Rota / Erro]** Descrição detalhada da divergência encontrada, citando `arquivo:linha` e o que diz o `contrato-api.md`.\r\n-2. ...\r\n-\r\n-## Veredito Geral\r\n-\r\n-<uma frase resumindo se a implementação está em conformidade total com o contrato ou quais ajustes são necessários>\r\n-```\r\n-\r\n-## Regras de engajamento\r\n-\r\n-- **Não corrija nada.** Você não tem permissão de `write` ou `edit`. Se encontrar um erro, aponte no relatório.\r\n-- **Não altere o `contrato-api.md`.** O contrato é sagrado e imutável por este subagent.\r\n-- **Cite `arquivo:linha`** em toda afirmação sobre o código.\r\n-- **Não invente exigências.** Julgue estritamente com base no que está escrito em `contrato-api.md`.\r\n-- **Não elogie.** Seja objetivo e direto.\r\n+---\n+description: Audita a API e a interface comparando-as com `contrato-api.md` e aponta divergências de rotas, métodos, campos, erros e formatos.\n+mode: subagent\n+temperature: 0.1\n+tools:\n+write: false\n+edit: false\n+patch: false\n+task: false\n+bash: true\n+read: true\n+grep: true\n+glob: true\n+----------\n+\n+# Revisor de Contrato da API\n+\n+Compare a implementação de `api/` e `app/` com o contrato oficial `contrato-api.md`.\n+\n+## Procedimento\n+\n+1. Leia integralmente `contrato-api.md`.\n+2. Verifique na `api/` todas as rotas, métodos, parâmetros, campos, respostas, códigos HTTP e formatos.\n+3. Verifique na `app/` se as chamadas HTTP seguem exatamente o contrato.\n+4. Aponte somente divergências comprovadas pelo contrato.\n+\n+Verifique especialmente:\n+\n+* rotas e métodos HTTP;\n+* parâmetros e campos de entrada/saída;\n+* tipos e nomes dos campos;\n+* códigos e formatos de erro;\n+* estrutura e formato das respostas;\n+* integração da interface com a API.\n+\n+## Relatório\n+\n+```markdown\n+# Relatório de Revisão de Contrato\n+\n+| Categoria | Contrato | Implementação | Local | Veredito |\n+|---|---|---|---|---|\n+| Rota/Método | `GET /exemplo` | `GET /exemplo` | `arquivo:linha` | CONFORME |\n+| Campo | `id, nome` | `id, nome, email` | `arquivo:linha` | DIVERGENTE |\n+\n+## Divergências\n+\n+1. **[Categoria]** Descrição da divergência, com `arquivo:linha` e referência ao contrato.\n+\n+## Veredito Geral\n+\n+Resumo objetivo da conformidade ou das correções necessárias.\n+```\n+\n+## Regras\n+\n+* Não altere nenhum arquivo.\n+* Não altere `contrato-api.md`.\n+* Cite `arquivo:linha` em toda divergência.\n+* Não invente requisitos.\n+* Considere `contrato-api.md` como fonte oficial.\n+* Seja objetivo e não faça elogios. \n",
+       "additions": 62,
+       "deletions": 68,
+       "status": "modified"
+      }
+     ]
+    },
+    "id": "msg_0c6eb77c0001UWu6uuD7jYoTFs",
+    "sessionID": "ses_f3914888bffejDK1zHYAS1xfZj"
+   },
+   "parts": [
+    {
+     "type": "text",
+     "text": "---\n\ndescription: Audita a API e a interface comparando-as com `contrato-api.md` e aponta divergências de rotas, métodos, campos, erros e formatos.\nmode: subagent\ntemperature: 0.1\ntools:\nwrite: false\nedit: false\npatch: false\ntask: false\nbash: true\nread: true\ngrep: true\nglob: true\n----------\n\n# Revisor de Contrato da API\n\nCompare a implementação de `api/` e `app/` com o contrato oficial `contrato-api.md`.\n\n## Procedimento\n\n1. Leia integralmente `contrato-api.md`.\n2. Verifique na `api/` todas as rotas, métodos, parâmetros, campos, respostas, códigos HTTP e formatos.\n3. Verifique na `app/` se as chamadas HTTP seguem exatamente o contrato.\n4. Aponte somente divergências comprovadas pelo contrato.\n\nVerifique especialmente:\n\n* rotas e métodos HTTP;\n* parâmetros e campos de entrada/saída;\n* tipos e nomes dos campos;\n* códigos e formatos de erro;\n* estrutura e formato das respostas;\n* integração da interface com a API.\n\n## Relatório\n\n```markdown\n# Relatório de Revisão de Contrato\n\n| Categoria | Contrato | Implementação | Local | Veredito |\n|---|---|---|---|---|\n| Rota/Método | `GET /exemplo` | `GET /exemplo` | `arquivo:linha` | CONFORME |\n| Campo | `id, nome` | `id, nome, email` | `arquivo:linha` | DIVERGENTE |\n\n## Divergências\n\n1. **[Categoria]** Descrição da divergência, com `arquivo:linha` e referência ao contrato.\n\n## Veredito Geral\n\nResumo objetivo da conformidade ou das correções necessárias.\n```\n\n## Regras\n\n* Não altere nenhum arquivo.\n* Não altere `contrato-api.md`.\n* Cite `arquivo:linha` em toda divergência.\n* Não invente requisitos.\n* Considere `contrato-api.md` como fonte oficial.\n* Seja objetivo e não faça elogios. ",
+     "id": "prt_0c6eb77c30013ZjsakLxxstQXI",
+     "sessionID": "ses_f3914888bffejDK1zHYAS1xfZj",
+     "messageID": "msg_0c6eb77c0001UWu6uuD7jYoTFs"
+    }
+   ]
+  },
+  {
+   "info": {
+    "parentID": "msg_0c6eb77c0001UWu6uuD7jYoTFs",
+    "role": "assistant",
+    "mode": "build",
+    "agent": "build",
+    "path": {
+     "cwd": "C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica\\semana-academica",
+     "root": "C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica"
+    },
+    "cost": 0.001670525,
+    "tokens": {
+     "total": 11291,
+     "input": 2571,
+     "output": 25,
+     "reasoning": 524,
+     "cache": {
+      "write": 0,
+      "read": 8171
+     }
+    },
+    "modelID": "gemini-3.1-flash-lite",
+    "providerID": "google",
+    "time": {
+     "created": 1790043715546,
+     "completed": 1790043857020
+    },
+    "finish": "tool-calls",
+    "id": "msg_0c6eb77da001IeswbJOANOA9nq",
+    "sessionID": "ses_f3914888bffejDK1zHYAS1xfZj"
+   },
+   "parts": [
+    {
+     "snapshot": "a12ee2bfa7f7da8d5535a2944a803f7931064557",
+     "type": "step-start",
+     "id": "prt_0c6ed94a0001JnR8frfTmx2I7r",
+     "sessionID": "ses_f3914888bffejDK1zHYAS1xfZj",
+     "messageID": "msg_0c6eb77da001IeswbJOANOA9nq"
+    },
+    {
+     "type": "reasoning",
+     "text": "**Defining the New Agent**\n\nI'm focusing now on defining the new subagent, `revisor-de-contrato`. The user's markdown definition is the key input. I am mapping the definition to the implicit file location constraint, which is `.opencode/agent/<nome>.md`. This is a crucial step in the process, and I am close to completion.\n\n\n",
+     "time": {
+      "start": 1790043853990,
+      "end": 1790043855159
+     },
+     "id": "prt_0c6ed94a6001yJho4gzvOvz6Fy",
+     "sessionID": "ses_f3914888bffejDK1zHYAS1xfZj",
+     "messageID": "msg_0c6eb77da001IeswbJOANOA9nq"
+    },
+    {
+     "type": "tool",
+     "tool": "bash",
+     "callID": "Jb7WKLkn8T5tiU4s",
+     "state": {
+      "status": "completed",
+      "input": {
+       "command": "Test-Path -LiteralPath \".opencode\\agent\""
+      },
+      "output": "True\r\n",
+      "metadata": {
+       "output": "True\r\n",
+       "exit": 0,
+       "truncated": false
+      },
+      "title": "Test-Path -LiteralPath \".opencode\\agent\"",
+      "time": {
+       "start": 1790043855144,
+       "end": 1790043855883
+      }
+     },
+     "metadata": {
+      "google": {
+       "thoughtSignature": "Et8RCtwRAWkUfRO/Dz+ES4HEt49Lxe4iHsBuOYl9wviYxvZ0mE2z+TNuLrWKoQQpc6x2cyN0b7B0b/6OabO1SSHMEXbSVOknqyUog/RjES6cBjqcRg3n3tBSZj8xbfzIeN22Hn95wmJk0T3KXRLn77N2WG/8BxWsbmI1ifPwEmAokvmi2M7GVoHftlsC4D1zrE9ooMqRNpdp+LKGDCp49LN2lTFqrK9xN8reEYFRJEqoDccEHT73KYf1ynMfyX0KD6aeWYrks7FRourIHp3lSmocV9DH7D0yIV6pKH8l+Vndf4SdnN/WbdwoiiooS5Jsrb1WxjKUZUbAGu9ydlMbasbVG4e+eslFUW3pUBQ5csOdlYCz2jyF59QaGm3ek7Z6NvI9P9qUv7tbjJElOr4jrX0X87NuO/sUynm12xRjyUPYlMQbGEzUDXVePAFmfQ1YFnpieTn+UYyT0W0UnYjtPdq0DYSS1Z3dDMbTHrkhSotVxkrXQ07DmgO6V4N04hE8D1n9PVY1kIe9ESGzeWnN3lL/fYsPC0suyItRSGAxfbvTvh0qlzGMi8eKg2jca6lSMBLEe7jvr2WgTFqxGHauOMjL/MyFcxErEyFlvC7LCQsGW2Y3ilSfxe8DyVAk0f9h6Gj5G3l/z6GlOpkswjZJD9YZ8w91pmjf7re4S2x/FsSSqK+6FURuKDH6Nwhx7f0TDh3iu/7MQXvQTBg8QudE26+OTBnrJraCWZms5E17+9MnEP3WOQgU+a5sSMkYXd5O9WvYRvnTsM3f9lzHwtXUzwo9MR19I4C5tO3+AFGtTpQXNbhyON2pobSbh1ytOTv8ksJz32Rl5sBpxSmb1c1Wj0g9I/UB56cS0pB0yNVvqNTPAx1dYGPW1QKWs1ROi4+JHByqDl5YVjo3v8iVkBui+Jtw8ItKwDYb7/YYjFTQk+nqTLwHkO40m4vlwItxXZXMukJkmYd2lR31J8rLmX2vzXy1u1LAfYXE7XAGc696TFmDYWirbNNjoiwqkURb6FUUC9ykEg1e4pdD0iCAlCk9k4RwmniSLle+rcVF7U8NrZtmPNm1E1qmWqUtMxPlFkWFmH1EjpyKiR4UwIRwQdFpwnjJ1+jQiyq3pABgRI8UOc06KdppwrsofF/56gLQws6F/GhbZoHhVouRQZRHwDf+lSmKDjkkC7T7Ct2PxiTM/gfNE4tg2naSTWlgyG0PlEme+1bgJ3Tm12UU029Q+I/1oA5fe+ljitd5McxsDgomGsHo/Un992lktOAPBYc21Kf6TRU6W1DrQci9IuGctADu7GFLzXQQVnFmX/ekn/A/psN1W4FQHjPEUCPzoyiMnfnpAzHGwOWy1H+fpW0XbSg/vTxH7PhOPAKep2jrl83tbjHLSrSquh4BknLJi1iEA7Udku8VkE3M8oWl+bN5lyJ6hPPpkyqKGNmyrHvhucgaEN3PFzeC8v2W3RtWTBCDSg7cKDzHU9rHwM20VNmoEh6il8Yrm4qPtsM1OYJpyzlHjwLyLSCjVnPoD2kC6G++ne2rGhX+ewCCPVGxfvOKQm/a8aasDuzM71PRPY5WVoLfAYCcwtxIYDJYpN6bPsGmadE8q/7N38yRJrJXS+67n0OC8rTkqj/lUFSFkGpJMAfrOdS393BjdU93o7npxFyGLNqBilO8wzNGBkidR9q1w5HT10LHuRkQqQXC4zqIicAQMeSSU53jACJTXYPsTWkmiaAzzJFaVABordA9xb3Q1oSkXBFE/3rvboOT4zMOShGXMd1vZC52y/BOhyjpJpktJoL1jjZK+ZLEFdpjHRYP7BlJpCabaEDbX+P7E51gmqjsCtdYhq7s0PXLVpjOLQ9/PyWcWmpkuqUtCh8+yig67UqfabVkCzfCgfV3crD8waGGv309w1GIGOHjx2HUpdJb9MmKT2x/yknRC+dHjuEYgoWNznnj/ZW/NnC8/EVBxqT6mGfm7BhAiEqhfu2dkeg9yCf29CGVadTXCQq/f+rAx4QbIpCaXsSLjldXrGjPvF2XVY3JH/O8hHoIM/Jb1nCtJ/IfL/LgbrmwsPy+pEKkufVfSLp2awTAQvTLt29wCXMUG8IkPbnE3QMOA84antMg1Uu67fYlhcV995q6jfGcTMER81ra7mhHaFs3EuOmZDP9sJPYgYgMlAa6qkhNB80rfMr0Fx/SjjPOUwaEIm+zhglLeTKpEUafHoRsI1evlOpIBN3w/iDaoRUZCs4FZkhxw/I6pumwj0goOHwb4GpOCHirN5UUc2c70dWr3SfT05TTKqUIEDCzpg4JF/OAJ09+ol6FRI6VI8ODpG3kxMQH262Qd8wdAL+P83WU5nWAsfGVr2Jh+oIaxGGLssnm+Bo9vuuKp4yOuUhP3ZRCXuSPlE+fYloWXWPt12AsYwX37sE9+Vzezsk4ZzDa8Zr5LE9iNf6SJe+5YVmpRx/h+SUIcx1iEb8PZxmtPiRF5gLhV8kDGWt4eibFoUnljSKUNbqsoWYwh+53/tyPLAdonrLLYIlXzVDQFE8aG7f4+o1X4O6ISy/cq+SBgV+4CEufsO5ol6StqESepIB2tfOK90GxepuriswjwGo5pAVvz1n96RtjpUZAqF8Juy/F741opV0OZvrtD6J4l9YLY7UCd+GraZRAdzxvvSFx5qIKqtTM3nDixSyHBkv161J6S5nJt1jfzvY8c2Zm76ffSqa/kXA26IItPf9qjl3zyR8qpwvCzE1DTj+Cu/Gbg752XY2q6wKKbBNXUIgMvWT0YOa7LdFx1RrbOcUNaCG0OYeuuz6J3ss7OrtZ3C8JeIbNB8pRB2e6AC6paU66QGWaPOjuwbh/AjsO9sWqs0Lqq99ksr4mMejGG82moE4I8jKDV2K1Y1ZcCU3LndiWx3kzZYdJUcXkCQfnHSutYYfJgwk7sUrRpOv4IAGgTAy/x2HtK+oAMmePZ6jnkWE828xCXK3Ld9aBlAG1/AzZAb8TTeR6XCAfWryLsQ5H9um7N7JeLP/EMFUlZuvfbPNr2V6CrglAtFhQ5aBkAT+r"
+      }
+     },
+     "id": "prt_0c6ed9919001WbWOgnMVB4BhkP",
+     "sessionID": "ses_f3914888bffejDK1zHYAS1xfZj",
+     "messageID": "msg_0c6eb77da001IeswbJOANOA9nq"
+    },
+    {
+     "reason": "tool-calls",
+     "snapshot": "a12ee2bfa7f7da8d5535a2944a803f7931064557",
+     "type": "step-finish",
+     "tokens": {
+      "total": 11291,
+      "input": 2571,
+      "output": 25,
+      "reasoning": 524,
+      "cache": {
+       "write": 0,
+       "read": 8171
+      }
+     },
+     "cost": 0.001670525,
+     "id": "prt_0c6ed9e59001mZiGM6p3CK9R81",
+     "sessionID": "ses_f3914888bffejDK1zHYAS1xfZj",
+     "messageID": "msg_0c6eb77da001IeswbJOANOA9nq"
+    }
+   ]
+  },
+  {
+   "info": {
+    "parentID": "msg_0c6eb77c0001UWu6uuD7jYoTFs",
+    "role": "assistant",
+    "mode": "build",
+    "agent": "build",
+    "path": {
+     "cwd": "C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica\\semana-academica",
+     "root": "C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica"
+    },
+    "cost": 0.001069325,
+    "tokens": {
+     "total": 11438,
+     "input": 3167,
+     "output": 35,
+     "reasoning": 13,
+     "cache": {
+      "write": 0,
+      "read": 8223
+     }
+    },
+    "modelID": "gemini-3.1-flash-lite",
+    "providerID": "google",
+    "time": {
+     "created": 1790043857027,
+     "completed": 1790043865548
+    },
+    "finish": "tool-calls",
+    "id": "msg_0c6eda083001KmWOeBGrDxCdeC",
+    "sessionID": "ses_f3914888bffejDK1zHYAS1xfZj"
+   },
+   "parts": [
+    {
+     "snapshot": "a12ee2bfa7f7da8d5535a2944a803f7931064557",
+     "type": "step-start",
+     "id": "prt_0c6edbb12001OuYUEoqgx3cu2Y",
+     "sessionID": "ses_f3914888bffejDK1zHYAS1xfZj",
+     "messageID": "msg_0c6eda083001KmWOeBGrDxCdeC"
+    },
+    {
+     "type": "tool",
+     "tool": "bash",
+     "callID": "eZj2Bl7nXscfQVZ4",
+     "state": {
+      "status": "completed",
+      "input": {
+       "command": "Test-Path -LiteralPath \".opencode\\agent\\revisor-de-contrato.md\""
+      },
+      "output": "True\r\n",
+      "metadata": {
+       "output": "True\r\n",
+       "exit": 0,
+       "truncated": false
+      },
+      "title": "Test-Path -LiteralPath \".opencode\\agent\\revisor-de-contrato.md\"",
+      "time": {
+       "start": 1790043863841,
+       "end": 1790043864442
+      }
+     },
+     "metadata": {
+      "google": {
+       "thoughtSignature": "ErwBCrkBAWkUfRO9MT1dhleyLYYSV5LaAWb+5zTDdunTyoTCsDC9QYyMlNA08AWnSe+9QQenPobv5BlJ5+AywN3aVBgY9zUrY9MFogqNYsJGoyzCSVT02EDByYGB7dsizBpHPzG1mnzpnnpOKLVfAsAusTryUjErTr+hTRRD3GgMk4J6iZ+7pfgKorM2CvuSpzcjwYRs/UMcymMMReFJ2192piiHsX/rQGSYdVR85c8mj05vnZlq5Q7eloNppOA="
+      }
+     },
+     "id": "prt_0c6edbb18001Hzl5iv1R3TTb7g",
+     "sessionID": "ses_f3914888bffejDK1zHYAS1xfZj",
+     "messageID": "msg_0c6eda083001KmWOeBGrDxCdeC"
+    },
+    {
+     "reason": "tool-calls",
+     "snapshot": "a12ee2bfa7f7da8d5535a2944a803f7931064557",
+     "type": "step-finish",
+     "tokens": {
+      "total": 11438,
+      "input": 3167,
+      "output": 35,
+      "reasoning": 13,
+      "cache": {
+       "write": 0,
+       "read": 8223
+      }
+     },
+     "cost": 0.001069325,
+     "id": "prt_0c6edbf85001njDL39doT6v26Q",
+     "sessionID": "ses_f3914888bffejDK1zHYAS1xfZj",
+     "messageID": "msg_0c6eda083001KmWOeBGrDxCdeC"
+    }
+   ]
+  },
+  {
+   "info": {
+    "parentID": "msg_0c6eb77c0001UWu6uuD7jYoTFs",
+    "role": "assistant",
+    "mode": "build",
+    "agent": "build",
+    "path": {
+     "cwd": "C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica\\semana-academica",
+     "root": "C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica"
+    },
+    "cost": 0.00303825,
+    "tokens": {
+     "total": 11573,
+     "input": 11457,
+     "output": 63,
+     "reasoning": 53,
+     "cache": {
+      "write": 0,
+      "read": 0
+     }
+    },
+    "modelID": "gemini-3.1-flash-lite",
+    "providerID": "google",
+    "time": {
+     "created": 1790043865553,
+     "completed": 1790043880379
+    },
+    "finish": "tool-calls",
+    "id": "msg_0c6edc1d1001zzSpC7xU0g5brC",
+    "sessionID": "ses_f3914888bffejDK1zHYAS1xfZj"
+   },
+   "parts": [
+    {
+     "snapshot": "a12ee2bfa7f7da8d5535a2944a803f7931064557",
+     "type": "step-start",
+     "id": "prt_0c6edf69f001f3y0bwI8u0iev3",
+     "sessionID": "ses_f3914888bffejDK1zHYAS1xfZj",
+     "messageID": "msg_0c6edc1d1001zzSpC7xU0g5brC"
+    },
+    {
+     "type": "tool",
+     "tool": "read",
+     "callID": "6T5R2DaMDGWzBQkM",
+     "state": {
+      "status": "completed",
+      "input": {
+       "filePath": "C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica\\semana-academica\\.opencode\\agent\\revisor-de-contrato.md"
+      },
+      "output": "[3939 caracteres omitidos]",
+      "title": "semana-academica\\.opencode\\agent\\revisor-de-contrato.md",
+      "time": {
+       "start": 1790043879091,
+       "end": 1790043879167
+      }
+     },
+     "metadata": {
+      "google": {
+       "thoughtSignature": "EvkCCvYCAWkUfRMDVPPVq0XeA8WPxBCagkyFdzGzt1//WvVfDRb8KuF7T8VokEFp1EAeL82Ssj3LOnfh3hIxZZxeWxCAm8nTDCHCA6Lf29BsVFU7tX1mjf8vvzzyHdz0ED5JZdIXYfH2jZAGQeVC4+njFmXm7Nt02mRSfOHTeWOCpLfZdpt30388kVO2Jo30Hf/vh8FAUmEcNNKiLzwnf3VQbPCX/iowXSo9ydbK3/nVoiL5fBiIYmdFuWJtopVtqSSAm2VMlS0LBXDqEmXBsdWUKTtiVek8mUsbbuAcsUwxqZ6q/2YlU5xl0/O6TuOktK0JDmhuW4BKVKZyVjOCFUkz1km7ARVvVbw2CpQaJ5eYnbxmPjF01cJfbOEkLRhx6Dvb6gBzvhaHHOFhmPcVIzObQUf9ky8o5UIDkFgWpD3ZjoyU1I0IhQjRxPVPuB1q7/94qTpHBw9n7La8D+Paz/zN0500XugSSnA3ps3rD4LGwl0fHKjKZb4IqbY="
+      }
+     },
+     "id": "prt_0c6edf6a5001N8U0Z1bxRV3cAc",
+     "sessionID": "ses_f3914888bffejDK1zHYAS1xfZj",
+     "messageID": "msg_0c6edc1d1001zzSpC7xU0g5brC"
+    },
+    {
+     "reason": "tool-calls",
+     "snapshot": "a12ee2bfa7f7da8d5535a2944a803f7931064557",
+     "type": "step-finish",
+     "tokens": {
+      "total": 11573,
+      "input": 11457,
+      "output": 63,
+      "reasoning": 53,
+      "cache": {
+       "write": 0,
+       "read": 0
+      }
+     },
+     "cost": 0.00303825,
+     "id": "prt_0c6edf952001XtBvmz9nmC3EPv",
+     "sessionID": "ses_f3914888bffejDK1zHYAS1xfZj",
+     "messageID": "msg_0c6edc1d1001zzSpC7xU0g5brC"
+    }
+   ]
+  },
+  {
+   "info": {
+    "parentID": "msg_0c6eb77c0001UWu6uuD7jYoTFs",
+    "role": "assistant",
+    "mode": "build",
+    "agent": "build",
+    "path": {
+     "cwd": "C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica\\semana-academica",
+     "root": "C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica"
+    },
+    "cost": 0.0026259,
+    "tokens": {
+     "total": 13729,
+     "input": 4691,
+     "output": 557,
+     "reasoning": 275,
+     "cache": {
+      "write": 0,
+      "read": 8206
+     }
+    },
+    "modelID": "gemini-3.1-flash-lite",
+    "providerID": "google",
+    "time": {
+     "created": 1790043880385,
+     "completed": 1790043889569
+    },
+    "finish": "tool-calls",
+    "id": "msg_0c6edfbc1001Va4w06dXc9NK01",
+    "sessionID": "ses_f3914888bffejDK1zHYAS1xfZj"
+   },
+   "parts": [
+    {
+     "snapshot": "a12ee2bfa7f7da8d5535a2944a803f7931064557",
+     "type": "step-start",
+     "id": "prt_0c6ee116a0016OO9HlZCFyqzN6",
+     "sessionID": "ses_f3914888bffejDK1zHYAS1xfZj",
+     "messageID": "msg_0c6edfbc1001Va4w06dXc9NK01"
+    },
+    {
+     "type": "reasoning",
+     "text": "**Defining User's Intent**\n\nOkay, so I'm honing in on the user's goal. It seems they are providing new content, expecting a direct replacement, not an expansion or addition. This is a crucial distinction. I've re-evaluated and will proceed as directed, replacing the current definition with the new input.\n\n\n",
+     "time": {
+      "start": 1790043885937,
+      "end": 1790043887322
+     },
+     "id": "prt_0c6ee11710014vZUPhNivJDOjI",
+     "sessionID": "ses_f3914888bffejDK1zHYAS1xfZj",
+     "messageID": "msg_0c6edfbc1001Va4w06dXc9NK01"
+    },
+    {
+     "type": "tool",
+     "tool": "write",
+     "callID": "cTJxukYbU6lDaIKU",
+     "state": {
+      "status": "completed",
+      "input": {
+       "filePath": "C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica\\semana-academica\\.opencode\\agent\\revisor-de-contrato.md",
+       "content": "---\ndescription: Audita a API e a interface comparando-as com `contrato-api.md` e aponta divergências de rotas, métodos, campos, erros e formatos.\nmode: subagent\ntemperature: 0.1\ntools:\nwrite: false\nedit: false\npatch: false\ntask: false\nbash: true\nread: true\ngrep: true\nglob: true\n----------\n\n# Revisor de Contrato da API\n\nCompare a implementação de `api/` e `app/` com o contrato oficial `contrato-api.md`.\n\n## Procedimento\n\n1. Leia integralmente `contrato-api.md`.\n2. Verifique na `api/` todas as rotas, métodos, parâmetros, campos, respostas, códigos HTTP e formatos.\n3. Verifique na `app/` se as chamadas HTTP seguem exatamente o contrato.\n4. Aponte somente divergências comprovadas pelo contrato.\n\nVerifique especialmente:\n\n* rotas e métodos HTTP;\n* parâmetros e campos de entrada/saída;\n* tipos e nomes dos campos;\n* códigos e formatos de erro;\n* estrutura e formato das respostas;\n* integração da interface com a API.\n\n## Relatório\n\n```markdown\n# Relatório de Revisão de Contrato\n\n| Categoria | Contrato | Implementação | Local | Veredito |\n|---|---|---|---|---|\n| Rota/Método | `GET /exemplo` | `GET /exemplo` | `arquivo:linha` | CONFORME |\n| Campo | `id, nome` | `id, nome, email` | `arquivo:linha` | DIVERGENTE |\n\n## Divergências\n\n1. **[Categoria]** Descrição da divergência, com `arquivo:linha` e referência ao contrato.\n\n## Veredito Geral\n\nResumo objetivo da conformidade ou das correções necessárias.\n```\n\n## Regras\n\n* Não altere nenhum arquivo.\n* Não altere `contrato-api.md`.\n* Cite `arquivo:linha` em toda divergência.\n* Não invente requisitos.\n* Considere `contrato-api.md` como fonte oficial.\n* Seja objetivo e não faça elogios. \n"
+      },
+      "output": "Wrote file successfully.",
+      "metadata": {
+       "diagnostics": {},
+       "filepath": "C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica\\semana-academica\\.opencode\\agent\\revisor-de-contrato.md",
+       "exists": true,
+       "truncated": false
+      },
+      "title": "semana-academica\\.opencode\\agent\\revisor-de-contrato.md",
+      "time": {
+       "start": 1790043887313,
+       "end": 1790043887402
+      }
+     },
+     "metadata": {
+      "google": {
+       "thoughtSignature": "Eo8LCowLAWkUfRMS95umWKjsz7zPKCdX67Sa2DRcidmuUp+6c5oQfDNgo4wfAm8+j1KVwDtCdR/rbtbKvYjcirAfvLkcF/EnMDU33wzkGU2Rg8Si5xO/LEra4XI2PqhNKnjfUHT/LtYesHVkdjCNDlCUYWONBK6hry1JZdQcw+wAQDb3jwYvNYcpjYFe1WtlWsOu1o8bS1pZh119L+3qax2l2E2Vczbxumq8zh1Z4aZcZHhx4DxXiowtPgVBmUNehOka+K5BHJhj3lzm1SWx7eHxDXBVNL4FBfXN7E8hr8CJwpXUgQT3sWV7Aj2mU/exwpmYdz8vU8t9skmdA9fNmPGg1yaHselncKUPAdZLG6a54apLQ/MIgj5ZXrNk1kOch9nyOP0ooDrugPRhbaKxOa8QPCdspqMx8f8EDWQcCzST2IwxlggcaDd9anvl8VyjjHivSDl5ZG4BUr+ikmw2giGhblippUKwl1HzhTm4mSrHSNtL5TemFbWrhTDQeBDnROr0vpHNmYFTO8+rsYZl+hQPvXxONfN2H90wjU+VJMNogGpNxTorgUOfLaAV3jg6IW8P6dvG5rAmNkMd5ISOVIYdDZ9vHLRZAwIYupKLtrhuyNoEdtACUDQOgVC52vgTj92uSH7MvOTBDPmt1OxxmNyNJeQLEaTjdW9cXOcmU/UxSWqVjiM2ovBr7b1kTeQ+iUzgLQdidNTr6fosMminoJClNL2LpzDJlZYZ3ribjD1obn/NO2fojAK2T5AfON8Sir0rGlIMCfIro/qzEIq7hWqOv4ZWfbDyzpJC3ycJrIHg+sjdb2rFxya5qJBatQXBH6Boby3gj3RW/xPfkIGXWn/AdZG5Hq4yX5ngutZCyn0uU9rJyygqCBNZGUaB5zRUARBFVlspVRz20mJal3aSejvQB24gB2hkdwmvwxEfktujGre5B/3xIvEzuygkIUAXf9OubapYQqEF3E61Din9jxuyZIaQeLhtBWoZEnr96STRPKNTd+UqEG1vEocIcrJP2lN1+6st2Db/h+28jaNzsus5x8mjpMe0Xl55YI+T4CgFo9C9oA85zG3W5KydXW8DtBh/DbBO8ooAtUuhdbMNZAV6wczmaMQt39Gq0eLHEScHC4YdbDr3MCELzUSdXiY/d3lRebtORGy8VOqa0egYWEtfaQIJ1jKp2DTaH/fG9ojvO1Pk9msJY0df6bYpJUb4r5lTCH9aVDyW+weOOQy+zBpyw69OVlR2GOeW5DDBFb4Mdxmik71HoBGsHx0MC12s/lTas3dyHBjGzornKA6acwtTclja3Hfq+xVyuIuMZtcwYlSZAG254wfBMxik4qhPbpLhutwYsN1R8kaLKtUM/DDrjJmpQAiyEt7IW0DSk4I9Ar9fP+w+gpoaXC8VxLFzgNvV3sj6774Y3F1viHt8XDnwY+mwsGTAR54TLQRDJV5okVIb1gm6VmIRmheBlX61XZvDDuCJykiMBNJGIN1fPmMY1EeJ/Ivl4pyRUHE9WktBy6scEjmfCEEz1SHtF51x0PULAquuMVNPj10CO21YEm+t91ywdiRbT+gvJJl92lJY+vTgekoLaGf+onvuKuIM7W7IOrgJAF/YZD0Y+bxUup8Bbr/4yV1PCpIJ14XFwSCn7z/b/Vt42LIXuFPs3u23qCuMJ16xKGulqt/CtZHQWNdPpDC8ek0kneaSJMk3YbZ+YQ8CPah1Am9Tl7xqLRl/E0kCF3Nj5Sklw+2KRU4ioRYnX1dky6Uejoivt7x9WWrR6InU2Bf0ccZJYdz8cuIDXtE1NtdnMnuaNY5IaZM9c2Ep2yP0KFxLBm0gFB76CGRAZvf6Twc6NQ+QyZ0CRGrAUzQ6+eT8Tp3ekXpwOxWuiF/olaU6OzYRYjrLnk4P9iVEPQ=="
+      }
+     },
+     "id": "prt_0c6ee16bb0016M7XjEtooh1Zi7",
+     "sessionID": "ses_f3914888bffejDK1zHYAS1xfZj",
+     "messageID": "msg_0c6edfbc1001Va4w06dXc9NK01"
+    },
+    {
+     "reason": "tool-calls",
+     "snapshot": "a31b7e1f9548e91e5d244aa9387b4e2a2f50b66f",
+     "type": "step-finish",
+     "tokens": {
+      "total": 13729,
+      "input": 4691,
+      "output": 557,
+      "reasoning": 275,
+      "cache": {
+       "write": 0,
+       "read": 8206
+      }
+     },
+     "cost": 0.0026259,
+     "id": "prt_0c6ee1c7c001SAJm5jLXBYYTbH",
+     "sessionID": "ses_f3914888bffejDK1zHYAS1xfZj",
+     "messageID": "msg_0c6edfbc1001Va4w06dXc9NK01"
+    },
+    {
+     "type": "patch",
+     "hash": "a12ee2bfa7f7da8d5535a2944a803f7931064557",
+     "files": [
+      "C:/Users/Rafaela Cunha/Downloads/TrabGustavo/ProjetoSemanaAcademica/ProjetoSemanaAcademica/semana-academica/.opencode/agent/revisor-de-contrato.md"
+     ],
+     "id": "prt_0c6ee1f99001uMXkjM4ck5Xlo2",
+     "sessionID": "ses_f3914888bffejDK1zHYAS1xfZj",
+     "messageID": "msg_0c6edfbc1001Va4w06dXc9NK01"
+    }
+   ]
+  },
+  {
+   "info": {
+    "parentID": "msg_0c6eb77c0001UWu6uuD7jYoTFs",
+    "role": "assistant",
+    "mode": "build",
+    "agent": "build",
+    "path": {
+     "cwd": "C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica\\semana-academica",
+     "root": "C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica"
+    },
+    "cost": 0.001661025,
+    "tokens": {
+     "total": 13861,
+     "input": 5580,
+     "output": 20,
+     "reasoning": 20,
+     "cache": {
+      "write": 0,
+      "read": 8241
+     }
+    },
+    "modelID": "gemini-3.1-flash-lite",
+    "providerID": "google",
+    "time": {
+     "created": 1790043889578,
+     "completed": 1790043894139
+    },
+    "finish": "stop",
+    "id": "msg_0c6ee1faa001pAW27zRnh2574W",
+    "sessionID": "ses_f3914888bffejDK1zHYAS1xfZj"
+   },
+   "parts": [
+    {
+     "snapshot": "a31b7e1f9548e91e5d244aa9387b4e2a2f50b66f",
+     "type": "step-start",
+     "id": "prt_0c6ee2c02001AcKp1quYf9XrjY",
+     "sessionID": "ses_f3914888bffejDK1zHYAS1xfZj",
+     "messageID": "msg_0c6ee1faa001pAW27zRnh2574W"
+    },
+    {
+     "type": "text",
+     "text": "O agente `revisor-de-contrato` foi atualizado com a nova especificação.",
+     "time": {
+      "start": 1790043892745,
+      "end": 1790043892791
+     },
+     "id": "prt_0c6ee2c090013tfqE2w0U2NqP4",
+     "sessionID": "ses_f3914888bffejDK1zHYAS1xfZj",
+     "messageID": "msg_0c6ee1faa001pAW27zRnh2574W"
+    },
+    {
+     "reason": "stop",
+     "snapshot": "a31b7e1f9548e91e5d244aa9387b4e2a2f50b66f",
+     "type": "step-finish",
+     "tokens": {
+      "total": 13861,
+      "input": 5580,
+      "output": 20,
+      "reasoning": 20,
+      "cache": {
+       "write": 0,
+       "read": 8241
+      }
+     },
+     "cost": 0.001661025,
+     "id": "prt_0c6ee2ee1001byO1YqORzeQIDe",
+     "sessionID": "ses_f3914888bffejDK1zHYAS1xfZj",
+     "messageID": "msg_0c6ee1faa001pAW27zRnh2574W"
+    }
+   ]
+  },
+  {
+   "info": {
+    "role": "user",
+    "time": {
+     "created": 1790044129535
+    },
+    "agent": "build",
+    "model": {
+     "providerID": "google",
+     "modelID": "gemini-3.1-flash-lite"
+    },
+    "summary": {
+     "diffs": []
+    },
+    "id": "msg_0c6f1c8ff001c0gAu66EcioNl7",
+    "sessionID": "ses_f3914888bffejDK1zHYAS1xfZj"
+   },
+   "parts": [
+    {
+     "type": "text",
+     "text": "@revisor-de-contrato audito o M2-inscricoes e valide com o contrato-api. Não altera nem modifique nada, apenas fornece o seu parecer",
+     "id": "prt_0c6f1c900001djhmg56wf86O4I",
+     "sessionID": "ses_f3914888bffejDK1zHYAS1xfZj",
+     "messageID": "msg_0c6f1c8ff001c0gAu66EcioNl7"
+    }
+   ]
+  },
+  {
+   "info": {
+    "parentID": "msg_0c6f1c8ff001c0gAu66EcioNl7",
+    "role": "assistant",
+    "mode": "build",
+    "agent": "build",
+    "path": {
+     "cwd": "C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica\\semana-academica",
+     "root": "C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica"
+    },
+    "cost": 0.00350125,
+    "tokens": {
+     "total": 13180,
+     "input": 13015,
+     "output": 19,
+     "reasoning": 146,
+     "cache": {
+      "write": 0,
+      "read": 0
+     }
+    },
+    "modelID": "gemini-3.1-flash-lite",
+    "providerID": "google",
+    "time": {
+     "created": 1790044129566,
+     "completed": 1790044132893
+    },
+    "finish": "tool-calls",
+    "id": "msg_0c6f1c91e001XmStS0iu8KvtXm",
+    "sessionID": "ses_f3914888bffejDK1zHYAS1xfZj"
+   },
+   "parts": [
+    {
+     "snapshot": "a31b7e1f9548e91e5d244aa9387b4e2a2f50b66f",
+     "type": "step-start",
+     "id": "prt_0c6f1d133001iFfH7N9DHapWKL",
+     "sessionID": "ses_f3914888bffejDK1zHYAS1xfZj",
+     "messageID": "msg_0c6f1c91e001XmStS0iu8KvtXm"
+    },
+    {
+     "type": "tool",
+     "tool": "glob",
+     "callID": "P7FPTlrH7OcNu1JC",
+     "state": {
+      "status": "completed",
+      "input": {
+       "pattern": "**/*inscricoes*"
+      },
+      "output": "[267 caracteres omitidos]",
+      "title": "semana-academica",
+      "time": {
+       "start": 1790044131648,
+       "end": 1790044131796
+      }
+     },
+     "metadata": {
+      "google": {
+       "thoughtSignature": "EqkFCqYFAWkUfROWKBeLk4Gsk35WxVQGy4SjxoajL1LVutIV8bsIwsvwvaDcGAh2iHFQJcIN2RQiPPD9wXVJ8mjn+hqH3yYt6ltOxWPcqAU3ji2T3GC+CdvoQoUHm7ygl12XG9WAKU8Iuvaesk4IC2luSJXOd3x+xwHEw6nBHVqL8mEZlaVV8jehmgk5+JX5/uN8uLhStoqCQa3DX+O5Hu55V/Fv432Wm74o19rRubAkYStuSwFwV8Qefx8TnP/lLWZVWckt6TsYdVVxtIKGwugMrbK6rBFx8nFLgGkxABwo8rK628AyQJuohZ4pbeDZmWlvDgx9F8OEtkXuUfqtuYCoKI2XQVU8NqMTrLGs6wC/+/d5H30mtk+vPOXJz+JilYx/cEp3VkKXCpru32LCpgefD3j3/M2+ri/0UEd2jBLudBHAKolB36+Z/AQIUWLAn0Ih3PVhEAw3XTFzXVDqty6tj4FYyk4WI9nGZwU7piPL5cACe44BicvE6V6scEUaGgjEWUhfiPcoepwvYUIr0Epo8Vl4bnrtH4yOJHWfqMU8ipc6F15MEDsT3G/uK5udOIdsgEUeUncXZ34UUeucNW+Fm0wZcYoT5Vx9wcJUFN67sqOsFUHcHkC45u5L6WsmZkavBuivutw0Qb5O+Tbjr1rn8ze7QNZW1lkJQAJnj0yJJJQUCM/ZH7ITIZrYqRfinVYaG9ws7jHuaUlOoSD2Wo7H3+e2VzKm025b3PtDeQmwD12+FvCLYnstkFL5Ogxb+eX2CfGoWyRwfJTmSLNb8Jb8frin4LyanbsSD1c2PG9zhoafObA0AbdiEd/I9tvUNLJcHjZCBZrTryqCJjQHU2PDlSjYRVH/e+bZcBVT7zcfitDD71FltbRpeBftr1O/FOuinUzzqt9QarjU"
+      }
+     },
+     "id": "prt_0c6f1d1380014VoOrW2r1R4S7a",
+     "sessionID": "ses_f3914888bffejDK1zHYAS1xfZj",
+     "messageID": "msg_0c6f1c91e001XmStS0iu8KvtXm"
+    },
+    {
+     "reason": "tool-calls",
+     "snapshot": "a31b7e1f9548e91e5d244aa9387b4e2a2f50b66f",
+     "type": "step-finish",
+     "tokens": {
+      "total": 13180,
+      "input": 13015,
+      "output": 19,
+      "reasoning": 146,
+      "cache": {
+       "write": 0,
+       "read": 0
+      }
+     },
+     "cost": 0.00350125,
+     "id": "prt_0c6f1d45c001kuUiD8aB0T36Jo",
+     "sessionID": "ses_f3914888bffejDK1zHYAS1xfZj",
+     "messageID": "msg_0c6f1c91e001XmStS0iu8KvtXm"
+    }
+   ]
+  },
+  {
+   "info": {
+    "parentID": "msg_0c6f1c8ff001c0gAu66EcioNl7",
+    "role": "assistant",
+    "mode": "build",
+    "agent": "build",
+    "path": {
+     "cwd": "C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica\\semana-academica",
+     "root": "C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica"
+    },
+    "cost": 0.00161555,
+    "tokens": {
+     "total": 13390,
+     "input": 5050,
+     "output": 61,
+     "reasoning": 37,
+     "cache": {
+      "write": 0,
+      "read": 8242
+     }
+    },
+    "modelID": "gemini-3.1-flash-lite",
+    "providerID": "google",
+    "time": {
+     "created": 1790044132898,
+     "completed": 1790044136308
+    },
+    "finish": "tool-calls",
+    "id": "msg_0c6f1d622001erKHWuNiUy0Cvw",
+    "sessionID": "ses_f3914888bffejDK1zHYAS1xfZj"
+   },
+   "parts": [
+    {
+     "snapshot": "a31b7e1f9548e91e5d244aa9387b4e2a2f50b66f",
+     "type": "step-start",
+     "id": "prt_0c6f1df58001I4mHprk3i5hY5h",
+     "sessionID": "ses_f3914888bffejDK1zHYAS1xfZj",
+     "messageID": "msg_0c6f1d622001erKHWuNiUy0Cvw"
+    },
+    {
+     "type": "tool",
+     "tool": "glob",
+     "callID": "TlCXnFNvU2ak6pdY",
+     "state": {
+      "status": "completed",
+      "input": {
+       "pattern": "**/*inscricoes*",
+       "path": "C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica\\semana-academica\\api"
+      },
+      "output": "[14 caracteres omitidos]",
+      "title": "semana-academica\\api",
+      "time": {
+       "start": 1790044135271,
+       "end": 1790044135380
+      }
+     },
+     "metadata": {
+      "google": {
+       "thoughtSignature": "EpMCCpACAWkUfROmAyAxI8L7udGv1aHGwTv1ul7IbrdOmpWxHM66W8nauC9bliVdlJ7PYV7WeiHgTqvhA51SyYghLmF8A1bLypvccPkeh5S5nDVAxyHYAnGu87UiY7Oja/2AcVoW1uDjvkXBijUQwuujV+PU2HmPepoEF3dvDbyEZ9MU6g37Zbd/dUayM67IEf7HLMMIhIxQTsOYiTTywZoGVLeh4kFuCMpIdab7KxUOdp5b2h7NxdaHjajL897KzxpLvuqDQ5npRHpdX8lsZ5TfwK0+PZksI6kgd/YxhFIoHrCXW0t26O087y1WlymauNuJGehchrqFo3hx+D6Xxk8YNC/04SxlV0i4KZFOGpWqwy0jaAc="
+      }
+     },
+     "id": "prt_0c6f1df5d001oAyBFbcjxJczR7",
+     "sessionID": "ses_f3914888bffejDK1zHYAS1xfZj",
+     "messageID": "msg_0c6f1d622001erKHWuNiUy0Cvw"
+    },
+    {
+     "reason": "tool-calls",
+     "snapshot": "a31b7e1f9548e91e5d244aa9387b4e2a2f50b66f",
+     "type": "step-finish",
+     "tokens": {
+      "total": 13390,
+      "input": 5050,
+      "output": 61,
+      "reasoning": 37,
+      "cache": {
+       "write": 0,
+       "read": 8242
+      }
+     },
+     "cost": 0.00161555,
+     "id": "prt_0c6f1e1a8001XN5xyLwGvIAeiy",
+     "sessionID": "ses_f3914888bffejDK1zHYAS1xfZj",
+     "messageID": "msg_0c6f1d622001erKHWuNiUy0Cvw"
+    }
+   ]
+  },
+  {
+   "info": {
+    "parentID": "msg_0c6f1c8ff001c0gAu66EcioNl7",
+    "role": "assistant",
+    "mode": "build",
+    "agent": "build",
+    "path": {
+     "cwd": "C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica\\semana-academica",
+     "root": "C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica"
+    },
+    "cost": 0.001664625,
+    "tokens": {
+     "total": 13520,
+     "input": 5175,
+     "output": 66,
+     "reasoning": 44,
+     "cache": {
+      "write": 0,
+      "read": 8235
+     }
+    },
+    "modelID": "gemini-3.1-flash-lite",
+    "providerID": "google",
+    "time": {
+     "created": 1790044136314,
+     "completed": 1790044140552
+    },
+    "finish": "tool-calls",
+    "id": "msg_0c6f1e37a001y7bmfVFl2IwP3Y",
+    "sessionID": "ses_f3914888bffejDK1zHYAS1xfZj"
+   },
+   "parts": [
+    {
+     "snapshot": "a31b7e1f9548e91e5d244aa9387b4e2a2f50b66f",
+     "type": "step-start",
+     "id": "prt_0c6f1ef7a00163mACb1UjXMLTe",
+     "sessionID": "ses_f3914888bffejDK1zHYAS1xfZj",
+     "messageID": "msg_0c6f1e37a001y7bmfVFl2IwP3Y"
+    },
+    {
+     "type": "tool",
+     "tool": "grep",
+     "callID": "fZ5FPyrKodnk0TSP",
+     "state": {
+      "status": "completed",
+      "input": {
+       "pattern": "inscricoes",
+       "include": "**/*.js",
+       "path": "C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica\\semana-academica\\api"
+      },
+      "output": "[8543 caracteres omitidos]",
+      "title": "inscricoes",
+      "time": {
+       "start": 1790044139399,
+       "end": 1790044139733
+      }
+     },
+     "metadata": {
+      "google": {
+       "thoughtSignature": "EqwCCqkCAWkUfRMI9QevEjOpGEibEIbw5WwjtePgHJg3Xx7+Xy2ZF9JX8wTB9mXl0tixt27iGB9KAD8UlF978SkhKiKX7qtx74GdfvHyO330+Yge7Ply2o1j/hrDldHvP8I2Ww0+GpWcrTnfzu9wCUN8+sHmzp5vjPwjuvng8nbFpJFHWgKjrR+Z+6yoL6CFmw0ppRZ8WOGPlo3DWwj3j+SEzhOp0yWKhtwiiDdlCWVjGpGGeJbxJjua5sLVNibvMRmNok6mkZ9NIomxSimIqmSh5F38L5C3K0WeEwvQOydKUzFNJGMfwaa+CRsLw1mHmi15NplJ7UZT5GHkhM1sUfxFdgpA5Lpq8G2aVLEoMl0LMdwgdl+NfuEuGsrLb7e5XLQWOaPHwEK4ESNmsaiQ"
+      }
+     },
+     "id": "prt_0c6f1ef7e001PU8gFu3QPXuzT9",
+     "sessionID": "ses_f3914888bffejDK1zHYAS1xfZj",
+     "messageID": "msg_0c6f1e37a001y7bmfVFl2IwP3Y"
+    },
+    {
+     "reason": "tool-calls",
+     "snapshot": "a31b7e1f9548e91e5d244aa9387b4e2a2f50b66f",
+     "type": "step-finish",
+     "tokens": {
+      "total": 13520,
+      "input": 5175,
+      "output": 66,
+      "reasoning": 44,
+      "cache": {
+       "write": 0,
+       "read": 8235
+      }
+     },
+     "cost": 0.001664625,
+     "id": "prt_0c6f1f2960011hmRh2HhBpymrd",
+     "sessionID": "ses_f3914888bffejDK1zHYAS1xfZj",
+     "messageID": "msg_0c6f1e37a001y7bmfVFl2IwP3Y"
+    }
+   ]
+  },
+  {
+   "info": {
+    "parentID": "msg_0c6f1c8ff001c0gAu66EcioNl7",
+    "role": "assistant",
+    "mode": "build",
+    "agent": "build",
+    "path": {
+     "cwd": "C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica\\semana-academica",
+     "root": "C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica"
+    },
+    "cost": 0.001461575,
+    "tokens": {
+     "total": 16491,
+     "input": 4067,
+     "output": 55,
+     "reasoning": 36,
+     "cache": {
+      "write": 0,
+      "read": 12333
+     }
+    },
+    "modelID": "gemini-3.1-flash-lite",
+    "providerID": "google",
+    "time": {
+     "created": 1790044140558,
+     "completed": 1790044144557
+    },
+    "finish": "tool-calls",
+    "id": "msg_0c6f1f40e001IAnWt7b7kupM2E",
+    "sessionID": "ses_f3914888bffejDK1zHYAS1xfZj"
+   },
+   "parts": [
+    {
+     "snapshot": "a31b7e1f9548e91e5d244aa9387b4e2a2f50b66f",
+     "type": "step-start",
+     "id": "prt_0c6f1fb17001u6Hnbj4QzwezBe",
+     "sessionID": "ses_f3914888bffejDK1zHYAS1xfZj",
+     "messageID": "msg_0c6f1f40e001IAnWt7b7kupM2E"
+    },
+    {
+     "type": "tool",
+     "tool": "read",
+     "callID": "XxgJSGUobRVJ8qpy",
+     "state": {
+      "status": "completed",
+      "input": {
+       "filePath": "C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica\\semana-academica\\contrato-api.md"
+      },
+      "output": "[13954 caracteres omitidos]",
+      "title": "semana-academica\\contrato-api.md",
+      "time": {
+       "start": 1790044142370,
+       "end": 1790044143712
+      }
+     },
+     "metadata": {
+      "google": {
+       "thoughtSignature": "EogCCoUCAWkUfRN72H2H//uzNlfBSgYEC0M3NGl5z5CwSve13erm3C0iyCZ5Jzv8F16tZ5ECHnYkWbQwW7ZNJdmcPQROcRlMRgdSCWSndey1AWz50KiUNXMKOJcZyL5FdYSR9njUSlpHRgvwDxHqJjRZrE/AaKJOPdhHKtNWXa/UkDZzSnjamtcokBWxmo2I/lqUKI7S76Sn0Sywl4hN9yKbt43BBfvgMbHnZzR3q1qFz0CLE+crYurSUDvAvbfHBnB/dNBCvwNRFIPGL1Bk4FizqgvbMe4tevwFwGyS++na6HCszLOP4Va81+h8HVHhkH0T6ixNUduhBKHGtpMljnvQ/qQaZV0u97Cv"
+      }
+     },
+     "id": "prt_0c6f1fb1a001a2pb7HFoFuhBtz",
+     "sessionID": "ses_f3914888bffejDK1zHYAS1xfZj",
+     "messageID": "msg_0c6f1f40e001IAnWt7b7kupM2E"
+    },
+    {
+     "reason": "tool-calls",
+     "snapshot": "a31b7e1f9548e91e5d244aa9387b4e2a2f50b66f",
+     "type": "step-finish",
+     "tokens": {
+      "total": 16491,
+      "input": 4067,
+      "output": 55,
+      "reasoning": 36,
+      "cache": {
+       "write": 0,
+       "read": 12333
+      }
+     },
+     "cost": 0.001461575,
+     "id": "prt_0c6f20227001E4T5kiEzgrNJLl",
+     "sessionID": "ses_f3914888bffejDK1zHYAS1xfZj",
+     "messageID": "msg_0c6f1f40e001IAnWt7b7kupM2E"
+    }
+   ]
+  },
+  {
+   "info": {
+    "parentID": "msg_0c6f1c8ff001c0gAu66EcioNl7",
+    "role": "assistant",
+    "mode": "build",
+    "agent": "build",
+    "path": {
+     "cwd": "C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica\\semana-academica",
+     "root": "C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica"
+    },
+    "cost": 0.0030414,
+    "tokens": {
+     "total": 22485,
+     "input": 10016,
+     "output": 26,
+     "reasoning": 127,
+     "cache": {
+      "write": 0,
+      "read": 12316
+     }
+    },
+    "modelID": "gemini-3.1-flash-lite",
+    "providerID": "google",
+    "time": {
+     "created": 1790044144564,
+     "completed": 1790044174913
+    },
+    "finish": "tool-calls",
+    "id": "msg_0c6f203b40012qAOSPfT9PYgdt",
+    "sessionID": "ses_f3914888bffejDK1zHYAS1xfZj"
+   },
+   "parts": [
+    {
+     "snapshot": "a31b7e1f9548e91e5d244aa9387b4e2a2f50b66f",
+     "type": "step-start",
+     "id": "prt_0c6f20d7c001U01Zv48R2ufxqB",
+     "sessionID": "ses_f3914888bffejDK1zHYAS1xfZj",
+     "messageID": "msg_0c6f203b40012qAOSPfT9PYgdt"
+    },
+    {
+     "type": "tool",
+     "tool": "bash",
+     "callID": "HyRpuG9pIS5Gr99y",
+     "state": {
+      "status": "completed",
+      "input": {
+       "command": "Get-ChildItem -Path \"app\" -Recurse"
+      },
+      "output": "...output truncated...\n\nFull output saved to: C:\\Users\\Rafaela Cunha\\.local\\share\\opencode\\tool-output\\tool_0c6f21947001TBAw6K7uFlhepG\n\n-a----         9/21/2026  10:10 PM          16843 init.3UJvPvQg.js                                                     \r\n-a----         9/21/2026  10:10 PM           1642 inspector.CvyFGlXm.js                                                \r\n-a----         9/21/2026  10:10 PM           1493 modules.BJuCwlRJ.js                                                  \r\n-a----         9/21/2026  10:10 PM           6799 native.CF4uT5hY.js                                                   \r\n-a----         9/21/2026  10:10 PM           9208 nativeModuleMocker.B20FEd-E.js                                       \r\n-a----         9/21/2026  10:10 PM          63431 nativeModuleRunner.J0QLzNtK.js                                       \r\n-a----         9/21/2026  10:10 PM           1511 node.CfQ_OGWr.js                                                     \r\n-a----         9/21/2026  10:10 PM            896 offset.Dy-5Fdfn.js                                                   \r\n-a----         9/21/2026  10:10 PM          15425 pathe.M-eThtNZ.DwEga6ro.js                                           \r\n-a----         9/21/2026  10:10 PM         148195 plugin.d.CN87HSxv.d.ts                                               \r\n-a----         9/21/2026  10:10 PM           1303 plugins.Cigb0uSy.js                                                  \r\n-a----         9/21/2026  10:10 PM           1636 resolver.NpfwMKt9.js                                                 \r\n-a----         9/21/2026  10:10 PM           3081 rpc.Bvs-iVxs.js                                                      \r\n-a----         9/21/2026  10:10 PM           3291 rpc.d.DA9Utv4e.d.ts                                                  \r\n-a----         9/21/2026  10:10 PM         165335 run.C5UmxDPh.js                                                      \r\n-a----         9/21/2026  10:10 PM           1831 setup-common.BkQOiNcI.js                                             \r\n-a----         9/21/2026  10:10 PM          63512 source-map.BH0bbrs9.js                                               \r\n-a----         9/21/2026  10:10 PM           2277 source-map.d.YqWNcp4e.d.ts                                           \r\n-a----         9/21/2026  10:10 PM          19048 spy.DQ0ZsPbi.js                                                      \r\n-a----         9/21/2026  10:10 PM           5011 task-utils.d.BZm4GSQD.d.ts                                           \r\n-a----         9/21/2026  10:10 PM           2299 tinyrainbow.Ht9iggcq.js                                              \r\n-a----         9/21/2026  10:10 PM           7406 utils.CJ0JImL8.js                                                    \r\n-a----         9/21/2026  10:10 PM           1713 utils.DYj33du9.js                                                    \r\n-a----         9/21/2026  10:10 PM          53331 vm.W4G5WMTl.js                                                       \r\n-a----         9/21/2026  10:10 PM           9038 worker.d.MLmnzOJE.d.ts                                               \r\n\r\n\r\n    Directory: C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica\\semana-academ\r\n    ica\\app\\node_modules\\vitest\\dist\\workers\r\n\r\n\r\nMode                 LastWriteTime         Length Name                                                                 \r\n----                 -------------         ------ ----                                                                 \r\n-a----         9/21/2026  10:10 PM           1561 forks.js                                                             \r\n-a----         9/21/2026  10:10 PM           4991 runVmTests.js                                                        \r\n-a----         9/21/2026  10:10 PM           1593 threads.js                                                           \r\n-a----         9/21/2026  10:10 PM           1169 vmForks.js                                                           \r\n-a----         9/21/2026  10:10 PM           1201 vmThreads.js                                                         \r\n\r\n\r\n    Directory: C:\\Users\\Rafaela \r\n    Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica\\semana-academica\\app\\node_modules\\vue\r\n\r\n\r\nMode                 LastWriteTime         Length Name                                                                 \r\n----                 -------------         ------ ----                                                                 \r\nd-----         9/21/2026  10:10 PM                compiler-sfc                                                         \r\nd-----         9/21/2026  10:10 PM                dist                                                                 \r\nd-----         9/21/2026  10:10 PM                jsx-runtime                                                          \r\nd-----         9/21/2026  10:10 PM                server-renderer                                                      \r\n-a----         9/21/2026  10:10 PM            171 index.js                                                             \r\n-a----         9/21/2026  10:10 PM             27 index.mjs                                                            \r\n-a----         9/21/2026  10:10 PM            742 jsx.d.ts                                                             \r\n-a----         9/21/2026  10:10 PM           1091 LICENSE                                                              \r\n-a----         9/21/2026  10:10 PM           2769 package.json                                                         \r\n-a----         9/21/2026  10:10 PM           3759 README.md                                                            \r\n\r\n\r\n    Directory: C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica\\semana-academ\r\n    ica\\app\\node_modules\\vue\\compiler-sfc\r\n\r\n\r\nMode                 LastWriteTime         Length Name                                                                 \r\n----                 -------------         ------ ----                                                                 \r\n-a----         9/21/2026  10:10 PM             46 index.browser.js                                                     \r\n-a----         9/21/2026  10:10 PM             34 index.browser.mjs                                                    \r\n-a----         9/21/2026  10:10 PM             34 index.d.mts                                                          \r\n-a----         9/21/2026  10:10 PM             34 index.d.ts                                                           \r\n-a----         9/21/2026  10:10 PM             75 index.js                                                             \r\n-a----         9/21/2026  10:10 PM             61 index.mjs                                                            \r\n-a----         9/21/2026  10:10 PM             50 package.json                                                         \r\n-a----         9/21/2026  10:10 PM            111 register-ts.js                                                       \r\n\r\n\r\n    Directory: C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica\\semana-academ\r\n    ica\\app\\node_modules\\vue\\dist\r\n\r\n\r\nMode                 LastWriteTime         Length Name                                                                 \r\n----                 -------------         ------ ----                                                                 \r\n-a----         9/21/2026  10:10 PM           2296 vue.cjs.js                                                           \r\n-a----         9/21/2026  10:10 PM           1774 vue.cjs.prod.js                                                      \r\n-a----         9/21/2026  10:10 PM            299 vue.d.mts                                                            \r\n-a----         9/21/2026  10:10 PM            299 vue.d.ts                                                             \r\n-a----         9/21/2026  10:10 PM         563667 vue.esm-browser.js                                                   \r\n-a----         9/21/2026  10:10 PM         173163 vue.esm-browser.prod.js                                              \r\n-a----         9/21/2026  10:10 PM           2188 vue.esm-bundler.js                                                   \r\n-a----         9/21/2026  10:10 PM         596415 vue.global.js                                                        \r\n-a----         9/21/2026  10:10 PM         168331 vue.global.prod.js                                                   \r\n-a----         9/21/2026  10:10 PM         393190 vue.runtime.esm-browser.js                                           \r\n-a----         9/21/2026  10:10 PM         111433 vue.runtime.esm-browser.prod.js                                      \r\n-a----         9/21/2026  10:10 PM            580 vue.runtime.esm-bundler.js                                           \r\n-a----         9/21/2026  10:10 PM         419764 vue.runtime.global.js                                                \r\n-a----         9/21/2026  10:10 PM         109374 vue.runtime.global.prod.js                                           \r\n\r\n\r\n    Directory: C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica\\semana-academ\r\n    ica\\app\\node_modules\\vue\\jsx-runtime\r\n\r\n\r\nMode                 LastWriteTime         Length Name                                                                 \r\n----                 -------------         ------ ----                                                                 \r\n-a----         9/21/2026  10:10 PM            848 index.d.ts                                                           \r\n-a----         9/21/2026  10:10 PM            303 index.js                                                             \r\n-a----         9/21/2026  10:10 PM            265 index.mjs                                                            \r\n-a----         9/21/2026  10:10 PM             75 package.json                                                         \r\n\r\n\r\n    Directory: C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica\\semana-academ\r\n    ica\\app\\node_modules\\vue\\server-renderer\r\n\r\n\r\nMode                 LastWriteTime         Length Name                                                                 \r\n----                 -------------         ------ ----                                                                 \r\n-a----         9/21/2026  10:10 PM             37 index.d.mts                                                          \r\n-a----         9/21/2026  10:10 PM             37 index.d.ts                                                           \r\n-a----         9/21/2026  10:10 PM             49 index.js                                                             \r\n-a----         9/21/2026  10:10 PM             37 index.mjs                                                            \r\n-a----         9/21/2026  10:10 PM             50 package.json                                                         \r\n\r\n\r\n    Directory: C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica\\semana-academ\r\n    ica\\app\\node_modules\\vue-component-type-helpers\r\n\r\n\r\nMode                 LastWriteTime         Length Name                                                                 \r\n----                 -------------         ------ ----                                                                 \r\n-a----         9/21/2026  10:10 PM           1064 index.d.ts                                                           \r\n-a----         9/21/2026  10:10 PM            110 index.js                                                             \r\n-a----         9/21/2026  10:10 PM           1076 LICENSE                                                              \r\n-a----         9/21/2026  10:10 PM            350 package.json                                                         \r\n-a----         9/21/2026  10:10 PM           3032 README.md                                                            \r\n\r\n\r\n    Directory: C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica\\semana-academ\r\n    ica\\app\\node_modules\\w3c-xmlserializer\r\n\r\n\r\nMode                 LastWriteTime         Length Name                                                                 \r\n----                 -------------         ------ ----                                                                 \r\nd-----         9/21/2026  10:10 PM                lib                                                                  \r\n-a----         9/21/2026  10:10 PM           1105 LICENSE.md                                                           \r\n-a----         9/21/2026  10:10 PM            598 package.json                                                         \r\n-a----         9/21/2026  10:10 PM           1689 README.md                                                            \r\n\r\n\r\n    Directory: C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica\\semana-academ\r\n    ica\\app\\node_modules\\w3c-xmlserializer\\lib\r\n\r\n\r\nMode                 LastWriteTime         Length Name                                                                 \r\n----                 -------------         ------ ----                                                                 \r\n-a----         9/21/2026  10:10 PM           3691 attributes.js                                                        \r\n-a----         9/21/2026  10:10 PM            790 constants.js                                                         \r\n-a----         9/21/2026  10:10 PM          10100 serialize.js                                                         \r\n\r\n\r\n    Directory: C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica\\semana-academ\r\n    ica\\app\\node_modules\\webidl-conversions\r\n\r\n\r\nMode                 LastWriteTime         Length Name                                                                 \r\n----                 -------------         ------ ----                                                                 \r\nd-----         9/21/2026  10:10 PM                lib                                                                  \r\n-a----         9/21/2026  10:10 PM           1323 LICENSE.md                                                           \r\n-a----         9/21/2026  10:10 PM            794 package.json                                                         \r\n-a----         9/21/2026  10:10 PM           9156 README.md                                                            \r\n\r\n\r\n    Directory: C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica\\semana-academ\r\n    ica\\app\\node_modules\\webidl-conversions\\lib\r\n\r\n\r\nMode                 LastWriteTime         Length Name                                                                 \r\n----                 -------------         ------ ----                                                                 \r\n-a----         9/21/2026  10:10 PM          12221 index.js                                                             \r\n\r\n\r\n    Directory: C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica\\semana-academ\r\n    ica\\app\\node_modules\\whatwg-mimetype\r\n\r\n\r\nMode                 LastWriteTime         Length Name                                                                 \r\n----                 -------------         ------ ----                                                                 \r\nd-----         9/21/2026  10:10 PM                lib                                                                  \r\n-a----         9/21/2026  10:10 PM           1069 LICENSE.txt                                                          \r\n-a----         9/21/2026  10:10 PM            971 package.json                                                         \r\n-a----         9/21/2026  10:10 PM           7467 README.md                                                            \r\n\r\n\r\n    Directory: C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica\\semana-academ\r\n    ica\\app\\node_modules\\whatwg-mimetype\\lib\r\n\r\n\r\nMode                 LastWriteTime         Length Name                                                                 \r\n----                 -------------         ------ ----                                                                 \r\n-a----         9/21/2026  10:10 PM            111 index.js                                                             \r\n-a----         9/21/2026  10:10 PM           1435 mime-type-parameters.js                                              \r\n-a----         9/21/2026  10:10 PM           3155 mime-type.js                                                         \r\n-a----         9/21/2026  10:10 PM           2516 parser.js                                                            \r\n-a----         9/21/2026  10:10 PM            600 serializer.js                                                        \r\n-a----         9/21/2026  10:10 PM          23888 sniff.js                                                             \r\n-a----         9/21/2026  10:10 PM           1406 utils.js                                                             \r\n\r\n\r\n    Directory: C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica\\semana-academ\r\n    ica\\app\\node_modules\\whatwg-url\r\n\r\n\r\nMode                 LastWriteTime         Length Name                                                                 \r\n----                 -------------         ------ ----                                                                 \r\nd-----         9/21/2026  10:10 PM                lib                                                                  \r\n-a----         9/21/2026  10:10 PM           1264 index.js                                                             \r\n-a----         9/21/2026  10:10 PM           1076 LICENSE.txt                                                          \r\n-a----         9/21/2026  10:10 PM           1479 package.json                                                         \r\n-a----         9/21/2026  10:10 PM           6973 README.md                                                            \r\n-a----         9/21/2026  10:10 PM            170 webidl2js-wrapper.js                                                 \r\n\r\n\r\n    Directory: C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica\\semana-academ\r\n    ica\\app\\node_modules\\whatwg-url\\lib\r\n\r\n\r\nMode                 LastWriteTime         Length Name                                                                 \r\n----                 -------------         ------ ----                                                                 \r\n-a----         9/21/2026  10:10 PM            328 encoding.js                                                          \r\n-a----         9/21/2026  10:10 PM           1186 Function.js                                                          \r\n-a----         9/21/2026  10:10 PM            518 infra.js                                                             \r\n-a----         9/21/2026  10:10 PM           5300 percent-encoding.js                                                  \r\n-a----         9/21/2026  10:10 PM           5116 URL-impl.js                                                          \r\n-a----         9/21/2026  10:10 PM          31989 url-state-machine.js                                                 \r\n-a----         9/21/2026  10:10 PM          15383 URL.js                                                               \r\n-a----         9/21/2026  10:10 PM           2280 urlencoded.js                                                        \r\n-a----         9/21/2026  10:10 PM           2970 URLSearchParams-impl.js                                              \r\n-a----         9/21/2026  10:10 PM          17120 URLSearchParams.js                                                   \r\n-a----         9/21/2026  10:10 PM           7087 utils.js                                                             \r\n-a----         9/21/2026  10:10 PM            728 VoidFunction.js                                                      \r\n\r\n\r\n    Directory: C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica\\semana-academ\r\n    ica\\app\\node_modules\\why-is-node-running\r\n\r\n\r\nMode                 LastWriteTime         Length Name                                                                 \r\n----                 -------------         ------ ----                                                                 \r\nd-----         9/21/2026  10:10 PM                .github                                                              \r\n-a----         9/21/2026  10:10 PM            441 cli.js                                                               \r\n-a----         9/21/2026  10:10 PM            241 example.js                                                           \r\n-a----         9/21/2026  10:10 PM             55 include.js                                                           \r\n-a----         9/21/2026  10:10 PM           2073 index.js                                                             \r\n-a----         9/21/2026  10:10 PM           1079 LICENSE                                                              \r\n-a----         9/21/2026  10:10 PM            855 package.json                                                         \r\n-a----         9/21/2026  10:10 PM           2534 README.md                                                            \r\n\r\n\r\n    Directory: C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica\\semana-academ\r\n    ica\\app\\node_modules\\why-is-node-running\\.github\r\n\r\n\r\nMode                 LastWriteTime         Length Name                                                                 \r\n----                 -------------         ------ ----                                                                 \r\n-a----         9/21/2026  10:10 PM             18 FUNDING.yml                                                          \r\n\r\n\r\n    Directory: C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica\\semana-academ\r\n    ica\\app\\node_modules\\wrap-ansi\r\n\r\n\r\nMode                 LastWriteTime         Length Name                                                                 \r\n----                 -------------         ------ ----                                                                 \r\n-a----         9/21/2026  10:10 PM           5772 index.js                                                             \r\n-a----         9/21/2026  10:10 PM           1117 license                                                              \r\n-a----         9/21/2026  10:10 PM           1014 package.json                                                         \r\n-a----         9/21/2026  10:10 PM           2745 readme.md                                                            \r\n\r\n\r\n    Directory: C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica\\semana-academ\r\n    ica\\app\\node_modules\\xml-name-validator\r\n\r\n\r\nMode                 LastWriteTime         Length Name                                                                 \r\n----                 -------------         ------ ----                                                                 \r\nd-----         9/21/2026  10:10 PM                lib                                                                  \r\n-a----         9/21/2026  10:10 PM          10173 LICENSE.txt                                                          \r\n-a----         9/21/2026  10:10 PM            699 package.json                                                         \r\n-a----         9/21/2026  10:10 PM            999 README.md                                                            \r\n\r\n\r\n    Directory: C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica\\semana-academ\r\n    ica\\app\\node_modules\\xml-name-validator\\lib\r\n\r\n\r\nMode                 LastWriteTime         Length Name                                                                 \r\n----                 -------------         ------ ----                                                                 \r\n-a----         9/21/2026  10:10 PM           1703 xml-name-validator.js                                                \r\n\r\n\r\n    Directory: C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica\\semana-academ\r\n    ica\\app\\node_modules\\xmlchars\r\n\r\n\r\nMode                 LastWriteTime         Length Name                                                                 \r\n----                 -------------         ------ ----                                                                 \r\nd-----         9/21/2026  10:10 PM                xml                                                                  \r\nd-----         9/21/2026  10:10 PM                xmlns                                                                \r\n-a----         9/21/2026  10:10 PM           1086 LICENSE                                                              \r\n-a----         9/21/2026  10:10 PM           2064 package.json                                                         \r\n-a----         9/21/2026  10:10 PM           1373 README.md                                                            \r\n-a----         9/21/2026  10:10 PM           9336 xmlchars.d.ts                                                        \r\n-a----         9/21/2026  10:10 PM           6911 xmlchars.js                                                          \r\n-a----         9/21/2026  10:10 PM           3077 xmlchars.js.map                                                      \r\n\r\n\r\n    Directory: C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica\\semana-academ\r\n    ica\\app\\node_modules\\xmlchars\\xml\r\n\r\n\r\nMode                 LastWriteTime         Length Name                                                                 \r\n----                 -------------         ------ ----                                                                 \r\nd-----         9/21/2026  10:10 PM                1.0                                                                  \r\nd-----         9/21/2026  10:10 PM                1.1                                                                  \r\n\r\n\r\n    Directory: C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica\\semana-academ\r\n    ica\\app\\node_modules\\xmlchars\\xml\\1.0\r\n\r\n\r\nMode                 LastWriteTime         Length Name                                                                 \r\n----                 -------------         ------ ----                                                                 \r\n-a----         9/21/2026  10:10 PM           4761 ed4.d.ts                                                             \r\n-a----         9/21/2026  10:10 PM           5496 ed4.js                                                               \r\n-a----         9/21/2026  10:10 PM           1395 ed4.js.map                                                           \r\n-a----         9/21/2026  10:10 PM           1796 ed5.d.ts                                                             \r\n-a----         9/21/2026  10:10 PM           3342 ed5.js                                                               \r\n-a----         9/21/2026  10:10 PM           2608 ed5.js.map                                                           \r\n\r\n\r\n    Directory: C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica\\semana-academ\r\n    ica\\app\\node_modules\\xmlchars\\xml\\1.1\r\n\r\n\r\nMode                 LastWriteTime         Length Name                                                                 \r\n----                 -------------         ------ ----                                                                 \r\n-a----         9/21/2026  10:10 PM           2669 ed2.d.ts                                                             \r\n-a----         9/21/2026  10:10 PM           4737 ed2.js                                                               \r\n-a----         9/21/2026  10:10 PM           3391 ed2.js.map                                                           \r\n\r\n\r\n    Directory: C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica\\semana-academ\r\n    ica\\app\\node_modules\\xmlchars\\xmlns\r\n\r\n\r\nMode                 LastWriteTime         Length Name                                                                 \r\n----                 -------------         ------ ----                                                                 \r\nd-----         9/21/2026  10:10 PM                1.0                                                                  \r\n\r\n\r\n    Directory: C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica\\semana-academ\r\n    ica\\app\\node_modules\\xmlchars\\xmlns\\1.0\r\n\r\n\r\nMode                 LastWriteTime         Length Name                                                                 \r\n----                 -------------         ------ ----                                                                 \r\n-a----         9/21/2026  10:10 PM            981 ed3.d.ts                                                             \r\n-a----         9/21/2026  10:10 PM           2253 ed3.js                                                               \r\n-a----         9/21/2026  10:10 PM           1681 ed3.js.map                                                           \r\n\r\n\r\n    Directory: C:\\Users\\Rafaela \r\n    Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica\\semana-academica\\app\\node_modules\\y18n\r\n\r\n\r\nMode                 LastWriteTime         Length Name                                                                 \r\n----                 -------------         ------ ----                                                                 \r\nd-----         9/21/2026  10:10 PM                build                                                                \r\n-a----         9/21/2026  10:10 PM           3911 CHANGELOG.md                                                         \r\n-a----         9/21/2026  10:10 PM            183 index.mjs                                                            \r\n-a----         9/21/2026  10:10 PM            731 LICENSE                                                              \r\n-a----         9/21/2026  10:10 PM           1775 package.json                                                         \r\n-a----         9/21/2026  10:10 PM           3215 README.md                                                            \r\n\r\n\r\n    Directory: C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica\\semana-academ\r\n    ica\\app\\node_modules\\y18n\\build\r\n\r\n\r\nMode                 LastWriteTime         Length Name                                                                 \r\n----                 -------------         ------ ----                                                                 \r\nd-----         9/21/2026  10:10 PM                lib                                                                  \r\n-a----         9/21/2026  10:10 PM           6783 index.cjs                                                            \r\n\r\n\r\n    Directory: C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica\\semana-academ\r\n    ica\\app\\node_modules\\y18n\\build\\lib\r\n\r\n\r\nMode                 LastWriteTime         Length Name                                                                 \r\n----                 -------------         ------ ----                                                                 \r\nd-----         9/21/2026  10:10 PM                platform-shims                                                       \r\n-a----         9/21/2026  10:10 PM            192 cjs.js                                                               \r\n-a----         9/21/2026  10:10 PM           6268 index.js                                                             \r\n\r\n\r\n    Directory: C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica\\semana-academ\r\n    ica\\app\\node_modules\\y18n\\build\\lib\\platform-shims\r\n\r\n\r\nMode                 LastWriteTime         Length Name                                                                 \r\n----                 -------------         ------ ----                                                                 \r\n-a----         9/21/2026  10:10 PM            377 node.js                                                              \r\n\r\n\r\n    Directory: C:\\Users\\Rafaela \r\n    Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica\\semana-academica\\app\\node_modules\\yargs\r\n\r\n\r\nMode                 LastWriteTime         Length Name                                                                 \r\n----                 -------------         ------ ----                                                                 \r\nd-----         9/21/2026  10:10 PM                build                                                                \r\nd-----         9/21/2026  10:10 PM                helpers                                                              \r\nd-----         9/21/2026  10:10 PM                lib                                                                  \r\nd-----         9/21/2026  10:10 PM                locales                                                              \r\n-a----         9/21/2026  10:10 PM            232 browser.mjs                                                          \r\n-a----         9/21/2026  10:10 PM          25158 CHANGELOG.md                                                         \r\n-a----         9/21/2026  10:10 PM           1455 index.cjs                                                            \r\n-a----         9/21/2026  10:10 PM            231 index.mjs                                                            \r\n-a----         9/21/2026  10:10 PM           1146 LICENSE                                                              \r\n-a----         9/21/2026  10:10 PM           3136 package.json                                                         \r\n-a----         9/21/2026  10:10 PM           5974 README.md                                                            \r\n-a----         9/21/2026  10:10 PM            220 yargs                                                                \r\n-a----         9/21/2026  10:10 PM            476 yargs.cjs                                                            \r\n-a----         9/21/2026  10:10 PM            473 yargs.mjs                                                            \r\n\r\n\r\n    Directory: C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica\\semana-academ\r\n    ica\\app\\node_modules\\yargs\\build\r\n\r\n\r\nMode                 LastWriteTime         Length Name                                                                 \r\n----                 -------------         ------ ----                                                                 \r\nd-----         9/21/2026  10:10 PM                lib                                                                  \r\n-a----         9/21/2026  10:10 PM          61906 index.cjs                                                            \r\n\r\n\r\n    Directory: C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica\\semana-academ\r\n    ica\\app\\node_modules\\yargs\\build\\lib\r\n\r\n\r\nMode                 LastWriteTime         Length Name                                                                 \r\n----                 -------------         ------ ----                                                                 \r\nd-----         9/21/2026  10:10 PM                typings                                                              \r\nd-----         9/21/2026  10:10 PM                utils                                                                \r\n-a----         9/21/2026  10:10 PM           2477 argsert.js                                                           \r\n-a----         9/21/2026  10:10 PM          19368 command.js                                                           \r\n-a----         9/21/2026  10:10 PM           1452 completion-templates.js                                              \r\n-a----         9/21/2026  10:10 PM          10495 completion.js                                                        \r\n-a----         9/21/2026  10:10 PM           3221 middleware.js                                                        \r\n-a----         9/21/2026  10:10 PM           1060 parse-command.js                                                     \r\n-a----         9/21/2026  10:10 PM          21402 usage.js                                                             \r\n-a----         9/21/2026  10:10 PM          12653 validation.js                                                        \r\n-a----         9/21/2026  10:10 PM          77635 yargs-factory.js                                                     \r\n-a----         9/21/2026  10:10 PM            234 yerror.js                                                            \r\n\r\n\r\n    Directory: C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica\\semana-academ\r\n    ica\\app\\node_modules\\yargs\\build\\lib\\typings\r\n\r\n\r\nMode                 LastWriteTime         Length Name                                                                 \r\n----                 -------------         ------ ----                                                                 \r\n-a----         9/21/2026  10:10 PM            308 common-types.js                                                      \r\n-a----         9/21/2026  10:10 PM             11 yargs-parser-types.js                                                \r\n\r\n\r\n    Directory: C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica\\semana-academ\r\n    ica\\app\\node_modules\\yargs\\build\\lib\\utils\r\n\r\n\r\nMode                 LastWriteTime         Length Name                                                                 \r\n----                 -------------         ------ ----                                                                 \r\n-a----         9/21/2026  10:10 PM           2049 apply-extends.js                                                     \r\n-a----         9/21/2026  10:10 PM            155 is-promise.js                                                        \r\n-a----         9/21/2026  10:10 PM           1031 levenshtein.js                                                       \r\n-a----         9/21/2026  10:10 PM            496 maybe-async-result.js                                                \r\n-a----         9/21/2026  10:10 PM            299 obj-filter.js                                                        \r\n-a----         9/21/2026  10:10 PM            436 process-argv.js                                                      \r\n-a----         9/21/2026  10:10 PM            386 set-blocking.js                                                      \r\n-a----         9/21/2026  10:10 PM            321 which-module.js                                                      \r\n\r\n\r\n    Directory: C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica\\semana-academ\r\n    ica\\app\\node_modules\\yargs\\helpers\r\n\r\n\r\nMode                 LastWriteTime         Length Name                                                                 \r\n----                 -------------         ------ ----                                                                 \r\n-a----         9/21/2026  10:10 PM            384 helpers.mjs                                                          \r\n-a----         9/21/2026  10:10 PM            291 index.js                                                             \r\n-a----         9/21/2026  10:10 PM             25 package.json                                                         \r\n\r\n\r\n    Directory: C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica\\semana-academ\r\n    ica\\app\\node_modules\\yargs\\lib\r\n\r\n\r\nMode                 LastWriteTime         Length Name                                                                 \r\n----                 -------------         ------ ----                                                                 \r\nd-----         9/21/2026  10:10 PM                platform-shims                                                       \r\n\r\n\r\n    Directory: C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica\\semana-academ\r\n    ica\\app\\node_modules\\yargs\\lib\\platform-shims\r\n\r\n\r\nMode                 LastWriteTime         Length Name                                                                 \r\n----                 -------------         ------ ----                                                                 \r\n-a----         9/21/2026  10:10 PM           2301 browser.mjs                                                          \r\n-a----         9/21/2026  10:10 PM           1876 esm.mjs                                                              \r\n\r\n\r\n    Directory: C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica\\semana-academ\r\n    ica\\app\\node_modules\\yargs\\locales\r\n\r\n\r\nMode                 LastWriteTime         Length Name                                                                 \r\n----                 -------------         ------ ----                                                                 \r\n-a----         9/21/2026  10:10 PM           2602 be.json                                                              \r\n-a----         9/21/2026  10:10 PM           2024 cs.json                                                              \r\n-a----         9/21/2026  10:10 PM           1805 de.json                                                              \r\n-a----         9/21/2026  10:10 PM           2019 en.json                                                              \r\n-a----         9/21/2026  10:10 PM           1885 es.json                                                              \r\n-a----         9/21/2026  10:10 PM           2113 fi.json                                                              \r\n-a----         9/21/2026  10:10 PM           2117 fr.json                                                              \r\n-a----         9/21/2026  10:10 PM           3074 hi.json                                                              \r\n-a----         9/21/2026  10:10 PM           1883 hu.json                                                              \r\n-a----         9/21/2026  10:10 PM           1821 id.json                                                              \r\n-a----         9/21/2026  10:10 PM           1855 it.json                                                              \r\n-a----         9/21/2026  10:10 PM           2411 ja.json                                                              \r\n-a----         9/21/2026  10:10 PM           2257 ko.json                                                              \r\n-a----         9/21/2026  10:10 PM           1680 nb.json                                                              \r\n-a----         9/21/2026  10:10 PM           1958 nl.json                                                              \r\n-a----         9/21/2026  10:10 PM           1661 nn.json                                                              \r\n-a----         9/21/2026  10:10 PM            569 pirate.json                                                          \r\n-a----         9/21/2026  10:10 PM           2075 pl.json                                                              \r\n-a----         9/21/2026  10:10 PM           1917 pt.json                                                              \r\n-a----         9/21/2026  10:10 PM           1932 pt_BR.json                                                           \r\n-a----         9/21/2026  10:10 PM           2972 ru.json                                                              \r\n-a----         9/21/2026  10:10 PM           3278 th.json                                                              \r\n-a----         9/21/2026  10:10 PM           1912 tr.json                                                              \r\n-a----         9/21/2026  10:10 PM           2748 uk_UA.json                                                           \r\n-a----         9/21/2026  10:10 PM           2157 uz.json                                                              \r\n-a----         9/21/2026  10:10 PM           1907 zh_CN.json                                                           \r\n-a----         9/21/2026  10:10 PM           2055 zh_TW.json                                                           \r\n\r\n\r\n    Directory: C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica\\semana-academ\r\n    ica\\app\\node_modules\\yargs-parser\r\n\r\n\r\nMode                 LastWriteTime         Length Name                                                                 \r\n----                 -------------         ------ ----                                                                 \r\nd-----         9/21/2026  10:10 PM                build                                                                \r\n-a----         9/21/2026  10:10 PM           1016 browser.js                                                           \r\n-a----         9/21/2026  10:10 PM          16462 CHANGELOG.md                                                         \r\n-a----         9/21/2026  10:10 PM            731 LICENSE.txt                                                          \r\n-a----         9/21/2026  10:10 PM           2518 package.json                                                         \r\n-a----         9/21/2026  10:10 PM          11916 README.md                                                            \r\n\r\n\r\n    Directory: C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica\\semana-academ\r\n    ica\\app\\node_modules\\yargs-parser\\build\r\n\r\n\r\nMode                 LastWriteTime         Length Name                                                                 \r\n----                 -------------         ------ ----                                                                 \r\nd-----         9/21/2026  10:10 PM                lib                                                                  \r\n-a----         9/21/2026  10:10 PM          42891 index.cjs                                                            \r\n\r\n\r\n    Directory: C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica\\semana-academ\r\n    ica\\app\\node_modules\\yargs-parser\\build\\lib\r\n\r\n\r\nMode                 LastWriteTime         Length Name                                                                 \r\n----                 -------------         ------ ----                                                                 \r\n-a----         9/21/2026  10:10 PM           2508 index.js                                                             \r\n-a----         9/21/2026  10:10 PM           2084 string-utils.js                                                      \r\n-a----         9/21/2026  10:10 PM           1092 tokenize-arg-string.js                                               \r\n-a----         9/21/2026  10:10 PM            425 yargs-parser-types.js                                                \r\n-a----         9/21/2026  10:10 PM          46827 yargs-parser.js                                                      \r\n\r\n\r\n    Directory: C:\\Users\\Rafaela \r\n    Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica\\semana-academica\\app\\src\r\n\r\n\r\nMode                 LastWriteTime         Length Name                                                                 \r\n----                 -------------         ------ ----                                                                 \r\nd-----         9/21/2026  10:08 PM                components                                                           \r\n\r\n\r\n    Directory: C:\\Users\\Rafaela \r\n    Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica\\semana-academica\\app\\src\\components\r\n\r\n\r\nMode                 LastWriteTime         Length Name                                                                 \r\n----                 -------------         ------ ----                                                                 \r\n-a----         9/21/2026  10:13 PM           1649 AtividadeDetalhe.vue                                                 \r\n-a----         9/21/2026   8:24 PM            866 AtividadesDia.vue                                                    \r\n-a----         9/21/2026   8:24 PM           1040 CriarAtividade.vue                                                   \r\n-a----         9/21/2026  11:17 PM           2261 MinhasInscricoes.vue                                                 \r\n\r\n\r\n    Directory: C:\\Users\\Rafaela \r\n    Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica\\semana-academica\\app\\tests\r\n\r\n\r\nMode                 LastWriteTime         Length Name                                                                 \r\n----                 -------------         ------ ----                                                                 \r\nd-----         9/21/2026   8:24 PM                mocks                                                                \r\n-a----         9/21/2026   8:24 PM            787 AtividadeDetalhe.test.js                                             \r\n-a----         9/21/2026   8:24 PM            741 AtividadesDia.test.js                                                \r\n-a----         9/21/2026   8:24 PM           1161 CriarAtividade.test.js                                               \r\n-a----         9/21/2026  11:16 PM           2832 MinhasInscricoes.test.js                                             \r\n\r\n\r\n    Directory: C:\\Users\\Rafaela \r\n    Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica\\semana-academica\\app\\tests\\mocks\r\n\r\n\r\nMode                 LastWriteTime         Length Name                                                                 \r\n----                 -------------         ------ ----                                                                 \r\n-a----         9/21/2026  10:57 PM           2320 handlers.js                                                          \r\n-a----         9/21/2026   8:24 PM            132 server.js                                                            \r\n\r\n\r\n",
+      "metadata": {
+       "output": "...\n\n    \r\n-a----         9/21/2026  10:10 PM             55 include.js                                                           \r\n-a----         9/21/2026  10:10 PM           2073 index.js                                                             \r\n-a----         9/21/2026  10:10 PM           1079 LICENSE                                                              \r\n-a----         9/21/2026  10:10 PM            855 package.json                                                         \r\n-a----         9/21/2026  10:10 PM           2534 README.md                                                            \r\n\r\n\r\n    Directory: C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica\\semana-academ\r\n    ica\\app\\node_modules\\why-is-node-running\\.github\r\n\r\n\r\nMode                 LastWriteTime         Length Name                                                                 \r\n----                 -------------         ------ ----                                                                 \r\n-a----         9/21/2026  10:10 PM             18 FUNDING.yml                                                          \r\n\r\n\r\n    Directory: C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica\\semana-academ\r\n    ica\\app\\node_modules\\wrap-ansi\r\n\r\n\r\nMode                 LastWriteTime         Length Name                                                                 \r\n----                 -------------         ------ ----                                                                 \r\n-a----         9/21/2026  10:10 PM           5772 index.js                                                             \r\n-a----         9/21/2026  10:10 PM           1117 license                                                              \r\n-a----         9/21/2026  10:10 PM           1014 package.json                                                         \r\n-a----         9/21/2026  10:10 PM           2745 readme.md                                                            \r\n\r\n\r\n    Directory: C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica\\semana-academ\r\n    ica\\app\\node_modules\\xml-name-validator\r\n\r\n\r\nMode                 LastWriteTime         Length Name                                                                 \r\n----                 -------------         ------ ----                                                                 \r\nd-----         9/21/2026  10:10 PM                lib                                                                  \r\n-a----         9/21/2026  10:10 PM          10173 LICENSE.txt                                                          \r\n-a----         9/21/2026  10:10 PM            699 package.json                                                         \r\n-a----         9/21/2026  10:10 PM            999 README.md                                                            \r\n\r\n\r\n    Directory: C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica\\semana-academ\r\n    ica\\app\\node_modules\\xml-name-validator\\lib\r\n\r\n\r\nMode                 LastWriteTime         Length Name                                                                 \r\n----                 -------------         ------ ----                                                                 \r\n-a----         9/21/2026  10:10 PM           1703 xml-name-validator.js                                                \r\n\r\n\r\n    Directory: C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica\\semana-academ\r\n    ica\\app\\node_modules\\xmlchars\r\n\r\n\r\nMode                 LastWriteTime         Length Name                                                                 \r\n----                 -------------         ------ ----                                                                 \r\nd-----         9/21/2026  10:10 PM                xml                                                                  \r\nd-----         9/21/2026  10:10 PM                xmlns                                                                \r\n-a----         9/21/2026  10:10 PM           1086 LICENSE                                                              \r\n-a----         9/21/2026  10:10 PM           2064 package.json                                                         \r\n-a----         9/21/2026  10:10 PM           1373 README.md                                                            \r\n-a----         9/21/2026  10:10 PM           9336 xmlchars.d.ts                                                        \r\n-a----         9/21/2026  10:10 PM           6911 xmlchars.js                                                          \r\n-a----         9/21/2026  10:10 PM           3077 xmlchars.js.map                                                      \r\n\r\n\r\n    Directory: C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica\\semana-academ\r\n    ica\\app\\node_modules\\xmlchars\\xml\r\n\r\n\r\nMode                 LastWriteTime         Length Name                                                                 \r\n----                 -------------         ------ ----                                                                 \r\nd-----         9/21/2026  10:10 PM                1.0                                                                  \r\nd-----         9/21/2026  10:10 PM                1.1                                                                  \r\n\r\n\r\n    Directory: C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica\\semana-academ\r\n    ica\\app\\node_modules\\xmlchars\\xml\\1.0\r\n\r\n\r\nMode                 LastWriteTime         Length Name                                                                 \r\n----                 -------------         ------ ----                                                                 \r\n-a----         9/21/2026  10:10 PM           4761 ed4.d.ts                                                             \r\n-a----         9/21/2026  10:10 PM           5496 ed4.js                                                               \r\n-a----         9/21/2026  10:10 PM           1395 ed4.js.map                                                           \r\n-a----         9/21/2026  10:10 PM           1796 ed5.d.ts                                                             \r\n-a----         9/21/2026  10:10 PM           3342 ed5.js                                                               \r\n-a----         9/21/2026  10:10 PM           2608 ed5.js.map                                                           \r\n\r\n\r\n    Directory: C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica\\semana-academ\r\n    ica\\app\\node_modules\\xmlchars\\xml\\1.1\r\n\r\n\r\nMode                 LastWriteTime         Length Name                                                                 \r\n----                 -------------         ------ ----                                                                 \r\n-a----         9/21/2026  10:10 PM           2669 ed2.d.ts                                                             \r\n-a----         9/21/2026  10:10 PM           4737 ed2.js                                                               \r\n-a----         9/21/2026  10:10 PM           3391 ed2.js.map                                                           \r\n\r\n\r\n    Directory: C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica\\semana-academ\r\n    ica\\app\\node_modules\\xmlchars\\xmlns\r\n\r\n\r\nMode                 LastWriteTime         Length Name                                                                 \r\n----                 -------------         ------ ----                                                                 \r\nd-----         9/21/2026  10:10 PM                1.0                                                                  \r\n\r\n\r\n    Directory: C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica\\semana-academ\r\n    ica\\app\\node_modules\\xmlchars\\xmlns\\1.0\r\n\r\n\r\nMode                 LastWriteTime         Length Name                                                                 \r\n----                 -------------         ------ ----                                                                 \r\n-a----         9/21/2026  10:10 PM            981 ed3.d.ts                                                             \r\n-a----         9/21/2026  10:10 PM           2253 ed3.js                                                               \r\n-a----         9/21/2026  10:10 PM           1681 ed3.js.map                                                           \r\n\r\n\r\n    Directory: C:\\Users\\Rafaela \r\n    Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica\\semana-academica\\app\\node_modules\\y18n\r\n\r\n\r\nMode                 LastWriteTime         Length Name                                                                 \r\n----                 -------------         ------ ----                                                                 \r\nd-----         9/21/2026  10:10 PM                build                                                                \r\n-a----         9/21/2026  10:10 PM           3911 CHANGELOG.md                                                         \r\n-a----         9/21/2026  10:10 PM            183 index.mjs                                                            \r\n-a----         9/21/2026  10:10 PM            731 LICENSE                                                              \r\n-a----         9/21/2026  10:10 PM           1775 package.json                                                         \r\n-a----         9/21/2026  10:10 PM           3215 README.md                                                            \r\n\r\n\r\n    Directory: C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica\\semana-academ\r\n    ica\\app\\node_modules\\y18n\\build\r\n\r\n\r\nMode                 LastWriteTime         Length Name                                                                 \r\n----                 -------------         ------ ----                                                                 \r\nd-----         9/21/2026  10:10 PM                lib                                                                  \r\n-a----         9/21/2026  10:10 PM           6783 index.cjs                                                            \r\n\r\n\r\n    Directory: C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica\\semana-academ\r\n    ica\\app\\node_modules\\y18n\\build\\lib\r\n\r\n\r\nMode                 LastWriteTime         Length Name                                                                 \r\n----                 -------------         ------ ----                                                                 \r\nd-----         9/21/2026  10:10 PM                platform-shims                                                       \r\n-a----         9/21/2026  10:10 PM            192 cjs.js                                                               \r\n-a----         9/21/2026  10:10 PM           6268 index.js                                                             \r\n\r\n\r\n    Directory: C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica\\semana-academ\r\n    ica\\app\\node_modules\\y18n\\build\\lib\\platform-shims\r\n\r\n\r\nMode                 LastWriteTime         Length Name                                                                 \r\n----                 -------------         ------ ----                                                                 \r\n-a----         9/21/2026  10:10 PM            377 node.js                                                              \r\n\r\n\r\n    Directory: C:\\Users\\Rafaela \r\n    Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica\\semana-academica\\app\\node_modules\\yargs\r\n\r\n\r\nMode                 LastWriteTime         Length Name                                                                 \r\n----                 -------------         ------ ----                                                                 \r\nd-----         9/21/2026  10:10 PM                build                                                                \r\nd-----         9/21/2026  10:10 PM                helpers                                                              \r\nd-----         9/21/2026  10:10 PM                lib                                                                  \r\nd-----         9/21/2026  10:10 PM                locales                                                              \r\n-a----         9/21/2026  10:10 PM            232 browser.mjs                                                          \r\n-a----         9/21/2026  10:10 PM          25158 CHANGELOG.md                                                         \r\n-a----         9/21/2026  10:10 PM           1455 index.cjs                                                            \r\n-a----         9/21/2026  10:10 PM            231 index.mjs                                                            \r\n-a----         9/21/2026  10:10 PM           1146 LICENSE                                                              \r\n-a----         9/21/2026  10:10 PM           3136 package.json                                                         \r\n-a----         9/21/2026  10:10 PM           5974 README.md                                                            \r\n-a----         9/21/2026  10:10 PM            220 yargs                                                                \r\n-a----         9/21/2026  10:10 PM            476 yargs.cjs                                                            \r\n-a----         9/21/2026  10:10 PM            473 yargs.mjs                                                            \r\n\r\n\r\n    Directory: C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica\\semana-academ\r\n    ica\\app\\node_modules\\yargs\\build\r\n\r\n\r\nMode                 LastWriteTime         Length Name                                                                 \r\n----                 -------------         ------ ----                                                                 \r\nd-----         9/21/2026  10:10 PM                lib                                                                  \r\n-a----         9/21/2026  10:10 PM          61906 index.cjs                                                            \r\n\r\n\r\n    Directory: C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica\\semana-academ\r\n    ica\\app\\node_modules\\yargs\\build\\lib\r\n\r\n\r\nMode                 LastWriteTime         Length Name                                                                 \r\n----                 -------------         ------ ----                                                                 \r\nd-----         9/21/2026  10:10 PM                typings                                                              \r\nd-----         9/21/2026  10:10 PM                utils                                                                \r\n-a----         9/21/2026  10:10 PM           2477 argsert.js                                                           \r\n-a----         9/21/2026  10:10 PM          19368 command.js                                                           \r\n-a----         9/21/2026  10:10 PM           1452 completion-templates.js                                              \r\n-a----         9/21/2026  10:10 PM          10495 completion.js                                                        \r\n-a----         9/21/2026  10:10 PM           3221 middleware.js                                                        \r\n-a----         9/21/2026  10:10 PM           1060 parse-command.js                                                     \r\n-a----         9/21/2026  10:10 PM          21402 usage.js                                                             \r\n-a----         9/21/2026  10:10 PM          12653 validation.js                                                        \r\n-a----         9/21/2026  10:10 PM          77635 yargs-factory.js                                                     \r\n-a----         9/21/2026  10:10 PM            234 yerror.js                                                            \r\n\r\n\r\n    Directory: C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica\\semana-academ\r\n    ica\\app\\node_modules\\yargs\\build\\lib\\typings\r\n\r\n\r\nMode                 LastWriteTime         Length Name                                                                 \r\n----                 -------------         ------ ----                                                                 \r\n-a----         9/21/2026  10:10 PM            308 common-types.js                                                      \r\n-a----         9/21/2026  10:10 PM             11 yargs-parser-types.js                                                \r\n\r\n\r\n    Directory: C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica\\semana-academ\r\n    ica\\app\\node_modules\\yargs\\build\\lib\\utils\r\n\r\n\r\nMode                 LastWriteTime         Length Name                                                                 \r\n----                 -------------         ------ ----                                                                 \r\n-a----         9/21/2026  10:10 PM           2049 apply-extends.js                                                     \r\n-a----         9/21/2026  10:10 PM            155 is-promise.js                                                        \r\n-a----         9/21/2026  10:10 PM           1031 levenshtein.js                                                       \r\n-a----         9/21/2026  10:10 PM            496 maybe-async-result.js                                                \r\n-a----         9/21/2026  10:10 PM            299 obj-filter.js                                                        \r\n-a----         9/21/2026  10:10 PM            436 process-argv.js                                                      \r\n-a----         9/21/2026  10:10 PM            386 set-blocking.js                                                      \r\n-a----         9/21/2026  10:10 PM            321 which-module.js                                                      \r\n\r\n\r\n    Directory: C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica\\semana-academ\r\n    ica\\app\\node_modules\\yargs\\helpers\r\n\r\n\r\nMode                 LastWriteTime         Length Name                                                                 \r\n----                 -------------         ------ ----                                                                 \r\n-a----         9/21/2026  10:10 PM            384 helpers.mjs                                                          \r\n-a----         9/21/2026  10:10 PM            291 index.js                                                             \r\n-a----         9/21/2026  10:10 PM             25 package.json                                                         \r\n\r\n\r\n    Directory: C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica\\semana-academ\r\n    ica\\app\\node_modules\\yargs\\lib\r\n\r\n\r\nMode                 LastWriteTime         Length Name                                                                 \r\n----                 -------------         ------ ----                                                                 \r\nd-----         9/21/2026  10:10 PM                platform-shims                                                       \r\n\r\n\r\n    Directory: C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica\\semana-academ\r\n    ica\\app\\node_modules\\yargs\\lib\\platform-shims\r\n\r\n\r\nMode                 LastWriteTime         Length Name                                                                 \r\n----                 -------------         ------ ----                                                                 \r\n-a----         9/21/2026  10:10 PM           2301 browser.mjs                                                          \r\n-a----         9/21/2026  10:10 PM           1876 esm.mjs                                                              \r\n\r\n\r\n    Directory: C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica\\semana-academ\r\n    ica\\app\\node_modules\\yargs\\locales\r\n\r\n\r\nMode                 LastWriteTime         Length Name                                                                 \r\n----                 -------------         ------ ----                                                                 \r\n-a----         9/21/2026  10:10 PM           2602 be.json                                                              \r\n-a----         9/21/2026  10:10 PM           2024 cs.json                                                              \r\n-a----         9/21/2026  10:10 PM           1805 de.json                                                              \r\n-a----         9/21/2026  10:10 PM           2019 en.json                                                              \r\n-a----         9/21/2026  10:10 PM           1885 es.json                                                              \r\n-a----         9/21/2026  10:10 PM           2113 fi.json                                                              \r\n-a----         9/21/2026  10:10 PM           2117 fr.json                                                              \r\n-a----         9/21/2026  10:10 PM           3074 hi.json                                                              \r\n-a----         9/21/2026  10:10 PM           1883 hu.json                                                              \r\n-a----         9/21/2026  10:10 PM           1821 id.json                                                              \r\n-a----         9/21/2026  10:10 PM           1855 it.json                                                              \r\n-a----         9/21/2026  10:10 PM           2411 ja.json                                                              \r\n-a----         9/21/2026  10:10 PM           2257 ko.json                                                              \r\n-a----         9/21/2026  10:10 PM           1680 nb.json                                                              \r\n-a----         9/21/2026  10:10 PM           1958 nl.json                                                              \r\n-a----         9/21/2026  10:10 PM           1661 nn.json                                                              \r\n-a----         9/21/2026  10:10 PM            569 pirate.json                                                          \r\n-a----         9/21/2026  10:10 PM           2075 pl.json                                                              \r\n-a----         9/21/2026  10:10 PM           1917 pt.json                                                              \r\n-a----         9/21/2026  10:10 PM           1932 pt_BR.json                                                           \r\n-a----         9/21/2026  10:10 PM           2972 ru.json                                                              \r\n-a----         9/21/2026  10:10 PM           3278 th.json                                                              \r\n-a----         9/21/2026  10:10 PM           1912 tr.json                                                              \r\n-a----         9/21/2026  10:10 PM           2748 uk_UA.json                                                           \r\n-a----         9/21/2026  10:10 PM           2157 uz.json                                                              \r\n-a----         9/21/2026  10:10 PM           1907 zh_CN.json                                                           \r\n-a----         9/21/2026  10:10 PM           2055 zh_TW.json                                                           \r\n\r\n\r\n    Directory: C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica\\semana-academ\r\n    ica\\app\\node_modules\\yargs-parser\r\n\r\n\r\nMode                 LastWriteTime         Length Name                                                                 \r\n----                 -------------         ------ ----                                                                 \r\nd-----         9/21/2026  10:10 PM                build                                                                \r\n-a----         9/21/2026  10:10 PM           1016 browser.js                                                           \r\n-a----         9/21/2026  10:10 PM          16462 CHANGELOG.md                                                         \r\n-a----         9/21/2026  10:10 PM            731 LICENSE.txt                                                          \r\n-a----         9/21/2026  10:10 PM           2518 package.json                                                         \r\n-a----         9/21/2026  10:10 PM          11916 README.md                                                            \r\n\r\n\r\n    Directory: C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica\\semana-academ\r\n    ica\\app\\node_modules\\yargs-parser\\build\r\n\r\n\r\nMode                 LastWriteTime         Length Name                                                                 \r\n----                 -------------         ------ ----                                                                 \r\nd-----         9/21/2026  10:10 PM                lib                                                                  \r\n-a----         9/21/2026  10:10 PM          42891 index.cjs                                                            \r\n\r\n\r\n    Directory: C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica\\semana-academ\r\n    ica\\app\\node_modules\\yargs-parser\\build\\lib\r\n\r\n\r\nMode                 LastWriteTime         Length Name                                                                 \r\n----                 -------------         ------ ----                                                                 \r\n-a----         9/21/2026  10:10 PM           2508 index.js                                                             \r\n-a----         9/21/2026  10:10 PM           2084 string-utils.js                                                      \r\n-a----         9/21/2026  10:10 PM           1092 tokenize-arg-string.js                                               \r\n-a----         9/21/2026  10:10 PM            425 yargs-parser-types.js                                                \r\n-a----         9/21/2026  10:10 PM          46827 yargs-parser.js                                                      \r\n\r\n\r\n    Directory: C:\\Users\\Rafaela \r\n    Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica\\semana-academica\\app\\src\r\n\r\n\r\nMode                 LastWriteTime         Length Name                                                                 \r\n----                 -------------         ------ ----                                                                 \r\nd-----         9/21/2026  10:08 PM                components                                                           \r\n\r\n\r\n    Directory: C:\\Users\\Rafaela \r\n    Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica\\semana-academica\\app\\src\\components\r\n\r\n\r\nMode                 LastWriteTime         Length Name                                                                 \r\n----                 -------------         ------ ----                                                                 \r\n-a----         9/21/2026  10:13 PM           1649 AtividadeDetalhe.vue                                                 \r\n-a----         9/21/2026   8:24 PM            866 AtividadesDia.vue                                                    \r\n-a----         9/21/2026   8:24 PM           1040 CriarAtividade.vue                                                   \r\n-a----         9/21/2026  11:17 PM           2261 MinhasInscricoes.vue                                                 \r\n\r\n\r\n    Directory: C:\\Users\\Rafaela \r\n    Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica\\semana-academica\\app\\tests\r\n\r\n\r\nMode                 LastWriteTime         Length Name                                                                 \r\n----                 -------------         ------ ----                                                                 \r\nd-----         9/21/2026   8:24 PM                mocks                                                                \r\n-a----         9/21/2026   8:24 PM            787 AtividadeDetalhe.test.js                                             \r\n-a----         9/21/2026   8:24 PM            741 AtividadesDia.test.js                                                \r\n-a----         9/21/2026   8:24 PM           1161 CriarAtividade.test.js                                               \r\n-a----         9/21/2026  11:16 PM           2832 MinhasInscricoes.test.js                                             \r\n\r\n\r\n    Directory: C:\\Users\\Rafaela \r\n    Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica\\semana-academica\\app\\tests\\mocks\r\n\r\n\r\nMode                 LastWriteTime         Length Name                                                                 \r\n----                 -------------         ------ ----                                                                 \r\n-a----         9/21/2026  10:57 PM           2320 handlers.js                                                          \r\n-a----         9/21/2026   8:24 PM            132 server.js                                                            \r\n\r\n\r\n",
+       "exit": 0,
+       "truncated": true,
+       "outputPath": "C:\\Users\\Rafaela Cunha\\.local\\share\\opencode\\tool-output\\tool_0c6f21947001TBAw6K7uFlhepG"
+      },
+      "title": "Get-ChildItem -Path \"app\" -Recurse",
+      "time": {
+       "start": 1790044147079,
+       "end": 1790044173687
+      }
+     },
+     "metadata": {
+      "google": {
+       "thoughtSignature": "EosFCogFAWkUfRO7p4KN+2SPbrcwpXuh1YWFHM2sd9BBUODZKj5YgEXm1xjKhriuMssJc0szGDsdN7JjIaZYdPTue+DfB4dQ2/hJLoShy6fCqcWMaBxD1ZP1FwtoTfLF1UvWKqa6DQqWFWZVgD10X7Te5HXSY1xQIbSVeGugybY/rjBVnZjR8iJFaUDFXscZAEPDSdhy3uJGbVKsVi2ATp+DHR8QMSiISDVj8Nz6fHuSq10ryyZATL2R/1O8/BMr6afZu33ttATQTeFh+C3lnlaZThun041t/gzH0olRAGQdFmlYGQc5KFJuhNkyt7RB5UEF+rPnVDJVCq4Y4IOuv5ILb810P/CugzGcyBO5Iyj4z3X3GBtNudYK1N2Zbr8LLG3GjVXXvT/LU0VXEUV4ifxybR2sumigRxRytU6BeGVnUPSPndVYJkxRiLXw8FuspRE60HQqlTUac+VI4WQIZ4z9c/3u3H4kR1t8pgFdMieW7Ab9LxDpCO0HJovZqUtPax2e6h0kjtXEFvqwAeXToMk0f1T+kgCsBYrlnr0qH8zV/3RhFKPOxwKI4NU1bx0ybNoszB5Dhu0Et0tNsugFVRssTVX8D2SiroTU7s15WMVGfRHvU8hjNhRymf9ZP4jJzNyDkd62aEV+S5seimFi2YH01jLFg+9IY++khhuVVFYR/1rLgb8awkROB5GFJtsWE2PFYDMMi1eU46r3UyQ30JFJRKSxKf49f8EoliV/BCgIxWC+2kjsHD2i4SA/tARMAmFw78YHfTpB+v+pxU6jUdgHsYbvebgORt2kc/zAbTefn6C1JAWLvedXqYc4qWj9fLgiFJsDvjfjTYsh5l5rx5RgnDoZY6pk6xPkWKUp"
+      }
+     },
+     "id": "prt_0c6f20d80001GPEqVxLhy7Laxe",
+     "sessionID": "ses_f3914888bffejDK1zHYAS1xfZj",
+     "messageID": "msg_0c6f203b40012qAOSPfT9PYgdt"
+    },
+    {
+     "reason": "tool-calls",
+     "snapshot": "a31b7e1f9548e91e5d244aa9387b4e2a2f50b66f",
+     "type": "step-finish",
+     "tokens": {
+      "total": 22485,
+      "input": 10016,
+      "output": 26,
+      "reasoning": 127,
+      "cache": {
+       "write": 0,
+       "read": 12316
+      }
+     },
+     "cost": 0.0030414,
+     "id": "prt_0c6f277d3001XWDXcjVnplWebh",
+     "sessionID": "ses_f3914888bffejDK1zHYAS1xfZj",
+     "messageID": "msg_0c6f203b40012qAOSPfT9PYgdt"
+    }
+   ]
+  },
+  {
+   "info": {
+    "parentID": "msg_0c6f1c8ff001c0gAu66EcioNl7",
+    "role": "assistant",
+    "mode": "build",
+    "agent": "build",
+    "path": {
+     "cwd": "C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica\\semana-academica",
+     "root": "C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica"
+    },
+    "cost": 0.00900875,
+    "tokens": {
+     "total": 34775,
+     "input": 34523,
+     "output": 56,
+     "reasoning": 196,
+     "cache": {
+      "write": 0,
+      "read": 0
+     }
+    },
+    "modelID": "gemini-3.1-flash-lite",
+    "providerID": "google",
+    "time": {
+     "created": 1790044174923,
+     "completed": 1790044181773
+    },
+    "finish": "tool-calls",
+    "id": "msg_0c6f27a4b001TPPTLGUN4V1iBN",
+    "sessionID": "ses_f3914888bffejDK1zHYAS1xfZj"
+   },
+   "parts": [
+    {
+     "snapshot": "a31b7e1f9548e91e5d244aa9387b4e2a2f50b66f",
+     "type": "step-start",
+     "id": "prt_0c6f290b000190MIRSli2xMoEq",
+     "sessionID": "ses_f3914888bffejDK1zHYAS1xfZj",
+     "messageID": "msg_0c6f27a4b001TPPTLGUN4V1iBN"
+    },
+    {
+     "type": "tool",
+     "tool": "read",
+     "callID": "1s4Vrf5rViOApf6k",
+     "state": {
+      "status": "completed",
+      "input": {
+       "filePath": "C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica\\semana-academica\\api\\src\\server.js"
+      },
+      "output": "[38073 caracteres omitidos]",
+      "title": "semana-academica\\api\\src\\server.js",
+      "time": {
+       "start": 1790044180675,
+       "end": 1790044180733
+      }
+     },
+     "metadata": {
+      "google": {
+       "thoughtSignature": "EuIGCt8GAWkUfRMwG4ndJJ/TH2T5MFF4ieyDSRjCF+O4+R9Oj3cP+tebVfr8yuUwNbipL8ai+MlwtVe2wn1h5K2b64fHMjuMF01cg4/HpVWQBuMbe45+jXOWQ+pK3pQmnlZdffXNp4GvmWhkccO7G7IpuLNXzcC9geB71KvJoLLZ4ZBWbZ2+KnYWVXkgVkdRJpotzC8Qs8QNCPeicjf9W9Zs0oIhVWYRm5LHp+iqNlx8M0+N0JjlV4AxuxScZ0+ycYlrgIwBZTGwlJ9dtXGh3VHs7AR54IbJNqucVFS7LCbfIEk9BDKbDGTA9ATUy5TzuEa2/kH4vhEU4370gnuiUrPFxiIr6dNRZhvru5hRZw1cM608s34ynWOXhx7igrQqz8a5C/wuD8AP6++YoQgcPXSX5Wkaou9xhLzhDfZG5lSDx821TGdr4gIjT2piMNFuT9uDd6yAMe1NIprwXqNwAo6lnQdY1+puisTo6YntIIpxkccT8O92UBe3NDNS4xKfXhPEs084cbzr8Ko+m3jn0pcab+aK4CYC0bXoFNqBJhqlXhrypesaNy3dezc+116/zQ5/8HSD9Bya/M11/befV/5JeOrUCcvG5cb3g2t5/aIVliYzEpoUdk/O+/Lt5iScFIih5f+duxNyfb2sr67UsTsfHyjqexmIzqf/BrevZT5GuUiVK/IBYLOD6j0kgFC6+8M1Z+dRIl4CK7zKcPyfg1JfqksDo+49BHDk/c8uMrH9qbLK+JoEmh/hmtXtjMM4NobHIKeLEBObLa8V/BqA2rSsPUXPXZICSTSJWA6DUwYYj/159lhtsOvjbNKtPsOchmrh2WvJBMvxt/ofsB5JMFamcVGwXPsvYQaJcrSVlFXPX1JdlvTigJAJBPiMOUDgBMs0ryM3KUHF0G/wB0xIlYF3AYIGXxGwMTbDB/MUpSU2dTfoOHLPdPzMBhq3sgxe4hhVKpJa+IM1CQjQ6sgeJHJmfP/i0YsA9jjwJsHJc2jKr6LcTR5LUyN3pFDUNpKSUK4PA6S/Ig1D7C3S2zSyhBwWPBWdRUxD8mXRmh3+DoDoXXx6NkVO8DUH59yRVHqsUlbMZL/sgWaTm673azwIvaCO8BjhCCu+HqqhzwlPrQDyeKsUFJCw5P6BK7cplNFciYa9VC8="
+      }
+     },
+     "id": "prt_0c6f290b6001GeBIs6Rrh8jj6S",
+     "sessionID": "ses_f3914888bffejDK1zHYAS1xfZj",
+     "messageID": "msg_0c6f27a4b001TPPTLGUN4V1iBN"
+    },
+    {
+     "reason": "tool-calls",
+     "snapshot": "a31b7e1f9548e91e5d244aa9387b4e2a2f50b66f",
+     "type": "step-finish",
+     "tokens": {
+      "total": 34775,
+      "input": 34523,
+      "output": 56,
+      "reasoning": 196,
+      "cache": {
+       "write": 0,
+       "read": 0
+      }
+     },
+     "cost": 0.00900875,
+     "id": "prt_0c6f29315001f97QdFmdRX6C91",
+     "sessionID": "ses_f3914888bffejDK1zHYAS1xfZj",
+     "messageID": "msg_0c6f27a4b001TPPTLGUN4V1iBN"
+    }
+   ]
+  },
+  {
+   "info": {
+    "parentID": "msg_0c6f1c8ff001c0gAu66EcioNl7",
+    "role": "assistant",
+    "mode": "build",
+    "agent": "build",
+    "path": {
+     "cwd": "C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica\\semana-academica",
+     "root": "C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica"
+    },
+    "cost": 0.00494995,
+    "tokens": {
+     "total": 48939,
+     "input": 16077,
+     "output": 58,
+     "reasoning": 16,
+     "cache": {
+      "write": 0,
+      "read": 32788
+     }
+    },
+    "modelID": "gemini-3.1-flash-lite",
+    "providerID": "google",
+    "time": {
+     "created": 1790044181781,
+     "completed": 1790044187719
+    },
+    "finish": "tool-calls",
+    "id": "msg_0c6f29515001FE955T7weah8jz",
+    "sessionID": "ses_f3914888bffejDK1zHYAS1xfZj"
+   },
+   "parts": [
+    {
+     "snapshot": "a31b7e1f9548e91e5d244aa9387b4e2a2f50b66f",
+     "type": "step-start",
+     "id": "prt_0c6f2a78c001BbX8FwHAf8vjoq",
+     "sessionID": "ses_f3914888bffejDK1zHYAS1xfZj",
+     "messageID": "msg_0c6f29515001FE955T7weah8jz"
+    },
+    {
+     "type": "tool",
+     "tool": "read",
+     "callID": "ftprDJXo5QH4wPCN",
+     "state": {
+      "status": "completed",
+      "input": {
+       "filePath": "C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica\\semana-academica\\app\\tests\\mocks\\handlers.js"
+      },
+      "output": "[3238 caracteres omitidos]",
+      "title": "semana-academica\\app\\tests\\mocks\\handlers.js",
+      "time": {
+       "start": 1790044186533,
+       "end": 1790044186614
+      }
+     },
+     "metadata": {
+      "google": {
+       "thoughtSignature": "ErEBCq4BAWkUfRMyFrCO3/AT3gK1gs9dKkheU9pEhPcH3LQ/7pCJxcBvMfFsEYIVOugvZ63xqwmhw7JgMR1V1zLCJn81ztVWkn6fAir7/oJnVKDQ2Au8UoyK6V5JtLFmRF0+36BTMZrZaA0jhvOm7Md5dQKOlioyz/2zEEpmO4iPo1/AvKQkdYaRB90tItWLjp5rGvwlZVbgHaObXaZJKY79+CDg9F4s2lK/EoM0wyEbbQIs"
+      }
+     },
+     "id": "prt_0c6f2a795001nGTJlt4ytR5smk",
+     "sessionID": "ses_f3914888bffejDK1zHYAS1xfZj",
+     "messageID": "msg_0c6f29515001FE955T7weah8jz"
+    },
+    {
+     "reason": "tool-calls",
+     "snapshot": "a31b7e1f9548e91e5d244aa9387b4e2a2f50b66f",
+     "type": "step-finish",
+     "tokens": {
+      "total": 48939,
+      "input": 16077,
+      "output": 58,
+      "reasoning": 16,
+      "cache": {
+       "write": 0,
+       "read": 32788
+      }
+     },
+     "cost": 0.00494995,
+     "id": "prt_0c6f2aa23001r140LV2pvbQg0o",
+     "sessionID": "ses_f3914888bffejDK1zHYAS1xfZj",
+     "messageID": "msg_0c6f29515001FE955T7weah8jz"
+    }
+   ]
+  },
+  {
+   "info": {
+    "parentID": "msg_0c6f1c8ff001c0gAu66EcioNl7",
+    "role": "assistant",
+    "mode": "build",
+    "agent": "build",
+    "path": {
+     "cwd": "C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica\\semana-academica",
+     "root": "C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica"
+    },
+    "cost": 0.0055261,
+    "tokens": {
+     "total": 52301,
+     "input": 5153,
+     "output": 715,
+     "reasoning": 1359,
+     "cache": {
+      "write": 0,
+      "read": 45074
+     }
+    },
+    "modelID": "gemini-3.1-flash-lite",
+    "providerID": "google",
+    "time": {
+     "created": 1790044187728,
+     "completed": 1790044198058
+    },
+    "finish": "stop",
+    "id": "msg_0c6f2ac50001qES2C0NGWtVYxy",
+    "sessionID": "ses_f3914888bffejDK1zHYAS1xfZj"
+   },
+   "parts": [
+    {
+     "snapshot": "a31b7e1f9548e91e5d244aa9387b4e2a2f50b66f",
+     "type": "step-start",
+     "id": "prt_0c6f2c10f001nWiBsSl01B88jd",
+     "sessionID": "ses_f3914888bffejDK1zHYAS1xfZj",
+     "messageID": "msg_0c6f2ac50001qES2C0NGWtVYxy"
+    },
+    {
+     "type": "reasoning",
+     "text": "**Forming the Report**\n\nI've got the necessary information to draft the report. I've reviewed `contrato-api.md`, which specifies the contract for M2 regarding inscricoes, and `api/src/server.js`, which details the API route implementations for M2. For instance, I'm noting the `POST /atividades/:id/inscricoes`, `GET /inscricoes`, and `POST` routes.\n\n\n**Mapping the Fields**\n\nI'm now cross-referencing the API routes in `api/src/server.js` with the `Inscricao` fields specified in the contract.  I've examined the mock handlers in `app/tests/mocks/handlers.js`, and how they relate to the endpoints. Specifically, I'm verifying data mapping for GET /inscricoes, making sure the returned data structure matches the contract's expected format. I am also thinking about the request payloads.\n\n\n**Validating the Responses**\n\nI've validated the response structures from the API. I reviewed the implementations for `POST /atividades/:id/inscricoes`, `POST /inscricoes/:id/cancelamento`, and `POST /inscricoes/:id/confirmacao` in `api/src/server.js`, confirming their data fields align perfectly with the contract specifications. I am confident that the responses match the expected format.\n\n\n",
+     "time": {
+      "start": 1790044193050,
+      "end": 1790044195294
+     },
+     "id": "prt_0c6f2c11a001nn3cC7Kp54hldJ",
+     "sessionID": "ses_f3914888bffejDK1zHYAS1xfZj",
+     "messageID": "msg_0c6f2ac50001qES2C0NGWtVYxy"
+    },
+    {
+     "type": "text",
+     "text": "## Relatório de Revisão de Contrato\n\n| Categoria | Contrato (`contrato-api.md`) | Implementação Encontrada (`api/` ou `app/`) | Local (`arquivo:linha`) | Veredito |\n|---|---|---|---|---|\n| Rota / Método | `POST /atividades/:id/inscricoes` | `POST /atividades/:id/inscricoes` | `api/src/server.js:468` | CONFORME |\n| Rota / Método | `POST /inscricoes/:id/cancelamento` | `POST /inscricoes/:id/cancelamento` | `api/src/server.js:681` | CONFORME |\n| Rota / Método | `POST /inscricoes/:id/confirmacao` | `POST /inscricoes/:id/confirmacao` | `api/src/server.js:729` | CONFORME |\n| Campo de Saída | `Inscricao` completo | Retorna apenas `id` e `status` | `app/tests/mocks/handlers.js:58` | DIVERGENTE |\n| Campo de Saída | `Inscricao` completo | Retorna apenas `id`, `atividadeId`, `status` | `app/tests/mocks/handlers.js:61` | DIVERGENTE |\n| Campo de Saída | `Inscricao` completo | Retorna apenas `id` e `status` | `app/tests/mocks/handlers.js:64` | DIVERGENTE |\n\n## Achados de Divergência\n\n1. **[Divergência de Campo]** `POST /inscricoes/:id/confirmacao` (`app/tests/mocks/handlers.js:58`) retorna apenas `{ id, status }`, enquanto o `contrato-api.md` (seção 5, item M2) exige que o objeto `Inscricao` completo seja retornado, incluindo `atividadeId`, `participanteId`, `posicaoNaEspera`, `convocadaAte` e `criadaEm`.\n2. **[Divergência de Campo]** `POST /atividades/:id/inscricoes` (`app/tests/mocks/handlers.js:61`) retorna apenas `{ id, atividadeId, status }`, enquanto o `contrato-api.md` (seção 5, item M2) exige o objeto `Inscricao` completo.\n3. **[Divergência de Campo]** `POST /inscricoes/:id/cancelamento` (`app/tests/mocks/handlers.js:64`) retorna apenas `{ id, status }`, enquanto o `contrato-api.md` (seção 5, item M2) exige o objeto `Inscricao` completo.\n\n## Veredito Geral\n\nA API implementada (`api/src/server.js`) parece estar em conformidade com os campos exigidos pelo `contrato-api.md`. No entanto, a interface de testes (`app/tests/mocks/handlers.js`) apresenta divergências significativas nas respostas das requisições, retornando objetos incompletos que não condizem com a estrutura `Inscricao` definida no contrato.",
+     "time": {
+      "start": 1790044195300,
+      "end": 1790044196901
+     },
+     "id": "prt_0c6f2c9e4001Pno6Fs6Z0gtbwv",
+     "sessionID": "ses_f3914888bffejDK1zHYAS1xfZj",
+     "messageID": "msg_0c6f2ac50001qES2C0NGWtVYxy"
+    },
+    {
+     "reason": "stop",
+     "snapshot": "a31b7e1f9548e91e5d244aa9387b4e2a2f50b66f",
+     "type": "step-finish",
+     "tokens": {
+      "total": 52301,
+      "input": 5153,
+      "output": 715,
+      "reasoning": 1359,
+      "cache": {
+       "write": 0,
+       "read": 45074
+      }
+     },
+     "cost": 0.0055261,
+     "id": "prt_0c6f2d231001PapCUGn2wdDgHr",
+     "sessionID": "ses_f3914888bffejDK1zHYAS1xfZj",
+     "messageID": "msg_0c6f2ac50001qES2C0NGWtVYxy"
+    }
+   ]
+  }
+ ]
+}
