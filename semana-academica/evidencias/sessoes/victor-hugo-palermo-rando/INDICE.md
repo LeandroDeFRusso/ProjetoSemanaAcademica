@@ -23,4 +23,5 @@ Requisições são chamadas ao modelo: cada passo do agente é uma. Skills conta
 | 22/09 01:18 | [Respostas pendentes em M3-presenca-por-qr.md](ses_f38a96618ffeugKbzkXFaL7FhS.md) | 29 | — | — | 0 / 0 | 0 | 0 | 0 | — |
 | 22/09 17:48 | [Spec M3-presenca-por-qr a partir de entrevista](ses_f351f305cffelFxHGIEqNj2W9k.md) | 7 | to-spec | — | 0 / 0 | 0 | 0 | 0 | — |
 | 22/09 17:56 | [Especificação de specs/M3-presenca-por-qr.md](ses_f35181a07ffeO5x0Bg80gcsXsQ.md) | 9 | to-spec | — | 0 / 0 | 0 | 0 | 0 | — |
-| | **Total: 11 sessões** | 100 | grilling (3), to-spec (2) | — | 3 / 2 | 0 | 0 | 0 | — |
+| 22/09 18:32 | [TDD da fatia 1 de M3-presenca-por-qr.md](ses_f34f7730cffediGlRTKxQzXk4h.md) | 27 | tdd | — | 1 / 5 | 1 | 4 | 0 | — |
+| | **Total: 12 sessões** | 127 | grilling (3), to-spec (2), tdd | — | 4 / 7 | 1 | 4 | 0 | — |

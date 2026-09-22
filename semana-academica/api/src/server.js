@@ -593,6 +593,49 @@ export function criarServidor(portaDesejada = 3000) {
       res.json(inscricoes);
     });
 
+    // GET /encontros/:id/codigo
+    app.get('/encontros/:id/codigo', (req, res) => {
+      if (req.usuario.papel !== 'organizacao') {
+        return res.status(403).json({ erro: 'SOMENTE_ORGANIZACAO', mensagem: 'Apenas organização' });
+      }
+      const encontro = db.prepare('SELECT * FROM encontros WHERE id = ?').get(req.params.id);
+      if (!encontro) {
+        return res.status(404).json({ erro: 'NAO_ENCONTRADO', mensagem: 'Encontro não encontrado' });
+      }
+      const atividade = db.prepare('SELECT * FROM atividades WHERE id = ?').get(encontro.atividadeId);
+      if (!atividade) {
+        return res.status(404).json({ erro: 'NAO_ENCONTRADO', mensagem: 'Atividade não encontrada' });
+      }
+      if (atividade.cancelada) {
+        return res.status(422).json({ erro: 'ATIVIDADE_CANCELADA', mensagem: 'Atividade cancelada' });
+      }
+
+      const relogioRow = db.prepare('SELECT valor FROM sistema WHERE chave = ?').get('relogio');
+      const agoraMs = new Date(relogioRow ? relogioRow.valor : Date.now()).getTime();
+      const inicioMs = new Date(encontro.inicio).getTime();
+      const janelaInicio = inicioMs - 15 * 60 * 1000;
+      const janelaFim = inicioMs + 30 * 60 * 1000;
+
+      if (agoraMs < janelaInicio || agoraMs > janelaFim) {
+        return res.status(422).json({ erro: 'FORA_DA_JANELA', mensagem: 'Fora da janela de registro' });
+      }
+
+      const minutoMs = Math.floor(agoraMs / 60000) * 60000;
+      const trocaMs = minutoMs + 60000;
+      const validoAteMs = minutoMs + 2 * 60000;
+
+      const codigo = crypto.createHash('md5').update(`${encontro.id}-${minutoMs}`).digest('hex').substring(0, 6).toUpperCase();
+      const trocaEm = formatarDataIso(trocaMs);
+      const valAte = formatarDataIso(validoAteMs);
+
+      res.json({
+        encontroId: encontro.id,
+        codigo,
+        trocaEm,
+        validoAte: valAte
+      });
+    });
+
     // GET /inscricoes/:id
     app.get('/inscricoes/:id', (req, res) => {
       const row = db.prepare('SELECT * FROM inscricoes WHERE id = ?').get(req.params.id);
