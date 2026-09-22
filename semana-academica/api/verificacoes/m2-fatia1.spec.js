@@ -184,3 +184,53 @@ test('usuario da organizacao tentando realizar inscricao recebe 403 SOMENTE_PART
     app.close();
   }
 });
+
+test('participante tenta realizar nova inscricao em atividade que ja possui inscricao ativa retorna 409 JA_INSCRITO (R2)', async () => {
+  process.env.MODO_TESTE = '1';
+  const { app, porta } = await criarServidor(0);
+
+  try {
+    await fetch(`http://localhost:${porta}/_teste/reset`, { method: 'POST' });
+
+    const atvRes = await fetch(`http://localhost:${porta}/_teste/atividades`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-Usuario': 'org-ana' },
+      body: JSON.stringify({
+        id: 'atv_r2',
+        titulo: 'Palestra R2',
+        tipo: 'palestra',
+        salaId: 'auditorio',
+        vagas: 10,
+        encontros: [
+          { id: 'enc_r2', inicio: '2026-10-19T10:00:00-03:00', fim: '2026-10-19T12:00:00-03:00' }
+        ],
+        cancelada: 0
+      })
+    });
+    assert.equal(atvRes.status, 201);
+
+    await fetch(`http://localhost:${porta}/_teste/relogio`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ agora: '2026-10-19T09:00:00-03:00' })
+    });
+
+    // Primeira inscrição
+    const res1 = await fetch(`http://localhost:${porta}/atividades/atv_r2/inscricoes`, {
+      method: 'POST',
+      headers: { 'X-Usuario': 'p-carla' }
+    });
+    assert.equal(res1.status, 201);
+
+    // Segunda inscrição (mesma atividade, mesmo participante)
+    const res2 = await fetch(`http://localhost:${porta}/atividades/atv_r2/inscricoes`, {
+      method: 'POST',
+      headers: { 'X-Usuario': 'p-carla' }
+    });
+    assert.equal(res2.status, 409);
+    const data = await res2.json();
+    assert.equal(data.erro, 'JA_INSCRITO');
+  } finally {
+    app.close();
+  }
+});

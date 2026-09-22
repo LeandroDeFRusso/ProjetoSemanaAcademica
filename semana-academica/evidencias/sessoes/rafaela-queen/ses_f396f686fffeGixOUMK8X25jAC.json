@@ -1,0 +1,1402 @@
+{
+ "info": {
+  "id": "ses_f396f686fffeGixOUMK8X25jAC",
+  "slug": "playful-falcon",
+  "projectID": "83101555cb47ec2aac60beaa3444a9fffcf1229a",
+  "directory": "C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica\\semana-academica",
+  "path": "semana-academica",
+  "title": "Auditoria do módulo M2 contra especificações",
+  "agent": "build",
+  "model": {
+   "id": "gemini-3.5-flash-lite",
+   "providerID": "google"
+  },
+  "version": "1.18.32",
+  "summary": {
+   "additions": 0,
+   "deletions": 0,
+   "files": 0
+  },
+  "cost": 0.055291629999999994,
+  "tokens": {
+   "input": 155479,
+   "output": 552,
+   "reasoning": 1576,
+   "cache": {
+    "read": 110931,
+    "write": 0
+   }
+  },
+  "time": {
+   "created": 1790037759888,
+   "updated": 1790037848194
+  }
+ },
+ "messages": [
+  {
+   "info": {
+    "role": "user",
+    "time": {
+     "created": 1790037759959
+    },
+    "agent": "build",
+    "model": {
+     "providerID": "google",
+     "modelID": "gemini-3.5-flash-lite"
+    },
+    "summary": {
+     "diffs": []
+    },
+    "id": "msg_0c69097d7001QafvIVi3nWucMG",
+    "sessionID": "ses_f396f686fffeGixOUMK8X25jAC"
+   },
+   "parts": [
+    {
+     "type": "text",
+     "text": "@auditor audite o módulo M2 contra specs/M2-inscricoes.md\nSalvem o parecer inteiro, sem editar, em auditorias/M2-<data>.md. Cada achado termina num commit que o resolve ou numa linha explicando por que não procede. ",
+     "id": "prt_0c69097dc001lOFA9OsQ6pLf56",
+     "sessionID": "ses_f396f686fffeGixOUMK8X25jAC",
+     "messageID": "msg_0c69097d7001QafvIVi3nWucMG"
+    }
+   ]
+  },
+  {
+   "info": {
+    "parentID": "msg_0c69097d7001QafvIVi3nWucMG",
+    "role": "assistant",
+    "mode": "build",
+    "agent": "build",
+    "path": {
+     "cwd": "C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica\\semana-academica",
+     "root": "C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica"
+    },
+    "cost": 0.0038217,
+    "tokens": {
+     "total": 10605,
+     "input": 10314,
+     "output": 17,
+     "reasoning": 274,
+     "cache": {
+      "write": 0,
+      "read": 0
+     }
+    },
+    "modelID": "gemini-3.5-flash-lite",
+    "providerID": "google",
+    "time": {
+     "created": 1790037759999,
+     "completed": 1790037787341
+    },
+    "finish": "tool-calls",
+    "id": "msg_0c69097ff001yhtomglZLNVFCw",
+    "sessionID": "ses_f396f686fffeGixOUMK8X25jAC"
+   },
+   "parts": [
+    {
+     "snapshot": "3a57f3caac3aa38ccfc6331005b7d42ac700400c",
+     "type": "step-start",
+     "id": "prt_0c690fd9f001kyBBQB4xwskEdr",
+     "sessionID": "ses_f396f686fffeGixOUMK8X25jAC",
+     "messageID": "msg_0c69097ff001yhtomglZLNVFCw"
+    },
+    {
+     "type": "reasoning",
+     "text": "**Considering the Request**\n\nI'm currently focused on dissecting the user's instructions. It appears they're requesting an audit of module M2 against a specific specification file. I'll need to generate a comprehensive audit report and handle findings, committing resolutions or providing justifications for non-issues.\n\n\n",
+     "time": {
+      "start": 1790037786032,
+      "end": 1790037786069
+     },
+     "id": "prt_0c690fdaf001ewrrL3QoeKVLUa",
+     "sessionID": "ses_f396f686fffeGixOUMK8X25jAC",
+     "messageID": "msg_0c69097ff001yhtomglZLNVFCw"
+    },
+    {
+     "type": "tool",
+     "tool": "glob",
+     "callID": "gFj9UiDymzM4fvk0",
+     "state": {
+      "status": "completed",
+      "input": {
+       "pattern": "auditorias/**/*"
+      },
+      "output": "[725 caracteres omitidos]",
+      "title": "semana-academica",
+      "time": {
+       "start": 1790037786060,
+       "end": 1790037786251
+      }
+     },
+     "metadata": {
+      "google": {
+       "thoughtSignature": "EpsKCpgKAWkUfRPPC8KWTER+4pFefe96IoZ8vPIs8RWus8XFC9o/oxaBJ68uimoze8k99X2BBCPUuR9gwgEgUKUehP9TMpIvb20/jqLyq4TpAt1iPzAm1LODde8nEAg2v+0+ZQcn/P6amvYypb5VPiv1ugQdf0E0uyIVStAkaE9Yf/Yq8FZmENepJR0I6ZLMy2+LJh23jI1rh8ss14Ft9ByuREsMpHVNcSR4HHGeoEvsNkfdW/AOXfdUDVkP6iV3CNEeLyAhPcCk14zIkDjSGrnfQVfp3soSpm3mP2NIKWGNaCoPIQeOk4ADZQIvkqeIZZ6Gx4u4IekKxtx1a910OvVtqXXGfmNjedfFGKAUQv7ZbNTcofL0/ve+fXm32eYsFnrLClhrYWTiVlpLhcpOFPyeVghJZL9GbCD8a9uKv7nOcC+mx54aqDKrmQzSjl9MwEJrxlNZjqhMONWdOZrFdv1E9zr4TjZkIWENoo099xqya895YPHu3W52vSr7JletuAdsIshAwP2Zgclyx9Q7BdFjBLjpNiaiEtLCx/KVHIKA59SHEAYNueceei2DXngZgBQFOP0chrsTHqm35NkROENMDg7kiEl7H8d9ziXY0wL+7r/yd6ANwjP3c9KYbDjxIMlQBhygjme/XVR6Lwtl1RE0yJYn17f52dR4jKjP1/7se9d4kWTa3dhOaiSvxoTuQozIS7Rl7IHItJMSNVE1cm9T5IuJs/yUvgBfjGq4lOEC9NR91t45Xiw11l65goG5DCedY36F1plHMawgKQJvzYNVUyFnpQXU/bJR4bI+7Abm5jS6/uFlv30FqzDPX91ZK3Qd4JNqwYZ7jyM0gyF0KDFq6E9YUFSV9BUuBEwxsXN0X4QlMA0uAZDG3P2K+JzgRfOVeveX56c9DudJJYbhkFUw1bMawsPZZo00HdaXLha5rNrDNIh7JnjxMuKafRmQGh7jn/9OO5S94SEKYikNrWKDnqrXMDLoXb5QYV3Fk8/yBsbrPX3nJ9tWF6u/+beOaK9kgtQzWfKE0rgPFSrV1M3tgxK55sdAEgTUDwnuN9nlUATF+iAmw15s+XadcXjcIS6LTRS/Zf1s38iy+R1DPPNd3y2uVHBkx73zlg0AWOskkjbjvUQKQXebVZsPWqTamYhH8M9Bf0jENuxwAwVFctylaMoLShSMav2Y02zdP+9AR3EtRhywiY9mBxt0UwNFpLeTPtDX+tPxTrTjKTbO7FbkFQKc8MiMzsVkp+wkp5fgbMJnsbVCyiG6mYINFtHp+b6Inn1AKsaIUnT3cy6GgZsx+mjARO8xZcJgkt/TS6eM1XpSq1g/6lHf3vXpXN7Hfl057cxBib8hUsFgaJW2GNYJSSJzVtTYiIorQZa9DnlzMTEVBRm9l5iCZcsRL5X9g3dRM0lwgV3sDd8FKrHzON+AvdHsroJZl2GPTSk66XPKOKL8gtt07AHjkzYNIIVyBnv9CsFb7nIldm6onSKzfAPO1JBEN4mjvoM2d2tcWsyYA59JxeX0LRsXTSq0XLRGZrUsYZH9Nrmn16CMcCUaCMScwX2/7AazFfECMTH+FMgOjmJh1ou+aKbj1B+JPNT0cQ1H1BP6KB91cw1weBtSDCHekWSw49MBWh9m4L6jxZiGLQZpms8uGdMPx1bMxorvsIfIZLUxF56SOjPz7wPEAwMd8tJqy3WhskIT6ZSUN5nNPqmLUXkJk/HQg0fD6kS5gtuU63HUvYG8wW+NBz8="
+      }
+     },
+     "id": "prt_0c690fdba001lLxRWEZu0gROXg",
+     "sessionID": "ses_f396f686fffeGixOUMK8X25jAC",
+     "messageID": "msg_0c69097ff001yhtomglZLNVFCw"
+    },
+    {
+     "reason": "tool-calls",
+     "snapshot": "3a57f3caac3aa38ccfc6331005b7d42ac700400c",
+     "type": "step-finish",
+     "tokens": {
+      "total": 10605,
+      "input": 10314,
+      "output": 17,
+      "reasoning": 274,
+      "cache": {
+       "write": 0,
+       "read": 0
+      }
+     },
+     "cost": 0.0038217,
+     "id": "prt_0c691009e001qeZhHcUPQhhyG3",
+     "sessionID": "ses_f396f686fffeGixOUMK8X25jAC",
+     "messageID": "msg_0c69097ff001yhtomglZLNVFCw"
+    }
+   ]
+  },
+  {
+   "info": {
+    "parentID": "msg_0c69097d7001QafvIVi3nWucMG",
+    "role": "assistant",
+    "mode": "build",
+    "agent": "build",
+    "path": {
+     "cwd": "C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica\\semana-academica",
+     "root": "C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica"
+    },
+    "cost": 0.0034357,
+    "tokens": {
+     "total": 11005,
+     "input": 10944,
+     "output": 15,
+     "reasoning": 46,
+     "cache": {
+      "write": 0,
+      "read": 0
+     }
+    },
+    "modelID": "gemini-3.5-flash-lite",
+    "providerID": "google",
+    "time": {
+     "created": 1790037787351,
+     "completed": 1790037790519
+    },
+    "finish": "tool-calls",
+    "id": "msg_0c69102d7001YGNB9vT675Jxdh",
+    "sessionID": "ses_f396f686fffeGixOUMK8X25jAC"
+   },
+   "parts": [
+    {
+     "snapshot": "3a57f3caac3aa38ccfc6331005b7d42ac700400c",
+     "type": "step-start",
+     "id": "prt_0c6910a2d001MxM10EQwG735Lb",
+     "sessionID": "ses_f396f686fffeGixOUMK8X25jAC",
+     "messageID": "msg_0c69102d7001YGNB9vT675Jxdh"
+    },
+    {
+     "type": "tool",
+     "tool": "glob",
+     "callID": "ZlmU0y5dQ6YrxaG3",
+     "state": {
+      "status": "completed",
+      "input": {
+       "pattern": "specs/**/*"
+      },
+      "output": "[393 caracteres omitidos]",
+      "title": "semana-academica",
+      "time": {
+       "start": 1790037789254,
+       "end": 1790037789400
+      }
+     },
+     "metadata": {
+      "google": {
+       "thoughtSignature": "Eq4CCqsCAWkUfROVNISi7HEvU07cZCXNET2OLOQ7Qhdcj53Trb48mWQRbiU7tYYyOrk0hOUqjkCzZJ3o0ifnc2ju6/Xr9+69dL3oXNVFmnprZ1LXhS3t4i81Q2qTYwSz+eANZQvnC3HEsCRxE7B8BYhXbCZ2Nx2CipuALMftnCPGeQqKP7ZjZDlXpj0oKqoC90W8utxzZbm4Jl0WcxqEiNT116SyCSr5hsHtkgOGirsDhZRMnQzNLYNJa1mKNiMaslNJ4pZwmgpGl5HPDrbGEsE8qXY75AIlzhn3XKfBMhNHd8GKSr7Pb2vN+mzohYwUWla6hav2oUNMwSpo/HZe3Xvxzn4+Igqn31PCF6j0kuJZ+csW7kK4jycWPMX/egrCPk5dMWWF+oH3YMRTIIeBwOQ="
+      }
+     },
+     "id": "prt_0c6910a37001GJcGIBUBJUF9qH",
+     "sessionID": "ses_f396f686fffeGixOUMK8X25jAC",
+     "messageID": "msg_0c69102d7001YGNB9vT675Jxdh"
+    },
+    {
+     "reason": "tool-calls",
+     "snapshot": "3a57f3caac3aa38ccfc6331005b7d42ac700400c",
+     "type": "step-finish",
+     "tokens": {
+      "total": 11005,
+      "input": 10944,
+      "output": 15,
+      "reasoning": 46,
+      "cache": {
+       "write": 0,
+       "read": 0
+      }
+     },
+     "cost": 0.0034357,
+     "id": "prt_0c6910cae001Lvcr8mqam51bPh",
+     "sessionID": "ses_f396f686fffeGixOUMK8X25jAC",
+     "messageID": "msg_0c69102d7001YGNB9vT675Jxdh"
+    }
+   ]
+  },
+  {
+   "info": {
+    "parentID": "msg_0c69097d7001QafvIVi3nWucMG",
+    "role": "assistant",
+    "mode": "build",
+    "agent": "build",
+    "path": {
+     "cwd": "C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica\\semana-academica",
+     "root": "C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica"
+    },
+    "cost": 0.0034177,
+    "tokens": {
+     "total": 11187,
+     "input": 11159,
+     "output": 17,
+     "reasoning": 11,
+     "cache": {
+      "write": 0,
+      "read": 0
+     }
+    },
+    "modelID": "gemini-3.5-flash-lite",
+    "providerID": "google",
+    "time": {
+     "created": 1790037790533,
+     "completed": 1790037793500
+    },
+    "finish": "tool-calls",
+    "id": "msg_0c6910f45001DKmQCSUBzKrc35",
+    "sessionID": "ses_f396f686fffeGixOUMK8X25jAC"
+   },
+   "parts": [
+    {
+     "snapshot": "3a57f3caac3aa38ccfc6331005b7d42ac700400c",
+     "type": "step-start",
+     "id": "prt_0c6911646001q36trtMuYQtTr3",
+     "sessionID": "ses_f396f686fffeGixOUMK8X25jAC",
+     "messageID": "msg_0c6910f45001DKmQCSUBzKrc35"
+    },
+    {
+     "type": "tool",
+     "tool": "glob",
+     "callID": "5NJNE8VS4tiiRo9W",
+     "state": {
+      "status": "completed",
+      "input": {
+       "pattern": "entrevistas/**/*"
+      },
+      "output": "[411 caracteres omitidos]",
+      "title": "semana-academica",
+      "time": {
+       "start": 1790037792347,
+       "end": 1790037792496
+      }
+     },
+     "metadata": {
+      "google": {
+       "thoughtSignature": "En4KfAFpFH0Tq3xpAV7jtiSsVEDjkAZrkwNZ+mBmJWR6CDxzMDWRiqn3yotKVETrQGYidR8E7iy7h6fw90BD9gHCDwWKSYGibWh3hL7zekwAGID1ry77uWKbTt1qRBmljkO7RtIlmMUq4R4lwnag1NksvT1rrRec6Fb3clRxi+s="
+      }
+     },
+     "id": "prt_0c691164d001S3SxrZRU4pGeFJ",
+     "sessionID": "ses_f396f686fffeGixOUMK8X25jAC",
+     "messageID": "msg_0c6910f45001DKmQCSUBzKrc35"
+    },
+    {
+     "reason": "tool-calls",
+     "snapshot": "3a57f3caac3aa38ccfc6331005b7d42ac700400c",
+     "type": "step-finish",
+     "tokens": {
+      "total": 11187,
+      "input": 11159,
+      "output": 17,
+      "reasoning": 11,
+      "cache": {
+       "write": 0,
+       "read": 0
+      }
+     },
+     "cost": 0.0034177,
+     "id": "prt_0c69118c6001PETmEEUW12hB4K",
+     "sessionID": "ses_f396f686fffeGixOUMK8X25jAC",
+     "messageID": "msg_0c6910f45001DKmQCSUBzKrc35"
+    }
+   ]
+  },
+  {
+   "info": {
+    "parentID": "msg_0c69097d7001QafvIVi3nWucMG",
+    "role": "assistant",
+    "mode": "build",
+    "agent": "build",
+    "path": {
+     "cwd": "C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica\\semana-academica",
+     "root": "C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica"
+    },
+    "cost": 0.0041466,
+    "tokens": {
+     "total": 11644,
+     "input": 11347,
+     "output": 18,
+     "reasoning": 279,
+     "cache": {
+      "write": 0,
+      "read": 0
+     }
+    },
+    "modelID": "gemini-3.5-flash-lite",
+    "providerID": "google",
+    "time": {
+     "created": 1790037793516,
+     "completed": 1790037799481
+    },
+    "finish": "tool-calls",
+    "id": "msg_0c6911aec001THUNQFC78p43MG",
+    "sessionID": "ses_f396f686fffeGixOUMK8X25jAC"
+   },
+   "parts": [
+    {
+     "snapshot": "3a57f3caac3aa38ccfc6331005b7d42ac700400c",
+     "type": "step-start",
+     "id": "prt_0c691246b0010A3Lq2RQgQjsLh",
+     "sessionID": "ses_f396f686fffeGixOUMK8X25jAC",
+     "messageID": "msg_0c6911aec001THUNQFC78p43MG"
+    },
+    {
+     "type": "reasoning",
+     "text": "**Analyzing Date Formats**\n\nI'm currently focused on determining the optimal date format. Specifically, I'm considering the implications of Brazilian Portuguese and the international YYYY-MM-DD format. I'm aiming to establish a clear and effective standard.\n\n\n",
+     "time": {
+      "start": 1790037795956,
+      "end": 1790037798285
+     },
+     "id": "prt_0c6912474001ubt32DAxMolGJO",
+     "sessionID": "ses_f396f686fffeGixOUMK8X25jAC",
+     "messageID": "msg_0c6911aec001THUNQFC78p43MG"
+    },
+    {
+     "type": "tool",
+     "tool": "glob",
+     "callID": "Sr0lBip1dhUPRttj",
+     "state": {
+      "status": "completed",
+      "input": {
+       "pattern": "**/*m2*"
+      },
+      "output": "[571 caracteres omitidos]",
+      "title": "semana-academica",
+      "time": {
+       "start": 1790037798278,
+       "end": 1790037798428
+      }
+     },
+     "metadata": {
+      "google": {
+       "thoughtSignature": "Es0HCsoHAWkUfROtreqCThBMWRmtwP/SPHmBbTqvx8EjQtm4sFCiMzk/tCX2fNDoQ3k8SVYGWM2X+PrpcUpBjih58mfPf1pvaQ5SPj3sssCcjTKUPklbZS0m8/dyVTSeUD5jnc4SjLHq6kweNI2NE2CK2+A9U6EP+5HAxLNqcvsebSBePml2uP3VRmsu7EKSgrxXSMLWLvxwWEj3JLyt845xcDhrUI+MytKsOLkEjQGf7Kph1vaay6t0PqinmxcRPpZqx1eaYPJPUR1iN5VfxCxl/fTVZb23r6nPdfOgyabkxPUSvVx3+Cg20qmZSP/nrpm9uFiJNpLvMhu09jYLqreelv4N/lGAKmPyUHaZ2NNg3X1XoIvFYwH+RHCKstUDbapHZRaIvtxkWvsx7zwxwL8eOs3LwoMjfmO7JKg+eICkxCXm5CcoN/EFsnuSqS2XLCyMXcypyMQKlxqLAnLBvViXDGbRRyJk3WBlP75ky3/ol5TnPORfvxuB2mwZP2oLIdgEDOUqeCMERvflx+HdnJFgVy8vLEijCag69TePOWpVJQXl65FQx3GDF7GSQ1vCwHsCiXfxCSoo12X4TT9f8zb1FJxxBQci30YgmPcPEROXukq7nfxGYA0/7mjhBcCRH2N/s7Bi/qbS9cDIGAljR07nuZA5g9YE8bxL5Sm0IF3zSF9tFGMt0xZ9R4sOtzQzc19Bmd4Fm51n4Wj1SoBMTW/tqZ7oI70D/KuNqQejfWc6vvKiaOXdm6y93ZNZQUeZTIcwz9HYJyoj6ZxN3vSjD+gha1vCI13LKZCe2OrYT8Ygzyt1b1OJhDTsT8ADPhJEjubWQqNKnGEAop+Ibv7gS69rSGDroRtSej6Z3lDx3c+AL5wIjiloywoaUpUUgSdVpPrP5Vr3nAy2OduN+peqqFTeN3+U6msJizZO38cf42s1qv0JW1w9Enu7jLNgoE8V8DOhHVRNWLyITlw8v7BssHNUKn//gu0bknE/mlRzf36F//ZuCrzV9DUadsZPRE2/G5SMKxks1z4VeOd8f4fTX/FEMkrBiaxCViykLZnQDefITFvs6qtPJz80tX+sT++4bivYn0OWzKvkYlMFSZf3AEf879Qdybe8Tv68uoPIDWzUPA66K5zzRamLxTUEoaKZajtLvV0TtWwaEXvBhQMhNgZslo9wGneHjO/+PE+Yzkh9sclU8Zsihk3nEpH9pBFAiCpK1OiipqzMSIUvxbW1fbqpxOVCDDD+fYJQ/GpaVDUAvluu9+LA7+oVOVgeT1jFSga7Xj01gYy6EprbXVoVLQ=="
+      }
+     },
+     "id": "prt_0c6912d73001e44Fb42WTR2WHj",
+     "sessionID": "ses_f396f686fffeGixOUMK8X25jAC",
+     "messageID": "msg_0c6911aec001THUNQFC78p43MG"
+    },
+    {
+     "reason": "tool-calls",
+     "snapshot": "3a57f3caac3aa38ccfc6331005b7d42ac700400c",
+     "type": "step-finish",
+     "tokens": {
+      "total": 11644,
+      "input": 11347,
+      "output": 18,
+      "reasoning": 279,
+      "cache": {
+       "write": 0,
+       "read": 0
+      }
+     },
+     "cost": 0.0041466,
+     "id": "prt_0c6913024001Mr9Wu19F6dhz9r",
+     "sessionID": "ses_f396f686fffeGixOUMK8X25jAC",
+     "messageID": "msg_0c6911aec001THUNQFC78p43MG"
+    }
+   ]
+  },
+  {
+   "info": {
+    "parentID": "msg_0c69097d7001QafvIVi3nWucMG",
+    "role": "assistant",
+    "mode": "build",
+    "agent": "build",
+    "path": {
+     "cwd": "C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica\\semana-academica",
+     "root": "C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica"
+    },
+    "cost": 0.0037081,
+    "tokens": {
+     "total": 11979,
+     "input": 11927,
+     "output": 15,
+     "reasoning": 37,
+     "cache": {
+      "write": 0,
+      "read": 0
+     }
+    },
+    "modelID": "gemini-3.5-flash-lite",
+    "providerID": "google",
+    "time": {
+     "created": 1790037799497,
+     "completed": 1790037802783
+    },
+    "finish": "tool-calls",
+    "id": "msg_0c6913248001rTTJzroVNp6NeC",
+    "sessionID": "ses_f396f686fffeGixOUMK8X25jAC"
+   },
+   "parts": [
+    {
+     "snapshot": "3a57f3caac3aa38ccfc6331005b7d42ac700400c",
+     "type": "step-start",
+     "id": "prt_0c6913804001ddsboOepsH291P",
+     "sessionID": "ses_f396f686fffeGixOUMK8X25jAC",
+     "messageID": "msg_0c6913248001rTTJzroVNp6NeC"
+    },
+    {
+     "type": "tool",
+     "tool": "glob",
+     "callID": "qdHZlIh0Amq16jMQ",
+     "state": {
+      "status": "completed",
+      "input": {
+       "pattern": "api/**/*"
+      },
+      "output": "[14502 caracteres omitidos]",
+      "title": "semana-academica",
+      "time": {
+       "start": 1790037800979,
+       "end": 1790037801735
+      }
+     },
+     "metadata": {
+      "google": {
+       "thoughtSignature": "EuMBCuABAWkUfRPz4wnWNjlYntdwdzbUMMU7fLWo1iM2MjCNGR0XJmA+lBVggtxYoY1ZIRlcE2aj7m2ZNK7c5ljlv6FMGG7NT6Ig/OqN0B/iWrDNHgJu+vLmzGgyQNgO8Nd4fW9vLdr8zurZlwq55BihSY8RSiAvYfV6gXcbvmGcEnE0QAi+LnFltHLA1+FQb4ueAtfbbuoGENb6HjRNjA8Yv+lg36wl4fiAcAz4V6lVH/Ku9W01NrL6XY+z6hRXAMIHOdwV3bgvi9S0l4s66ffvB+OTb0gJOUNtavreK45SHB1EDHg="
+      }
+     },
+     "id": "prt_0c691380a001AdXgz2YYFS9HbI",
+     "sessionID": "ses_f396f686fffeGixOUMK8X25jAC",
+     "messageID": "msg_0c6913248001rTTJzroVNp6NeC"
+    },
+    {
+     "reason": "tool-calls",
+     "snapshot": "3a57f3caac3aa38ccfc6331005b7d42ac700400c",
+     "type": "step-finish",
+     "tokens": {
+      "total": 11979,
+      "input": 11927,
+      "output": 15,
+      "reasoning": 37,
+      "cache": {
+       "write": 0,
+       "read": 0
+      }
+     },
+     "cost": 0.0037081,
+     "id": "prt_0c6913d08001eGwgfE7jFQHfw2",
+     "sessionID": "ses_f396f686fffeGixOUMK8X25jAC",
+     "messageID": "msg_0c6913248001rTTJzroVNp6NeC"
+    }
+   ]
+  },
+  {
+   "info": {
+    "parentID": "msg_0c69097d7001QafvIVi3nWucMG",
+    "role": "assistant",
+    "mode": "build",
+    "agent": "build",
+    "path": {
+     "cwd": "C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica\\semana-academica",
+     "root": "C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica"
+    },
+    "cost": 0.0060457,
+    "tokens": {
+     "total": 17373,
+     "input": 16994,
+     "output": 17,
+     "reasoning": 362,
+     "cache": {
+      "write": 0,
+      "read": 0
+     }
+    },
+    "modelID": "gemini-3.5-flash-lite",
+    "providerID": "google",
+    "time": {
+     "created": 1790037802802,
+     "completed": 1790037806930
+    },
+    "finish": "tool-calls",
+    "id": "msg_0c6913f31001RrLT00ITI01Req",
+    "sessionID": "ses_f396f686fffeGixOUMK8X25jAC"
+   },
+   "parts": [
+    {
+     "snapshot": "3a57f3caac3aa38ccfc6331005b7d42ac700400c",
+     "type": "step-start",
+     "id": "prt_0c69149a3001l8PDbDeqp6oIJJ",
+     "sessionID": "ses_f396f686fffeGixOUMK8X25jAC",
+     "messageID": "msg_0c6913f31001RrLT00ITI01Req"
+    },
+    {
+     "type": "reasoning",
+     "text": "**Investigating Auditor's Tools**\n\nI'm currently looking into how to best utilize the `auditor` subagent. I'm investigating its available tools and the different methods for invocation. I need to know if the `task` tool, or another skill, can be used to call the `auditor`. A more thorough review of the `auditor` agent and task tool description is needed.\n\n\n",
+     "time": {
+      "start": 1790037805480,
+      "end": 1790037805783
+     },
+     "id": "prt_0c69149a8001TU0FcWx4ijUvG5",
+     "sessionID": "ses_f396f686fffeGixOUMK8X25jAC",
+     "messageID": "msg_0c6913f31001RrLT00ITI01Req"
+    },
+    {
+     "type": "tool",
+     "tool": "glob",
+     "callID": "oViuNWWBmntAQSbt",
+     "state": {
+      "status": "completed",
+      "input": {
+       "pattern": "auditorias/*"
+      },
+      "output": "[725 caracteres omitidos]",
+      "title": "semana-academica",
+      "time": {
+       "start": 1790037805775,
+       "end": 1790037805927
+      }
+     },
+     "metadata": {
+      "google": {
+       "thoughtSignature": "EvMMCvAMAWkUfROxpZZEZ96cQgRWQADnOnr1jm9awapOj/8PrRcFdHxPmkll3UuiRvJ/7NUbdSjramfFQbBBJ38901CBAJ86sjxUVspPEkWfNlvEMp8crEYfVbCMldDTO0M5Xr8nKawAOwE1yjaeC8nFNNE5adB8zklJ6wXyfHYy1pMPe+lyg0ZHlGjp75nHRv0sa9kT5iPR2nx0nCjrW4TqhU8en3tLiPe5mjpHQQYGUTY+Ry0RV49G5hkTwobrfX+GfuEhMHHrr2FIvj25SxRyD3Fl0FzFBZ76mKmoIO1MpEJwUQiuLcHO5t57vLdVqrfyZC8xBmDvDCC6Vmb3hZfgUaB+qm2thPIuYPLtq6iBWU1pjZ1gJI98JQjZk4xZ8OF7WhC/XYmc+O3FF751a0x2lJ1JEgC1q8+1IxdpBrbf72tQ3uEFxdSquZkH6DffaEOQDirH7LI5cQOv8GIRpg4o/NKabV/PZQPP599iaiRwROYPxhqh7L8GTGdU/JWI18x+ftg1GR2Q4yKmrqTe2vrLtrLmg8H/fhlf3gQ7fi6z7NIs4mugLfuTXUI277K8YjdLovdLWHwc5sOUDA2cVktJoS1N9LiHC6nE7RxAIVwfVYCmdOJsxkuIs+G4QykITQv7V0DDZPcxD47wYTay8xSMHxmJBo9v8EwUaSqLBbIFwO4pXHqRCaYjW8hzDye9jo4HGTHrBrxl60kQVumH9Ys9Uro4rmJsdN7KmG4Vb0YmtmZuscSJaRMCS4Zg73aAe0WbSDxCs7HCZslirRMDRr0Vrj3is7ekhYW9BYoN1RDRii4ht86bsusAYltc0dOKURYD1KFlVt2HRuc2/Bin3gUcPNnvKUu1cKgdcAKSo2egynjoe7PAAjONNVNqvWhowBXR0766B7E5nOF/yI8VTrsOvMzDdXz9w3tS6LW9hVtD2YNrNtDdf5QfVuDy/negZNfT+jdY4U8n0t1W4FBkTIVzDKXQMNoeDMWNdAcMQuWpa1fv4agtRWo7yrzsvH8jZ0DmpESfmBFPjIyJ2GIJ4vSLPuvZ2W6hz8iy4ZrcAy/vMnb4kXw28FM85MehansDk5dxwo51JglFcDZJ/qS25aW/zIZjmrgDTedeoDfyfM1aPHjFaVEhdry0ms02m+RJfa6ubduANf4qH7tBGaOWyzT2G/pcvDaDcLmop8TQcu89MWehApruG7Xg+dyNrVnkLtQx6W9LEg/hOdFKI49bN7NjV1w9P0wH5T+JF0o/h39ZrWAVHa+NI1F089vv5IpDI7n3gCzuLzb1POwemK8YDT5V1jwUq+UYPezT/1cJnJcZ85w/XUeMX486zi7+9tOZRgkWy1LxIwG/SKO3jMrLMXwVStQLW8eAYAhMHySYu7s/tovXkXPQKT9vjq/2Zq+zTlyapSi3Vr/IAtYN2+/CcIuTpxlIo/HLHHIN+EMEIjC22vsDmZ48J8pvZLTxpcUY9YJmypSp0oYXm3M6KzmqRwpTAulsa4p+5F+haiXb0sIGINzUSuvnvuoQ5sEUjOH7WJ/sKvqOTJJniuKhonEexe77KqPD//KfH9AMvDD5hN1uuUeSdOXpytLzhqZNOiKChxYjZnv8HheAvmBDK5ACC0xYmi+pJW7QlCf5+JFgT9ocg3hHLEVOahGwEmCPGQ1HveWvz0FuDuUSw4iFyj/7aFAuHZVeBXoc9EoTwO8yM9Ov22jef/tRJ0HObXt6LnJWulPNsQJr6GLu93Rx0z54+DF1Ksp5/ZIUSK1ft9VJbIQ0F9WcPRkBjhG560cPTDR+9bschnEN61iPJG6HeGSUFHdT0GykbqqxJK09hE5/H210s6OPr6Hyrbmwhu1k/YZOLRCeznXHNwgKv4eWPEQCvImruXXg6bBVXrg2xthjldY6bKg3H0KkMCRZIaJpzGuk+mzpqeoM06JEpnjBID8+8YxkSm/Vr8/9EzA84LuPhbm2fmgfeYnDZgSYdqOia/W0J14Avp/oc+eJ2nSjfVw+j+FZ52qGNSrfTTLrQodUBdYjXlDKb7j9zcVcBFiyKEUZE9Tnxl4KySZLHDeBB9zqhiJRP5HoXHafHWCAJKQmh9qsnJLEJS59egusYKdrn2x4H23RWr88czjtQrN9KM2yx7BFTdIMpUWpDAulBy152rKztAQo4Tw+mGEAmIVvG/DrFnXFqzmXcHRGk6SWmexyx1SzKL+FLw=="
+      }
+     },
+     "id": "prt_0c6914abe001EMlHLwwESPAhzH",
+     "sessionID": "ses_f396f686fffeGixOUMK8X25jAC",
+     "messageID": "msg_0c6913f31001RrLT00ITI01Req"
+    },
+    {
+     "reason": "tool-calls",
+     "snapshot": "3a57f3caac3aa38ccfc6331005b7d42ac700400c",
+     "type": "step-finish",
+     "tokens": {
+      "total": 17373,
+      "input": 16994,
+      "output": 17,
+      "reasoning": 362,
+      "cache": {
+       "write": 0,
+       "read": 0
+      }
+     },
+     "cost": 0.0060457,
+     "id": "prt_0c6914d94001NU8savXLWCl6xD",
+     "sessionID": "ses_f396f686fffeGixOUMK8X25jAC",
+     "messageID": "msg_0c6913f31001RrLT00ITI01Req"
+    }
+   ]
+  },
+  {
+   "info": {
+    "parentID": "msg_0c69097d7001QafvIVi3nWucMG",
+    "role": "assistant",
+    "mode": "build",
+    "agent": "build",
+    "path": {
+     "cwd": "C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica\\semana-academica",
+     "root": "C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica"
+    },
+    "cost": 0.00227023,
+    "tokens": {
+     "total": 17849,
+     "input": 5373,
+     "output": 70,
+     "reasoning": 45,
+     "cache": {
+      "write": 0,
+      "read": 12361
+     }
+    },
+    "modelID": "gemini-3.5-flash-lite",
+    "providerID": "google",
+    "time": {
+     "created": 1790037806936,
+     "completed": 1790037809964
+    },
+    "finish": "tool-calls",
+    "id": "msg_0c6914f5800114LLfwZ0xjbq23",
+    "sessionID": "ses_f396f686fffeGixOUMK8X25jAC"
+   },
+   "parts": [
+    {
+     "snapshot": "3a57f3caac3aa38ccfc6331005b7d42ac700400c",
+     "type": "step-start",
+     "id": "prt_0c6915676001ppgq4v1o5JHucU",
+     "sessionID": "ses_f396f686fffeGixOUMK8X25jAC",
+     "messageID": "msg_0c6914f5800114LLfwZ0xjbq23"
+    },
+    {
+     "type": "tool",
+     "tool": "read",
+     "callID": "2jxJuKweDctisElI",
+     "state": {
+      "status": "completed",
+      "input": {
+       "limit": 500,
+       "filePath": "C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica\\semana-academica\\auditorias\\M1-grade-de-atividades.md"
+      },
+      "output": "[2445 caracteres omitidos]",
+      "title": "semana-academica\\auditorias\\M1-grade-de-atividades.md",
+      "time": {
+       "start": 1790037808776,
+       "end": 1790037808899
+      }
+     },
+     "metadata": {
+      "google": {
+       "thoughtSignature": "Eo0CCooCAWkUfRM4CPhkIIvt4q9iULZHGXFzXlg2EifEB5XMhiQ0JhrtcqnZ8iUKyMw0/D7G5nFwAoKVTbyicGAMrwjpeeRsNzEom4lvvcDrFUC8RfpxCo9ZcoD+x5eI9Pii61vlsrfTau5L5MWLb1IgFMotA91BOpi88/PwPtwoiydy76bl3UTwhApk3FHryJSni4hxJr+eyh7EK+V/SR1Bpd0JUjAzGJNcrzvacqxjijzZ+gPwhJ1T7GP/XUhBMmIP9g7Yf2U9XA7zkJOkrTTfSQA6AcTzPdxwR96MMxxfRXF3dh5BX7qPkc9yeGRX/qye8oGnVCZYL3ObtGtSxyQu2eift4IJpkmZHtTK3XE="
+      }
+     },
+     "id": "prt_0c691567b001VjMiJ61T4lLC1D",
+     "sessionID": "ses_f396f686fffeGixOUMK8X25jAC",
+     "messageID": "msg_0c6914f5800114LLfwZ0xjbq23"
+    },
+    {
+     "reason": "tool-calls",
+     "snapshot": "3a57f3caac3aa38ccfc6331005b7d42ac700400c",
+     "type": "step-finish",
+     "tokens": {
+      "total": 17849,
+      "input": 5373,
+      "output": 70,
+      "reasoning": 45,
+      "cache": {
+       "write": 0,
+       "read": 12361
+      }
+     },
+     "cost": 0.00227023,
+     "id": "prt_0c6915954001Lg5ekTzeIcxbUp",
+     "sessionID": "ses_f396f686fffeGixOUMK8X25jAC",
+     "messageID": "msg_0c6914f5800114LLfwZ0xjbq23"
+    }
+   ]
+  },
+  {
+   "info": {
+    "parentID": "msg_0c69097d7001QafvIVi3nWucMG",
+    "role": "assistant",
+    "mode": "build",
+    "agent": "build",
+    "path": {
+     "cwd": "C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica\\semana-academica",
+     "root": "C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica"
+    },
+    "cost": 0.00158564,
+    "tokens": {
+     "total": 18970,
+     "input": 2347,
+     "output": 66,
+     "reasoning": 89,
+     "cache": {
+      "write": 0,
+      "read": 16468
+     }
+    },
+    "modelID": "gemini-3.5-flash-lite",
+    "providerID": "google",
+    "time": {
+     "created": 1790037809972,
+     "completed": 1790037813238
+    },
+    "finish": "tool-calls",
+    "id": "msg_0c6915b33001sU9wxorSr4NhL3",
+    "sessionID": "ses_f396f686fffeGixOUMK8X25jAC"
+   },
+   "parts": [
+    {
+     "snapshot": "3a57f3caac3aa38ccfc6331005b7d42ac700400c",
+     "type": "step-start",
+     "id": "prt_0c6916405001JWXRtzqsouGrji",
+     "sessionID": "ses_f396f686fffeGixOUMK8X25jAC",
+     "messageID": "msg_0c6915b33001sU9wxorSr4NhL3"
+    },
+    {
+     "type": "tool",
+     "tool": "read",
+     "callID": "cCt8rydrRA4v243M",
+     "state": {
+      "status": "completed",
+      "input": {
+       "filePath": "C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica\\semana-academica\\specs\\M2-inscricoes.md",
+       "limit": 2000
+      },
+      "output": "[11432 caracteres omitidos]",
+      "title": "semana-academica\\specs\\M2-inscricoes.md",
+      "time": {
+       "start": 1790037812251,
+       "end": 1790037812354
+      }
+     },
+     "metadata": {
+      "google": {
+       "thoughtSignature": "EvICCu8CAWkUfRODQbTI7a61Ci6HqGHOu6G6vCjqXLtowaRQDAnCJ86WlrUJlqRU0V6hpce/E++r4UrgYRxjrOeSlbfSs1NcLnx7JllMebUu9Dyq9HTJi0Xd/uhir4n52tPU7mE2c1A/cwKaqpRy3YM+ptOyyrGu8AfjdRJR5KU2dNdbefNiXXYz0ZZnIewUK9ovnSdtyBsJ1KYDh/3cBNCOP+IWcT8Z87m4FGNMSQncSGQYRL6qn2F5tmdcOpOXO+yNUhWdvbeey5sdyrRU1MhFo/9fMgWPLA7I6+G2jEVUUaqLko1DPgtdb3MJLzimP5noxONwuCp1X58lkgEs/qcX6i7G2K80pAgnr3wNJ0y5GrJfC7ogte8HN1T3epnsLrO+xKHgt9mS/z7iT1TiuR+3kbYzLAB3wd8XSUp1+3tLazqRStpm7lMwwCb4uV+SLtHa4Ydpomn+eGBI5iZg75hW3YBYf9pi/mlPg9P3Kqion2M1+Q=="
+      }
+     },
+     "id": "prt_0c691640c001KhobnGU4CIzhrU",
+     "sessionID": "ses_f396f686fffeGixOUMK8X25jAC",
+     "messageID": "msg_0c6915b33001sU9wxorSr4NhL3"
+    },
+    {
+     "reason": "tool-calls",
+     "snapshot": "3a57f3caac3aa38ccfc6331005b7d42ac700400c",
+     "type": "step-finish",
+     "tokens": {
+      "total": 18970,
+      "input": 2347,
+      "output": 66,
+      "reasoning": 89,
+      "cache": {
+       "write": 0,
+       "read": 16468
+      }
+     },
+     "cost": 0.00158564,
+     "id": "prt_0c6916629001lHgXMyIg3P6sjH",
+     "sessionID": "ses_f396f686fffeGixOUMK8X25jAC",
+     "messageID": "msg_0c6915b33001sU9wxorSr4NhL3"
+    }
+   ]
+  },
+  {
+   "info": {
+    "parentID": "msg_0c69097d7001QafvIVi3nWucMG",
+    "role": "assistant",
+    "mode": "build",
+    "agent": "build",
+    "path": {
+     "cwd": "C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica\\semana-academica",
+     "root": "C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica"
+    },
+    "cost": 0.00261368,
+    "tokens": {
+     "total": 22663,
+     "input": 6101,
+     "output": 68,
+     "reasoning": 48,
+     "cache": {
+      "write": 0,
+      "read": 16446
+     }
+    },
+    "modelID": "gemini-3.5-flash-lite",
+    "providerID": "google",
+    "time": {
+     "created": 1790037813244,
+     "completed": 1790037820175
+    },
+    "finish": "tool-calls",
+    "id": "msg_0c69167fc001deoOx6mXqjwDvT",
+    "sessionID": "ses_f396f686fffeGixOUMK8X25jAC"
+   },
+   "parts": [
+    {
+     "snapshot": "3a57f3caac3aa38ccfc6331005b7d42ac700400c",
+     "type": "step-start",
+     "id": "prt_0c6917f46001pmZ98GVEg3C7FV",
+     "sessionID": "ses_f396f686fffeGixOUMK8X25jAC",
+     "messageID": "msg_0c69167fc001deoOx6mXqjwDvT"
+    },
+    {
+     "type": "tool",
+     "tool": "read",
+     "callID": "fJqfACBGf47fI4UN",
+     "state": {
+      "status": "completed",
+      "input": {
+       "limit": 2000,
+       "filePath": "C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica\\semana-academica\\entrevistas\\M2-inscricoes.md"
+      },
+      "output": "[3856 caracteres omitidos]",
+      "title": "semana-academica\\entrevistas\\M2-inscricoes.md",
+      "time": {
+       "start": 1790037819232,
+       "end": 1790037819249
+      }
+     },
+     "metadata": {
+      "google": {
+       "thoughtSignature": "EvQBCvEBAWkUfROzeQ7TduPzkOPcGjXzP6mTTLn18O/jCA30S+dmZxXqomphydiTq5cJ6ihwQc4CXBiVZDCVQ7yIrwbpcl1EsEVwZ1V2t80hfdIxq5quYCTyNWurTnFZ1GodPwjlTXB4orzLJycaGcbuEMb5IVVPgIN+apECg9HjPWT+nS0EQGNoHwrfj1umEmaLP1lYRfk9SFkVyJizkNhRu8w4Ird4zxxLKeKkqEtJnIY3oWGACnyXLbX2PZj4NxE2uubIhSjQ8962h2YcEPnmWqGPT+zd3Ll/VFfdtzunQtzVL634u3MtUu+aOBG/XOTfa/8jKw=="
+      }
+     },
+     "id": "prt_0c6917f50001kyk0EsH01j47MJ",
+     "sessionID": "ses_f396f686fffeGixOUMK8X25jAC",
+     "messageID": "msg_0c69167fc001deoOx6mXqjwDvT"
+    },
+    {
+     "reason": "tool-calls",
+     "snapshot": "3a57f3caac3aa38ccfc6331005b7d42ac700400c",
+     "type": "step-finish",
+     "tokens": {
+      "total": 22663,
+      "input": 6101,
+      "output": 68,
+      "reasoning": 48,
+      "cache": {
+       "write": 0,
+       "read": 16446
+      }
+     },
+     "cost": 0.00261368,
+     "id": "prt_0c691811800179HW4jOX06Px47",
+     "sessionID": "ses_f396f686fffeGixOUMK8X25jAC",
+     "messageID": "msg_0c69167fc001deoOx6mXqjwDvT"
+    }
+   ]
+  },
+  {
+   "info": {
+    "parentID": "msg_0c69097d7001QafvIVi3nWucMG",
+    "role": "assistant",
+    "mode": "build",
+    "agent": "build",
+    "path": {
+     "cwd": "C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica\\semana-academica",
+     "root": "C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica"
+    },
+    "cost": 0.0075836,
+    "tokens": {
+     "total": 23966,
+     "input": 23787,
+     "output": 72,
+     "reasoning": 107,
+     "cache": {
+      "write": 0,
+      "read": 0
+     }
+    },
+    "modelID": "gemini-3.5-flash-lite",
+    "providerID": "google",
+    "time": {
+     "created": 1790037820190,
+     "completed": 1790037823334
+    },
+    "finish": "tool-calls",
+    "id": "msg_0c691831e001f4s0JJ1pPtpLnn",
+    "sessionID": "ses_f396f686fffeGixOUMK8X25jAC"
+   },
+   "parts": [
+    {
+     "snapshot": "3a57f3caac3aa38ccfc6331005b7d42ac700400c",
+     "type": "step-start",
+     "id": "prt_0c6918b9a001nQwvzHL4kqXRpo",
+     "sessionID": "ses_f396f686fffeGixOUMK8X25jAC",
+     "messageID": "msg_0c691831e001f4s0JJ1pPtpLnn"
+    },
+    {
+     "type": "tool",
+     "tool": "read",
+     "callID": "jaBOd5DkAilkPEsS",
+     "state": {
+      "status": "completed",
+      "input": {
+       "limit": 2000,
+       "filePath": "C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica\\semana-academica\\api\\verificacoes\\m2-fatia1.spec.js"
+      },
+      "output": "[8426 caracteres omitidos]",
+      "title": "semana-academica\\api\\verificacoes\\m2-fatia1.spec.js",
+      "time": {
+       "start": 1790037822381,
+       "end": 1790037822406
+      }
+     },
+     "metadata": {
+      "google": {
+       "thoughtSignature": "ErkDCrYDAWkUfROTtElIxsvhO5OZN2QB5u+lKoTertSORDqf4aLfnko7IK6F8hlOxNfltBHK/q0Q8cLhXlAFXg1ORQlF/yUA36hwmy5dZikKtMf3NMWPgtTffIvzd6XjJWCGb7c+HIvn43BYdrARvK1UVkYKwKPS2jCd1m65e7x93xt+GVU8Sq23pzdqE3xlqPtd2uUxwD8NQg4RFXExI+hVH0vFEpW3ny3XO/Uff8XE2vlnIto1d5HwDytAE0PYV9LgeLIYzPvI5B62qD/DtZJdh0FPvKJj7Qs265pxpB9nS5jo1+ngaKSszRFAqutkyIePFSjbiUkVxH3/Jrt0Fr1OaRQ67Xi7bRv14FX9hACntE02CE5A4UPs/zxw2sdVt4xrOEO2sx4yOE20izm9wC8iPatBHlB2/bmBl4ZybFUrg1N0g1H4TlRIALBfIYhpN8xJQPqmw/BlQcHt3pkmYpi66f5SpvU1jEuyCvWcfNCsXy28DLq4pXaHvqJXTI+rZ0oD5GSsGiSDZkF7HYbCg01xGwENGZqbDmLBdjjGn3q8XII+1TNVMqvttySe2pClhQwX536qxHImhiEd"
+      }
+     },
+     "id": "prt_0c6918ba2001y0yFQ8sDp5vYVR",
+     "sessionID": "ses_f396f686fffeGixOUMK8X25jAC",
+     "messageID": "msg_0c691831e001f4s0JJ1pPtpLnn"
+    },
+    {
+     "reason": "tool-calls",
+     "snapshot": "3a57f3caac3aa38ccfc6331005b7d42ac700400c",
+     "type": "step-finish",
+     "tokens": {
+      "total": 23966,
+      "input": 23787,
+      "output": 72,
+      "reasoning": 107,
+      "cache": {
+       "write": 0,
+       "read": 0
+      }
+     },
+     "cost": 0.0075836,
+     "id": "prt_0c6918db80016BYKC5NohKy07n",
+     "sessionID": "ses_f396f686fffeGixOUMK8X25jAC",
+     "messageID": "msg_0c691831e001f4s0JJ1pPtpLnn"
+    }
+   ]
+  },
+  {
+   "info": {
+    "parentID": "msg_0c69097d7001QafvIVi3nWucMG",
+    "role": "assistant",
+    "mode": "build",
+    "agent": "build",
+    "path": {
+     "cwd": "C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica\\semana-academica",
+     "root": "C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica"
+    },
+    "cost": 0.00399839,
+    "tokens": {
+     "total": 27412,
+     "input": 10894,
+     "output": 22,
+     "reasoning": 73,
+     "cache": {
+      "write": 0,
+      "read": 16423
+     }
+    },
+    "modelID": "gemini-3.5-flash-lite",
+    "providerID": "google",
+    "time": {
+     "created": 1790037823345,
+     "completed": 1790037828458
+    },
+    "finish": "tool-calls",
+    "id": "msg_0c6918f710019SyBluTfmXvIp3",
+    "sessionID": "ses_f396f686fffeGixOUMK8X25jAC"
+   },
+   "parts": [
+    {
+     "snapshot": "3a57f3caac3aa38ccfc6331005b7d42ac700400c",
+     "type": "step-start",
+     "id": "prt_0c69197e0001Grqt3j2bV3F3Qz",
+     "sessionID": "ses_f396f686fffeGixOUMK8X25jAC",
+     "messageID": "msg_0c6918f710019SyBluTfmXvIp3"
+    },
+    {
+     "type": "tool",
+     "tool": "bash",
+     "callID": "DHTdRetaT0gY8MTK",
+     "state": {
+      "status": "completed",
+      "input": {
+       "command": "npm test",
+       "workdir": "api"
+      },
+      "output": "\n> semana-academica-api@1.0.0 test\n> node --test verificacoes/**/*.spec.js\n\nCould not find 'C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica\\semana-academica\\api\\verificacoes\\**\\*.spec.js'\n",
+      "metadata": {
+       "output": "\n> semana-academica-api@1.0.0 test\n> node --test verificacoes/**/*.spec.js\n\nCould not find 'C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica\\semana-academica\\api\\verificacoes\\**\\*.spec.js'\n",
+       "exit": 1,
+       "truncated": false
+      },
+      "title": "npm test",
+      "time": {
+       "start": 1790037825526,
+       "end": 1790037827346
+      }
+     },
+     "metadata": {
+      "google": {
+       "thoughtSignature": "Ep4DCpsDAWkUfRPz7r6mwT3/Wm+dm3AXtKC5BwEgVVA4+UmzxykaPvTWxauVcY5aL4gXT/l4ga6IbgDQQ3Ek13x5PvUDQrLctkIVMPrttdBH2879lwYvamtJBS2d3e7pQ0kQKt/Pmy0q+MJbQUTSrlKp3t8+sW46KxY6yuxkLYfLdJOn+IO00pgSJlF5jl3wIhiEs34ROyj9+mryTW9LqHOOlYcaSmqelu6+TNFOnssb1QbLLVSCouKbK4wXUz/I4N9flBW3R8uQIHOSsYS2zn7yh+hdUCfLdtfKuuarpuQ0GC0HjofwlE9JU8RLXWISSgPkPtM8ZQgtD5WhB65HuYLPoO9dPtIGF5GukQ3ynYNwB9chOGXqRVXM80RkJWWUgpfLXa036ewlnm9GTNtVhsPhuveW4Ugk4qTr2gprysp7eMtgwZIY/lzvRjM7Y1MGCz4X5zQoW7Ly+4SeU23ZQP0O74a+Jd0sBCMDV8vfMjHxtp50FC+4qKncH4Ct29XJHoyV+Aisw53BBgIK6XgBLZCLLwvXFKilo97ao+GACKjT"
+      }
+     },
+     "id": "prt_0c69197e4001H33nAsC0F6Efad",
+     "sessionID": "ses_f396f686fffeGixOUMK8X25jAC",
+     "messageID": "msg_0c6918f710019SyBluTfmXvIp3"
+    },
+    {
+     "reason": "tool-calls",
+     "snapshot": "3a57f3caac3aa38ccfc6331005b7d42ac700400c",
+     "type": "step-finish",
+     "tokens": {
+      "total": 27412,
+      "input": 10894,
+      "output": 22,
+      "reasoning": 73,
+      "cache": {
+       "write": 0,
+       "read": 16423
+      }
+     },
+     "cost": 0.00399839,
+     "id": "prt_0c691a10d001RJo3w46wdSPd06",
+     "sessionID": "ses_f396f686fffeGixOUMK8X25jAC",
+     "messageID": "msg_0c6918f710019SyBluTfmXvIp3"
+    }
+   ]
+  },
+  {
+   "info": {
+    "parentID": "msg_0c69097d7001QafvIVi3nWucMG",
+    "role": "assistant",
+    "mode": "build",
+    "agent": "build",
+    "path": {
+     "cwd": "C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica\\semana-academica",
+     "root": "C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica"
+    },
+    "cost": 0.00409071,
+    "tokens": {
+     "total": 27619,
+     "input": 11094,
+     "output": 60,
+     "reasoning": 48,
+     "cache": {
+      "write": 0,
+      "read": 16417
+     }
+    },
+    "modelID": "gemini-3.5-flash-lite",
+    "providerID": "google",
+    "time": {
+     "created": 1790037828482,
+     "completed": 1790037832381
+    },
+    "finish": "tool-calls",
+    "id": "msg_0c691a382001dNgr0gy4MksWtf",
+    "sessionID": "ses_f396f686fffeGixOUMK8X25jAC"
+   },
+   "parts": [
+    {
+     "snapshot": "3a57f3caac3aa38ccfc6331005b7d42ac700400c",
+     "type": "step-start",
+     "id": "prt_0c691ae01001CRNxm5g6c48JI2",
+     "sessionID": "ses_f396f686fffeGixOUMK8X25jAC",
+     "messageID": "msg_0c691a382001dNgr0gy4MksWtf"
+    },
+    {
+     "type": "tool",
+     "tool": "read",
+     "callID": "xXKIKJLyP2YOgqlF",
+     "state": {
+      "status": "completed",
+      "input": {
+       "limit": 200,
+       "filePath": "C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica\\semana-academica\\api\\package.json"
+      },
+      "output": "[627 caracteres omitidos]",
+      "title": "semana-academica\\api\\package.json",
+      "time": {
+       "start": 1790037831182,
+       "end": 1790037831255
+      }
+     },
+     "metadata": {
+      "google": {
+       "thoughtSignature": "EqQCCqECAWkUfRMcNY+N0YI/G07p5/hqlM2IREGqdeCPL2z7z0fZQ4+Bj8T85X4jP2MDhzzmlMZ5pWqEm7Ki4suQlCvWjVsBV1u5uVP1o0swjFkBef6oOMVdWdPfv5igym0HqCqqxh8azWcPkVKag//r2HF3rUQ8fVYtdtcfwZY68Ouw1CrPb3Tsn0uS+D888oZKRzBlUS29HylX1tVXsi11q0hT5FILUwKS8RjuZLGa4SZMCnYSsgXI6vGWuxU6m4i91pbOAukrjdzHaFADot2bPkkT7LEiuw3T0JdMLCrXQrgP0+FNhsUtxOV4kp79QOFrHDe0l3xzU3umNN8sndblrPF5Qqu9wRjnrEOGwlU5W5grd3iQLAIbPgWiViDxcSmaFfm8cg=="
+      }
+     },
+     "id": "prt_0c691ae05001YEn5ojfDrz3f5m",
+     "sessionID": "ses_f396f686fffeGixOUMK8X25jAC",
+     "messageID": "msg_0c691a382001dNgr0gy4MksWtf"
+    },
+    {
+     "reason": "tool-calls",
+     "snapshot": "3a57f3caac3aa38ccfc6331005b7d42ac700400c",
+     "type": "step-finish",
+     "tokens": {
+      "total": 27619,
+      "input": 11094,
+      "output": 60,
+      "reasoning": 48,
+      "cache": {
+       "write": 0,
+       "read": 16417
+      }
+     },
+     "cost": 0.00409071,
+     "id": "prt_0c691b09d001XU2XcnxbYaXTvv",
+     "sessionID": "ses_f396f686fffeGixOUMK8X25jAC",
+     "messageID": "msg_0c691a382001dNgr0gy4MksWtf"
+    }
+   ]
+  },
+  {
+   "info": {
+    "parentID": "msg_0c69097d7001QafvIVi3nWucMG",
+    "role": "assistant",
+    "mode": "build",
+    "agent": "build",
+    "path": {
+     "cwd": "C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica\\semana-academica",
+     "root": "C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica"
+    },
+    "cost": 0.00428463,
+    "tokens": {
+     "total": 28040,
+     "input": 11491,
+     "output": 43,
+     "reasoning": 95,
+     "cache": {
+      "write": 0,
+      "read": 16411
+     }
+    },
+    "modelID": "gemini-3.5-flash-lite",
+    "providerID": "google",
+    "time": {
+     "created": 1790037832389,
+     "completed": 1790037836234
+    },
+    "finish": "tool-calls",
+    "id": "msg_0c691b2c5001XwcoFUvJ2q0Hwc",
+    "sessionID": "ses_f396f686fffeGixOUMK8X25jAC"
+   },
+   "parts": [
+    {
+     "snapshot": "3a57f3caac3aa38ccfc6331005b7d42ac700400c",
+     "type": "step-start",
+     "id": "prt_0c691bb9c001Q63OgFs3NKoAIr",
+     "sessionID": "ses_f396f686fffeGixOUMK8X25jAC",
+     "messageID": "msg_0c691b2c5001XwcoFUvJ2q0Hwc"
+    },
+    {
+     "type": "tool",
+     "tool": "bash",
+     "callID": "TGXm3tORC42BixSo",
+     "state": {
+      "status": "completed",
+      "input": {
+       "workdir": "api",
+       "command": "node --test verificacoes/m1-*.spec.js verificacoes/m2-*.spec.js"
+      },
+      "output": "Could not find 'C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica\\semana-academica\\api\\verificacoes\\m1-*.spec.js'\n",
+      "metadata": {
+       "output": "Could not find 'C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica\\semana-academica\\api\\verificacoes\\m1-*.spec.js'\n",
+       "exit": 1,
+       "truncated": false
+      },
+      "title": "node --test verificacoes/m1-*.spec.js verificacoes/m2-*.spec.js",
+      "time": {
+       "start": 1790037834683,
+       "end": 1790037835377
+      }
+     },
+     "metadata": {
+      "google": {
+       "thoughtSignature": "EvwDCvkDAWkUfROLNnnHrdyj92cfI/ISMx49ZFQd3cRWxnFm2SrfrdzkYvG0PqfM1CwrzTl1s1OVVVEDD1oxnZRfphzZ25AdkaNFn3yNoKJ7bS6j/w8Ln2+dcvWF0TF5DW0zjInP+dIyLlX1TReMhzlwS9tQjBiMedBw5hatMBjuQlKr5E4hQRzeP22zPOCKhKBKQltHXwr9PVpwYY+zzxsuP1HzaEJFddBEW2I5CHJnZxorxkBohLmc1OkhWQzURODLMeTOfuoTzemv6hnl2m4YAHkTHmt+JRP8vAy7PRqWTIBBv+zT6oA8xM13swux2cyUizf0JPE3yzigrK+o4zj/0gPZ+MnX8ljt9oCpNXV67JGiON4u36GtTg/Kgr8CsZ36G3OjwHYP4S0GgrfL1FnlJXBgcW9UFC/yIj5DH9vp4rjdGWBQsIAnYOydXaEEmB8Zp2RtWoXLvUKUxl11S5NSlLeFwf6SFe+Y7YBumxRA/pyDtaTgsLn1kFOjOA54vw06RqaqheRmUlEztRMR5SCu67JhwvHzWbb1lANLjRSWNR+HBHvMZ7RmurytT3sPhdzUEgLFJyqpIPXthrEh4beeuP89fWCoBF0AxDuwzP5mi6iU4R2+fdNnFjU28sgB7tPzb3g71LZvy7NhC5dS4eXLyaCyRRG6O+i70M+p8A=="
+      }
+     },
+     "id": "prt_0c691bba00016C0MJmsWa1V3dp",
+     "sessionID": "ses_f396f686fffeGixOUMK8X25jAC",
+     "messageID": "msg_0c691b2c5001XwcoFUvJ2q0Hwc"
+    },
+    {
+     "reason": "tool-calls",
+     "snapshot": "3a57f3caac3aa38ccfc6331005b7d42ac700400c",
+     "type": "step-finish",
+     "tokens": {
+      "total": 28040,
+      "input": 11491,
+      "output": 43,
+      "reasoning": 95,
+      "cache": {
+       "write": 0,
+       "read": 16411
+      }
+     },
+     "cost": 0.00428463,
+     "id": "prt_0c691c0590019orpdQaGHN8RFh",
+     "sessionID": "ses_f396f686fffeGixOUMK8X25jAC",
+     "messageID": "msg_0c691b2c5001XwcoFUvJ2q0Hwc"
+    }
+   ]
+  },
+  {
+   "info": {
+    "parentID": "msg_0c69097d7001QafvIVi3nWucMG",
+    "role": "assistant",
+    "mode": "build",
+    "agent": "build",
+    "path": {
+     "cwd": "C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica\\semana-academica",
+     "root": "C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica"
+    },
+    "cost": 0.00428925,
+    "tokens": {
+     "total": 28226,
+     "input": 11707,
+     "output": 52,
+     "reasoning": 62,
+     "cache": {
+      "write": 0,
+      "read": 16405
+     }
+    },
+    "modelID": "gemini-3.5-flash-lite",
+    "providerID": "google",
+    "time": {
+     "created": 1790037836241,
+     "completed": 1790037848174
+    },
+    "finish": "tool-calls",
+    "id": "msg_0c691c1d1001JIMZkuWtWNyien",
+    "sessionID": "ses_f396f686fffeGixOUMK8X25jAC"
+   },
+   "parts": [
+    {
+     "snapshot": "3a57f3caac3aa38ccfc6331005b7d42ac700400c",
+     "type": "step-start",
+     "id": "prt_0c691c96d001nBodvz002kDQQU",
+     "sessionID": "ses_f396f686fffeGixOUMK8X25jAC",
+     "messageID": "msg_0c691c1d1001JIMZkuWtWNyien"
+    },
+    {
+     "type": "tool",
+     "tool": "bash",
+     "callID": "bncGeL8vLdBtAcGY",
+     "state": {
+      "status": "completed",
+      "input": {
+       "workdir": "api",
+       "command": "Get-ChildItem -Path \"verificacoes\" -Filter \"*.spec.js\" | ForEach-Object { & node --test $_.FullName }"
+      },
+      "output": "TAP version 13\n# Subtest: Critério 9b: PATCH alterando só título numa atividade cancelada retorna 422 ATIVIDADE_CANCELADA\nok 1 - Critério 9b: PATCH alterando só título numa atividade cancelada retorna 422 ATIVIDADE_CANCELADA\n  ---\n  duration_ms: 200.0194\n  ...\n# Subtest: Critério 12: cancelar atividade já iniciada (não cancelada) retorna 422 ATIVIDADE_JA_INICIADA\nok 2 - Critério 12: cancelar atividade já iniciada (não cancelada) retorna 422 ATIVIDADE_JA_INICIADA\n  ---\n  duration_ms: 67.5036\n  ...\n# Subtest: Critério 12b: cancelar atividade já cancelada retorna 422 ATIVIDADE_CANCELADA\nok 3 - Critério 12b: cancelar atividade já cancelada retorna 422 ATIVIDADE_CANCELADA\n  ---\n  duration_ms: 33.6021\n  ...\n# Subtest: Critério 12c: cancelar atividade já iniciada E já cancelada retorna 422 ATIVIDADE_CANCELADA provando a ordem\nok 4 - Critério 12c: cancelar atividade já iniciada E já cancelada retorna 422 ATIVIDADE_CANCELADA provando a ordem\n  ---\n  duration_ms: 36.7239\n  ...\n# Subtest: Critério 16: situacao exatamente no instante do fim do último encontro é encerrada, não em_andamento\nok 5 - Critério 16: situacao exatamente no instante do fim do último encontro é encerrada, não em_andamento\n  ---\n  duration_ms: 30.7223\n  ...\n1..5\n# tests 5\n# suites 0\n# pass 5\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 920.7388\nTAP version 13\n# Subtest: GET /salas retorna a lista de salas\nok 1 - GET /salas retorna a lista de salas\n  ---\n  duration_ms: 117.8805\n  ...\n# Subtest: GET /atividades filtra por dia e tipo, ordena por R10 e calcula situacao por R12\nok 2 - GET /atividades filtra por dia e tipo, ordena por R10 e calcula situacao por R12\n  ---\n  duration_ms: 117.0957\n  ...\n# Subtest: GET /atividades inclui atividades canceladas na listagem (R10)\nok 3 - GET /atividades inclui atividades canceladas na listagem (R10)\n  ---\n  duration_ms: 23.9125\n  ...\n1..3\n# tests 3\n# suites 0\n# pass 3\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 797.0018\nTAP version 13\n# Subtest: POST /atividades por participante retorna 403 SOMENTE_ORGANIZACAO\nok 1 - POST /atividades por participante retorna 403 SOMENTE_ORGANIZACAO\n  ---\n  duration_ms: 132.8657\n  ...\n# Subtest: POST /atividades com minicurso contendo 1 encontro retorna 422 QUANTIDADE_DE_ENCONTROS\nok 2 - POST /atividades com minicurso contendo 1 encontro retorna 422 QUANTIDADE_DE_ENCONTROS\n  ---\n  duration_ms: 38.5373\n  ...\n# Subtest: POST /atividades com palestra contendo 2 encontros retorna 422 QUANTIDADE_DE_ENCONTROS\nok 3 - POST /atividades com palestra contendo 2 encontros retorna 422 QUANTIDADE_DE_ENCONTROS\n  ---\n  duration_ms: 22.0897\n  ...\n# Subtest: POST /atividades com encontro de 30 minutos retorna 422 ENCONTRO_INVALIDO\nok 4 - POST /atividades com encontro de 30 minutos retorna 422 ENCONTRO_INVALIDO\n  ---\n  duration_ms: 32.1007\n  ...\n# Subtest: POST /atividades com encontro fora do período do evento retorna 422 ENCONTRO_INVALIDO\nok 5 - POST /atividades com encontro fora do período do evento retorna 422 ENCONTRO_INVALIDO\n  ---\n  duration_ms: 31.5985\n  ...\n# Subtest: POST /atividades com vagas acima da capacidade da sala retorna 422 VAGAS_ACIMA_DA_CAPACIDADE\nok 6 - POST /atividades com vagas acima da capacidade da sala retorna 422 VAGAS_ACIMA_DA_CAPACIDADE\n  ---\n  duration_ms: 25.5832\n  ...\n# Subtest: POST /atividades com conflito de sala (menos de 15 min de intervalo) retorna 409 CONFLITO_DE_SALA\nok 7 - POST /atividades com conflito de sala (menos de 15 min de intervalo) retorna 409 CONFLITO_DE_SALA\n  ---\n  duration_ms: 26.0388\n  ...\n# Subtest: POST /atividades com sucesso calcula cargaHorariaMinutos corretamente e ignora valor enviado (R5)\nok 8 - POST /atividades com sucesso calcula cargaHorariaMinutos corretamente e ignora valor enviado (R5)\n  ---\n  duration_ms: 19.2114\n  ...\n# Subtest: POST /atividades com encontro de 5 horas retorna 422 ENCONTRO_INVALIDO\nok 9 - POST /atividades com encontro de 5 horas retorna 422 ENCONTRO_INVALIDO\n  ---\n  duration_ms: 21.9777\n  ...\n# Subtest: POST /atividades com encontro cruzando a meia-noite retorna 422 ENCONTRO_INVALIDO\nok 10 - POST /atividades com encontro cruzando a meia-noite retorna 422 ENCONTRO_INVALIDO\n  ---\n  duration_ms: 19.5345\n  ...\n# Subtest: POST /atividades com encontros sobrepostos na mesma atividade retorna 422 ENCONTRO_INVALIDO\nok 11 - POST /atividades com encontros sobrepostos na mesma atividade retorna 422 ENCONTRO_INVALIDO\n  ---\n  duration_ms: 17.652\n  ...\n# Subtest: POST /atividades com vagas <= 0 retorna 422 VAGAS_ACIMA_DA_CAPACIDADE\nok 12 - POST /atividades com vagas <= 0 retorna 422 VAGAS_ACIMA_DA_CAPACIDADE\n  ---\n  duration_ms: 26.1591\n  ...\n# Subtest: POST /atividades com horário conflitante em sala cuja atividade existente está cancelada permite criar (201)\nok 13 - POST /atividades com horário conflitante em sala cuja atividade existente está cancelada permite criar (201)\n  ---\n  duration_ms: 21.846\n  ...\n1..13\n# tests 13\n# suites 0\n# pass 13\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 825.8447\nTAP version 13\n# Subtest: PATCH /atividades/:id por participante retorna 403 SOMENTE_ORGANIZACAO\nok 1 - PATCH /atividades/:id por participante retorna 403 SOMENTE_ORGANIZACAO\n  ---\n  duration_ms: 162.394\n  ...\n# Subtest: PATCH /atividades/:id alterando salaId, tipo ou encontros retorna 422 CAMPO_NAO_EDITAVEL\nok 2 - PATCH /atividades/:id alterando salaId, tipo ou encontros retorna 422 CAMPO_NAO_EDITAVEL\n  ---\n  duration_ms: 43.8986\n  ...\n# Subtest: PATCH /atividades/:id alterando titulo e vagas válidos retorna 200 Atividade\nok 3 - PATCH /atividades/:id alterando titulo e vagas válidos retorna 200 Atividade\n  ---\n  duration_ms: 34.1585\n  ...\n# Subtest: PATCH /atividades/:id definindo vagas <= 0 retorna 422 VAGAS_ACIMA_DA_CAPACIDADE\nok 4 - PATCH /atividades/:id definindo vagas <= 0 retorna 422 VAGAS_ACIMA_DA_CAPACIDADE\n  ---\n  duration_ms: 33.9584\n  ...\n# Subtest: R7: PATCH /atividades/:id reduzindo vagas abaixo das inscrições ocupadas retorna 409 VAGAS_ABAIXO_DOS_INSCRITOS [via stub M2]\nok 5 - R7: PATCH /atividades/:id reduzindo vagas abaixo das inscrições ocupadas retorna 409 VAGAS_ABAIXO_DOS_INSCRITOS [via stub M2]\n  ---\n  duration_ms: 47.3146\n  ...\n# Subtest: PATCH /atividades/:id alterando tipo retorna 422 CAMPO_NAO_EDITAVEL\nok 6 - PATCH /atividades/:id alterando tipo retorna 422 CAMPO_NAO_EDITAVEL\n  ---\n  duration_ms: 46.2693\n  ...\n# Subtest: PATCH /atividades/:id alterando encontros retorna 422 CAMPO_NAO_EDITAVEL\nok 7 - PATCH /atividades/:id alterando encontros retorna 422 CAMPO_NAO_EDITAVEL\n  ---\n  duration_ms: 25.7898\n  ...\n1..7\n# tests 7\n# suites 0\n# pass 7\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 833.7522\nTAP version 13\n# Subtest: POST /atividades/:id/cancelamento por participante retorna 403 SOMENTE_ORGANIZACAO\nok 1 - POST /atividades/:id/cancelamento por participante retorna 403 SOMENTE_ORGANIZACAO\n  ---\n  duration_ms: 273.1067\n  ...\n# Subtest: POST /atividades/:id/cancelamento com sucesso por organizador retorna 200 Atividade cancelada\nok 2 - POST /atividades/:id/cancelamento com sucesso por organizador retorna 200 Atividade cancelada\n  ---\n  duration_ms: 36.7018\n  ...\n# Subtest: POST /atividades/:id/cancelamento em atividade que já iniciou retorna 422 ATIVIDADE_JA_INICIADA\nok 3 - POST /atividades/:id/cancelamento em atividade que já iniciou retorna 422 ATIVIDADE_JA_INICIADA\n  ---\n  duration_ms: 25.6617\n  ...\n# Subtest: POST /atividades/:id/cancelamento em atividade já cancelada retorna 422 ATIVIDADE_CANCELADA\nok 4 - POST /atividades/:id/cancelamento em atividade já cancelada retorna 422 ATIVIDADE_CANCELADA\n  ---\n  duration_ms: 28.764\n  ...\n# Subtest: POST /atividades/:id/cancelamento em atividade que já iniciou E já está cancelada retorna 422 ATIVIDADE_CANCELADA (prova a ordem)\nok 5 - POST /atividades/:id/cancelamento em atividade que já iniciou E já está cancelada retorna 422 ATIVIDADE_CANCELADA (prova a ordem)\n  ---\n  duration_ms: 31.7031\n  ...\n1..5\n# tests 5\n# suites 0\n# pass 5\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 810.4935\nTAP version 13\n# Subtest: participante realiza inscricao direta com vaga disponivel (R3)\nok 1 - participante realiza inscricao direta com vaga disponivel (R3)\n  ---\n  duration_ms: 175.2048\n  ...\n# Subtest: participante realiza inscricao em espera quando atividade esta lotada (R3)\nok 2 - participante realiza inscricao em espera quando atividade esta lotada (R3)\n  ---\n  duration_ms: 49.5884\n  ...\n# Subtest: inscricao realizada apos o fechamento retorna 422 INSCRICOES_ENCERRADAS (R1)\nok 3 - inscricao realizada apos o fechamento retorna 422 INSCRICOES_ENCERRADAS (R1)\n  ---\n  duration_ms: 38.1301\n  ...\n# Subtest: usuario da organizacao tentando realizar inscricao recebe 403 SOMENTE_PARTICIPANTE (R9)\nok 4 - usuario da organizacao tentando realizar inscricao recebe 403 SOMENTE_PARTICIPANTE (R9)\n  ---\n  duration_ms: 25.4319\n  ...\n1..4\n# tests 4\n# suites 0\n# pass 4\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 648.0823\nTAP version 13\n# Subtest: participante tenta inscricao direta com sobreposicao de horario de outra atividade confirmada retorna 409 CONFLITO_DE_HORARIO (R4)\nok 1 - participante tenta inscricao direta com sobreposicao de horario de outra atividade confirmada retorna 409 CONFLITO_DE_HORARIO (R4)\n  ---\n  duration_ms: 157.7841\n  ...\n# Subtest: participante realiza inscricao em horario que apenas encosta (10:00-12:00 e 12:00-14:00) com sucesso (R4)\nok 2 - participante realiza inscricao em horario que apenas encosta (10:00-12:00 e 12:00-14:00) com sucesso (R4)\n  ---\n  duration_ms: 43.5866\n  ...\n# Subtest: participante tenta inscricao direta em um 4.º minicurso ocupando vaga retorna 422 LIMITE_DE_MINICURSOS (R5)\nok 3 - participante tenta inscricao direta em um 4.º minicurso ocupando vaga retorna 422 LIMITE_DE_MINICURSOS (R5)\n  ---\n  duration_ms: 62.3191\n  ...\n# Subtest: minicursos em espera e palestras nao contam para o limite de minicursos (R5, Criterio 11)\nok 4 - minicursos em espera e palestras nao contam para o limite de minicursos (R5, Criterio 11)\n  ---\n  duration_ms: 57.7382\n  ...\n1..4\n# tests 4\n# suites 0\n# pass 4\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 734.287\nTAP version 13\n# Subtest: participante tenta cancelar inscricao apos o inicio da atividade retorna 422 ATIVIDADE_JA_INICIADA (R8)\nok 1 - participante tenta cancelar inscricao apos o inicio da atividade retorna 422 ATIVIDADE_JA_INICIADA (R8)\n  ---\n  duration_ms: 159.6058\n  ...\n# Subtest: participante tenta cancelar inscricao ja cancelada retorna 422 INSCRICAO_INATIVA (R8)\nok 2 - participante tenta cancelar inscricao ja cancelada retorna 422 INSCRICAO_INATIVA (R8)\n  ---\n  duration_ms: 48.4512\n  ...\n# Subtest: participante tenta cancelar inscricao de outro participante retorna 404 NAO_ENCONTRADO (R2, Criterio 5)\nok 3 - participante tenta cancelar inscricao de outro participante retorna 404 NAO_ENCONTRADO (R2, Criterio 5)\n  ---\n  duration_ms: 39.3601\n  ...\n# Subtest: usuario da organizacao tenta cancelar inscricao retorna 403 SOMENTE_PARTICIPANTE (R9)\nok 4 - usuario da organizacao tenta cancelar inscricao retorna 403 SOMENTE_PARTICIPANTE (R9)\n  ---\n  duration_ms: 28.5525\n  ...\n1..4\n# tests 4\n# suites 0\n# pass 4\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 642.1079\nTAP version 13\n# Subtest: cancelamento de inscricao confirmada convoca automaticamente o primeiro da espera com status convocada e prazo de 2 horas (R6, Criterio 12)\nok 1 - cancelamento de inscricao confirmada convoca automaticamente o primeiro da espera com status convocada e prazo de 2 horas (R6, Criterio 12)\n  ---\n  duration_ms: 296.2711\n  ...\n# Subtest: tentativa de confirmar inscricao sem convocacao retorna 422 SEM_CONVOCACAO (R7, Criterio 13)\nok 2 - tentativa de confirmar inscricao sem convocacao retorna 422 SEM_CONVOCACAO (R7, Criterio 13)\n  ---\n  duration_ms: 38.1957\n  ...\n# Subtest: confirmacao valida de convocacao retorna 200 com status confirmada (R7, Criterio 14)\nok 3 - confirmacao valida de convocacao retorna 200 com status confirmada (R7, Criterio 14)\n  ---\n  duration_ms: 51.1218\n  ...\n# Subtest: tentativa de confirmar apos convocadaAte retorna 422 CONVOCACAO_EXPIRADA e convoca proximo em cascata (R6, R7, Criterio 13)\nok 4 - tentativa de confirmar apos convocadaAte retorna 422 CONVOCACAO_EXPIRADA e convoca proximo em cascata (R6, R7, Criterio 13)\n  ---\n  duration_ms: 47.8579\n  ...\n1..4\n# tests 4\n# suites 0\n# pass 4\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 885.3058\n",
+      "metadata": {
+       "output": "TAP version 13\n# Subtest: Critério 9b: PATCH alterando só título numa atividade cancelada retorna 422 ATIVIDADE_CANCELADA\nok 1 - Critério 9b: PATCH alterando só título numa atividade cancelada retorna 422 ATIVIDADE_CANCELADA\n  ---\n  duration_ms: 200.0194\n  ...\n# Subtest: Critério 12: cancelar atividade já iniciada (não cancelada) retorna 422 ATIVIDADE_JA_INICIADA\nok 2 - Critério 12: cancelar atividade já iniciada (não cancelada) retorna 422 ATIVIDADE_JA_INICIADA\n  ---\n  duration_ms: 67.5036\n  ...\n# Subtest: Critério 12b: cancelar atividade já cancelada retorna 422 ATIVIDADE_CANCELADA\nok 3 - Critério 12b: cancelar atividade já cancelada retorna 422 ATIVIDADE_CANCELADA\n  ---\n  duration_ms: 33.6021\n  ...\n# Subtest: Critério 12c: cancelar atividade já iniciada E já cancelada retorna 422 ATIVIDADE_CANCELADA provando a ordem\nok 4 - Critério 12c: cancelar atividade já iniciada E já cancelada retorna 422 ATIVIDADE_CANCELADA provando a ordem\n  ---\n  duration_ms: 36.7239\n  ...\n# Subtest: Critério 16: situacao exatamente no instante do fim do último encontro é encerrada, não em_andamento\nok 5 - Critério 16: situacao exatamente no instante do fim do último encontro é encerrada, não em_andamento\n  ---\n  duration_ms: 30.7223\n  ...\n1..5\n# tests 5\n# suites 0\n# pass 5\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 920.7388\nTAP version 13\n# Subtest: GET /salas retorna a lista de salas\nok 1 - GET /salas retorna a lista de salas\n  ---\n  duration_ms: 117.8805\n  ...\n# Subtest: GET /atividades filtra por dia e tipo, ordena por R10 e calcula situacao por R12\nok 2 - GET /atividades filtra por dia e tipo, ordena por R10 e calcula situacao por R12\n  ---\n  duration_ms: 117.0957\n  ...\n# Subtest: GET /atividades inclui atividades canceladas na listagem (R10)\nok 3 - GET /atividades inclui atividades canceladas na listagem (R10)\n  ---\n  duration_ms: 23.9125\n  ...\n1..3\n# tests 3\n# suites 0\n# pass 3\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 797.0018\nTAP version 13\n# Subtest: POST /atividades por participante retorna 403 SOMENTE_ORGANIZACAO\nok 1 - POST /atividades por participante retorna 403 SOMENTE_ORGANIZACAO\n  ---\n  duration_ms: 132.8657\n  ...\n# Subtest: POST /atividades com minicurso contendo 1 encontro retorna 422 QUANTIDADE_DE_ENCONTROS\nok 2 - POST /atividades com minicurso contendo 1 encontro retorna 422 QUANTIDADE_DE_ENCONTROS\n  ---\n  duration_ms: 38.5373\n  ...\n# Subtest: POST /atividades com palestra contendo 2 encontros retorna 422 QUANTIDADE_DE_ENCONTROS\nok 3 - POST /atividades com palestra contendo 2 encontros retorna 422 QUANTIDADE_DE_ENCONTROS\n  ---\n  duration_ms: 22.0897\n  ...\n# Subtest: POST /atividades com encontro de 30 minutos retorna 422 ENCONTRO_INVALIDO\nok 4 - POST /atividades com encontro de 30 minutos retorna 422 ENCONTRO_INVALIDO\n  ---\n  duration_ms: 32.1007\n  ...\n# Subtest: POST /atividades com encontro fora do período do evento retorna 422 ENCONTRO_INVALIDO\nok 5 - POST /atividades com encontro fora do período do evento retorna 422 ENCONTRO_INVALIDO\n  ---\n  duration_ms: 31.5985\n  ...\n# Subtest: POST /atividades com vagas acima da capacidade da sala retorna 422 VAGAS_ACIMA_DA_CAPACIDADE\nok 6 - POST /atividades com vagas acima da capacidade da sala retorna 422 VAGAS_ACIMA_DA_CAPACIDADE\n  ---\n  duration_ms: 25.5832\n  ...\n# Subtest: POST /atividades com conflito de sala (menos de 15 min de intervalo) retorna 409 CONFLITO_DE_SALA\nok 7 - POST /atividades com conflito de sala (menos de 15 min de intervalo) retorna 409 CONFLITO_DE_SALA\n  ---\n  duration_ms: 26.0388\n  ...\n# Subtest: POST /atividades com sucesso calcula cargaHorariaMinutos corretamente e ignora valor enviado (R5)\nok 8 - POST /atividades com sucesso calcula cargaHorariaMinutos corretamente e ignora valor enviado (R5)\n  ---\n  duration_ms: 19.2114\n  ...\n# Subtest: POST /atividades com encontro de 5 horas retorna 422 ENCONTRO_INVALIDO\nok 9 - POST /atividades com encontro de 5 horas retorna 422 ENCONTRO_INVALIDO\n  ---\n  duration_ms: 21.9777\n  ...\n# Subtest: POST /atividades com encontro cruzando a meia-noite retorna 422 ENCONTRO_INVALIDO\nok 10 - POST /atividades com encontro cruzando a meia-noite retorna 422 ENCONTRO_INVALIDO\n  ---\n  duration_ms: 19.5345\n  ...\n# Subtest: POST /atividades com encontros sobrepostos na mesma atividade retorna 422 ENCONTRO_INVALIDO\nok 11 - POST /atividades com encontros sobrepostos na mesma atividade retorna 422 ENCONTRO_INVALIDO\n  ---\n  duration_ms: 17.652\n  ...\n# Subtest: POST /atividades com vagas <= 0 retorna 422 VAGAS_ACIMA_DA_CAPACIDADE\nok 12 - POST /atividades com vagas <= 0 retorna 422 VAGAS_ACIMA_DA_CAPACIDADE\n  ---\n  duration_ms: 26.1591\n  ...\n# Subtest: POST /atividades com horário conflitante em sala cuja atividade existente está cancelada permite criar (201)\nok 13 - POST /atividades com horário conflitante em sala cuja atividade existente está cancelada permite criar (201)\n  ---\n  duration_ms: 21.846\n  ...\n1..13\n# tests 13\n# suites 0\n# pass 13\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 825.8447\nTAP version 13\n# Subtest: PATCH /atividades/:id por participante retorna 403 SOMENTE_ORGANIZACAO\nok 1 - PATCH /atividades/:id por participante retorna 403 SOMENTE_ORGANIZACAO\n  ---\n  duration_ms: 162.394\n  ...\n# Subtest: PATCH /atividades/:id alterando salaId, tipo ou encontros retorna 422 CAMPO_NAO_EDITAVEL\nok 2 - PATCH /atividades/:id alterando salaId, tipo ou encontros retorna 422 CAMPO_NAO_EDITAVEL\n  ---\n  duration_ms: 43.8986\n  ...\n# Subtest: PATCH /atividades/:id alterando titulo e vagas válidos retorna 200 Atividade\nok 3 - PATCH /atividades/:id alterando titulo e vagas válidos retorna 200 Atividade\n  ---\n  duration_ms: 34.1585\n  ...\n# Subtest: PATCH /atividades/:id definindo vagas <= 0 retorna 422 VAGAS_ACIMA_DA_CAPACIDADE\nok 4 - PATCH /atividades/:id definindo vagas <= 0 retorna 422 VAGAS_ACIMA_DA_CAPACIDADE\n  ---\n  duration_ms: 33.9584\n  ...\n# Subtest: R7: PATCH /atividades/:id reduzindo vagas abaixo das inscrições ocupadas retorna 409 VAGAS_ABAIXO_DOS_INSCRITOS [via stub M2]\nok 5 - R7: PATCH /atividades/:id reduzindo vagas abaixo das inscrições ocupadas retorna 409 VAGAS_ABAIXO_DOS_INSCRITOS [via stub M2]\n  ---\n  duration_ms: 47.3146\n  ...\n# Subtest: PATCH /atividades/:id alterando tipo retorna 422 CAMPO_NAO_EDITAVEL\nok 6 - PATCH /atividades/:id alterando tipo retorna 422 CAMPO_NAO_EDITAVEL\n  ---\n  duration_ms: 46.2693\n  ...\n# Subtest: PATCH /atividades/:id alterando encontros retorna 422 CAMPO_NAO_EDITAVEL\nok 7 - PATCH /atividades/:id alterando encontros retorna 422 CAMPO_NAO_EDITAVEL\n  ---\n  duration_ms: 25.7898\n  ...\n1..7\n# tests 7\n# suites 0\n# pass 7\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 833.7522\nTAP version 13\n# Subtest: POST /atividades/:id/cancelamento por participante retorna 403 SOMENTE_ORGANIZACAO\nok 1 - POST /atividades/:id/cancelamento por participante retorna 403 SOMENTE_ORGANIZACAO\n  ---\n  duration_ms: 273.1067\n  ...\n# Subtest: POST /atividades/:id/cancelamento com sucesso por organizador retorna 200 Atividade cancelada\nok 2 - POST /atividades/:id/cancelamento com sucesso por organizador retorna 200 Atividade cancelada\n  ---\n  duration_ms: 36.7018\n  ...\n# Subtest: POST /atividades/:id/cancelamento em atividade que já iniciou retorna 422 ATIVIDADE_JA_INICIADA\nok 3 - POST /atividades/:id/cancelamento em atividade que já iniciou retorna 422 ATIVIDADE_JA_INICIADA\n  ---\n  duration_ms: 25.6617\n  ...\n# Subtest: POST /atividades/:id/cancelamento em atividade já cancelada retorna 422 ATIVIDADE_CANCELADA\nok 4 - POST /atividades/:id/cancelamento em atividade já cancelada retorna 422 ATIVIDADE_CANCELADA\n  ---\n  duration_ms: 28.764\n  ...\n# Subtest: POST /atividades/:id/cancelamento em atividade que já iniciou E já está cancelada retorna 422 ATIVIDADE_CANCELADA (prova a ordem)\nok 5 - POST /atividades/:id/cancelamento em atividade que já iniciou E já está cancelada retorna 422 ATIVIDADE_CANCELADA (prova a ordem)\n  ---\n  duration_ms: 31.7031\n  ...\n1..5\n# tests 5\n# suites 0\n# pass 5\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 810.4935\nTAP version 13\n# Subtest: participante realiza inscricao direta com vaga disponivel (R3)\nok 1 - participante realiza inscricao direta com vaga disponivel (R3)\n  ---\n  duration_ms: 175.2048\n  ...\n# Subtest: participante realiza inscricao em espera quando atividade esta lotada (R3)\nok 2 - participante realiza inscricao em espera quando atividade esta lotada (R3)\n  ---\n  duration_ms: 49.5884\n  ...\n# Subtest: inscricao realizada apos o fechamento retorna 422 INSCRICOES_ENCERRADAS (R1)\nok 3 - inscricao realizada apos o fechamento retorna 422 INSCRICOES_ENCERRADAS (R1)\n  ---\n  duration_ms: 38.1301\n  ...\n# Subtest: usuario da organizacao tentando realizar inscricao recebe 403 SOMENTE_PARTICIPANTE (R9)\nok 4 - usuario da organizacao tentando realizar inscricao recebe 403 SOMENTE_PARTICIPANTE (R9)\n  ---\n  duration_ms: 25.4319\n  ...\n1..4\n# tests 4\n# suites 0\n# pass 4\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 648.0823\nTAP version 13\n# Subtest: participante tenta inscricao direta com sobreposicao de horario de outra atividade confirmada retorna 409 CONFLITO_DE_HORARIO (R4)\nok 1 - participante tenta inscricao direta com sobreposicao de horario de outra atividade confirmada retorna 409 CONFLITO_DE_HORARIO (R4)\n  ---\n  duration_ms: 157.7841\n  ...\n# Subtest: participante realiza inscricao em horario que apenas encosta (10:00-12:00 e 12:00-14:00) com sucesso (R4)\nok 2 - participante realiza inscricao em horario que apenas encosta (10:00-12:00 e 12:00-14:00) com sucesso (R4)\n  ---\n  duration_ms: 43.5866\n  ...\n# Subtest: participante tenta inscricao direta em um 4.º minicurso ocupando vaga retorna 422 LIMITE_DE_MINICURSOS (R5)\nok 3 - participante tenta inscricao direta em um 4.º minicurso ocupando vaga retorna 422 LIMITE_DE_MINICURSOS (R5)\n  ---\n  duration_ms: 62.3191\n  ...\n# Subtest: minicursos em espera e palestras nao contam para o limite de minicursos (R5, Criterio 11)\nok 4 - minicursos em espera e palestras nao contam para o limite de minicursos (R5, Criterio 11)\n  ---\n  duration_ms: 57.7382\n  ...\n1..4\n# tests 4\n# suites 0\n# pass 4\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 734.287\nTAP version 13\n# Subtest: participante tenta cancelar inscricao apos o inicio da atividade retorna 422 ATIVIDADE_JA_INICIADA (R8)\nok 1 - participante tenta cancelar inscricao apos o inicio da atividade retorna 422 ATIVIDADE_JA_INICIADA (R8)\n  ---\n  duration_ms: 159.6058\n  ...\n# Subtest: participante tenta cancelar inscricao ja cancelada retorna 422 INSCRICAO_INATIVA (R8)\nok 2 - participante tenta cancelar inscricao ja cancelada retorna 422 INSCRICAO_INATIVA (R8)\n  ---\n  duration_ms: 48.4512\n  ...\n# Subtest: participante tenta cancelar inscricao de outro participante retorna 404 NAO_ENCONTRADO (R2, Criterio 5)\nok 3 - participante tenta cancelar inscricao de outro participante retorna 404 NAO_ENCONTRADO (R2, Criterio 5)\n  ---\n  duration_ms: 39.3601\n  ...\n# Subtest: usuario da organizacao tenta cancelar inscricao retorna 403 SOMENTE_PARTICIPANTE (R9)\nok 4 - usuario da organizacao tenta cancelar inscricao retorna 403 SOMENTE_PARTICIPANTE (R9)\n  ---\n  duration_ms: 28.5525\n  ...\n1..4\n# tests 4\n# suites 0\n# pass 4\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 642.1079\nTAP version 13\n# Subtest: cancelamento de inscricao confirmada convoca automaticamente o primeiro da espera com status convocada e prazo de 2 horas (R6, Criterio 12)\nok 1 - cancelamento de inscricao confirmada convoca automaticamente o primeiro da espera com status convocada e prazo de 2 horas (R6, Criterio 12)\n  ---\n  duration_ms: 296.2711\n  ...\n# Subtest: tentativa de confirmar inscricao sem convocacao retorna 422 SEM_CONVOCACAO (R7, Criterio 13)\nok 2 - tentativa de confirmar inscricao sem convocacao retorna 422 SEM_CONVOCACAO (R7, Criterio 13)\n  ---\n  duration_ms: 38.1957\n  ...\n# Subtest: confirmacao valida de convocacao retorna 200 com status confirmada (R7, Criterio 14)\nok 3 - confirmacao valida de convocacao retorna 200 com status confirmada (R7, Criterio 14)\n  ---\n  duration_ms: 51.1218\n  ...\n# Subtest: tentativa de confirmar apos convocadaAte retorna 422 CONVOCACAO_EXPIRADA e convoca proximo em cascata (R6, R7, Criterio 13)\nok 4 - tentativa de confirmar apos convocadaAte retorna 422 CONVOCACAO_EXPIRADA e convoca proximo em cascata (R6, R7, Criterio 13)\n  ---\n  duration_ms: 47.8579\n  ...\n1..4\n# tests 4\n# suites 0\n# pass 4\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 885.3058\n",
+       "exit": 0,
+       "truncated": false
+      },
+      "title": "Get-ChildItem -Path \"verificacoes\" -Filter \"*.spec.js\" | ForEach-Object { & node --test $_.FullName }",
+      "time": {
+       "start": 1790037838226,
+       "end": 1790037847135
+      }
+     },
+     "metadata": {
+      "google": {
+       "thoughtSignature": "EvsCCvgCAWkUfRPV+TgqBCGHwoATjS8LA3mLWduc6nAP+a7N072dPATOE0Xah6QLhp+KKPAT0booPHmwzoqn0JqnC+I9YSkmVBdzGPEr6tbGX8/QSXagCXzxmG+9zeMBhoJuYVA7iCS3sbhKb/4GFELJTnoow0Xkk793iDMNd3G0ZBWhZuXCxHNGzJxRJEKcuVfDVRvtGRofnTCv3/FFsKJznAxuk/8s0bo/SVVy8zSD8AVVZdjljNhVujpFNP4ucrwh5kGvpzxrYvUEUrSAvpetj5vSjEpPlhirjK2RiSGR+0JcAgLdoiavx/BjkO/3sKurxZh8Drh5Ui982igY/kJyA3wDnwqr0HHctij+KV5PiQsS8yLPnpnITpvUCVVn42HgWPxTEH+apGSsekjR0IQbuVSqo6FpMzxMpwZD/k44kPS64iLWOCjcLq6yvlx/kQW9/7lUTIfLSRJsvYGKoG3CZvmvA9Qfsp1kjy7rNLXAHz+rx84wcw+HaHoBMA=="
+      }
+     },
+     "id": "prt_0c691c9740017qhNWeQormMXXh",
+     "sessionID": "ses_f396f686fffeGixOUMK8X25jAC",
+     "messageID": "msg_0c691c1d1001JIMZkuWtWNyien"
+    },
+    {
+     "reason": "tool-calls",
+     "snapshot": "3a57f3caac3aa38ccfc6331005b7d42ac700400c",
+     "type": "step-finish",
+     "tokens": {
+      "total": 28226,
+      "input": 11707,
+      "output": 52,
+      "reasoning": 62,
+      "cache": {
+       "write": 0,
+       "read": 16405
+      }
+     },
+     "cost": 0.00428925,
+     "id": "prt_0c691ee62001AcVyPSXzK27Xdg",
+     "sessionID": "ses_f396f686fffeGixOUMK8X25jAC",
+     "messageID": "msg_0c691c1d1001JIMZkuWtWNyien"
+    }
+   ]
+  },
+  {
+   "info": {
+    "parentID": "msg_0c69097d7001QafvIVi3nWucMG",
+    "role": "assistant",
+    "mode": "build",
+    "agent": "build",
+    "path": {
+     "cwd": "C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica\\semana-academica",
+     "root": "C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica"
+    },
+    "cost": 0,
+    "tokens": {
+     "input": 0,
+     "output": 0,
+     "reasoning": 0,
+     "cache": {
+      "read": 0,
+      "write": 0
+     }
+    },
+    "modelID": "gemini-3.5-flash-lite",
+    "providerID": "google",
+    "time": {
+     "created": 1790037848187,
+     "completed": 1790038015669
+    },
+    "error": {
+     "name": "MessageAbortedError",
+     "data": {
+      "message": "Aborted"
+     }
+    },
+    "id": "msg_0c691f07b001p0PytOJJp0PNy2",
+    "sessionID": "ses_f396f686fffeGixOUMK8X25jAC"
+   },
+   "parts": [
+    {
+     "snapshot": "3a57f3caac3aa38ccfc6331005b7d42ac700400c",
+     "type": "step-start",
+     "id": "prt_0c691fb9a001bY5S6XO8h8Eor4",
+     "sessionID": "ses_f396f686fffeGixOUMK8X25jAC",
+     "messageID": "msg_0c691f07b001p0PytOJJp0PNy2"
+    },
+    {
+     "type": "reasoning",
+     "text": "**Verifying Task Requirements**\n\nI've confirmed that all tests have passed. Now, I'm focusing on understanding the task's specific requirements. It involves auditing module M2 against a specific specification file. The output, the complete report, must be saved without any modifications in a specific directory.\n\n\n",
+     "time": {
+      "start": 1790037851038,
+      "end": 1790037851443
+     },
+     "id": "prt_0c691fb9e001ZcbZ5rHNHbjKGL",
+     "sessionID": "ses_f396f686fffeGixOUMK8X25jAC",
+     "messageID": "msg_0c691f07b001p0PytOJJp0PNy2"
+    },
+    {
+     "type": "tool",
+     "tool": "task",
+     "callID": "FQq6omPUNXC5jSTH",
+     "state": {
+      "title": "Auditar módulo M2 contra a spec",
+      "metadata": {
+       "parentSessionId": "ses_f396f686fffeGixOUMK8X25jAC",
+       "sessionId": "ses_f396e031fffe8t0xVXkyk7TGYN",
+       "model": {
+        "modelID": "gemini-3.5-flash-lite",
+        "providerID": "google"
+       },
+       "interrupted": true
+      },
+      "status": "error",
+      "input": {
+       "description": "Auditar módulo M2 contra a spec",
+       "prompt": "Audite o módulo M2 contra specs/M2-inscricoes.md e entrevistas/M2-inscricoes.md. Verifique cada regra (R1 a R9), confira se ela nasceu de uma pergunta da entrevista e se existe um teste em api/verificacoes/m2-*.spec.js que a comprove. Aponte o que ficou sem prova ou sem origem e produza o parecer completo (matriz de rastreabilidade, suite de testes, achados e veredito).",
+       "subagent_type": "auditor"
+      },
+      "time": {
+       "start": 1790037851371,
+       "end": 1790038015663
+      },
+      "error": "Tool execution aborted"
+     },
+     "metadata": {
+      "google": {
+       "thoughtSignature": "EuEJCt4JAWkUfRO8ueOejryqXgMrFy4z7T2CvyYfGOuymJA5pS+2GzLGmNyRvNRaOSboqPDr5qGP0XC7xaHAZjhqrUw7XTvsQ/u2dOJQCsYRBR25aGI3X9l4VUrSgm5gIcPEezz9YVZgN4qaF+ezea/WdXjCI15JRcdv/guFKadWTwexyLlCrZC3Hu47pFZIuU0x5oGAvPO1MfSq+E9lq67zrrE1zSScqNYaa5N3jtOkzXxcZ53GSI2lBFcaRy5HOAi1HvD7xI5bxTfjXYEAweXYKudjgtjEOx1d/NysXnuRv0OfhohTapDlAWO7PmppGxN1WeqlFeBk0XCmf3nS+ndSDRpbM4iVRJA8M1boAx3PyzNx3SUQ/8G0pT931X+jXUXOEgP1smkAkLo8CELxFkCnvf9qxxSO8HzQWFbAqW3oK4IVUSA7rO78lAsFTtLgYi2zhHBBSVIMdKsAUeYSaCpkSpefzgJe3zZCFyUF/+Mu+pLW1+ul5Jvln0V4RusXEbAmBOAM22L70N0vjKib1k0vgvF2dxT9lO9J5Dd5BGxvJTST3pxnPcF03rYq79BWF68/sGC8OQmSSJtVfzPxMDlzDdKlO5KJA+KaIsX2oEGgyWYttxdHMGlTHO1ZIRDJia0gMGx5L6rJNSwVjFoAq6PFkJFkWurb7gr9viRH/TWCDMOwrsz5SYddbTTsAu33R17chyDXqGluRsCcLHAOGchvGrnw3MBQQ9Iy4NsUYKbnMj6yWFIPMDX6gJvbLfAFKhxohmLqGPJLxNvW9ekthEmqhORCTpHgkjEa0oZ8hqZ2tZhL+GzhYiC7bCH7Hi1MqNUtjRSC8ue5VzG+bWfKKvECP99Fweq94viYZG4OvROxjhypFINRnZspuJvOrIpW/FFwx4O5gP5QmbHQl/HdhNzQXHQs2bIRuBaJzAIuXCvPQ39E1XPVK59YmcBJpw+hr4BgSe29wW/+vI67xRB4Aw4ydqkZbR5aNLL/g2XGX0bCRjA9kZnSr2PCwh4nEMrioM3aOekbM6fIeRG3GMVuuC+FELgA57oo9MFi4b+dw348kGDtcwHG+FbB8cUoOIrPcdDTGNdp4OKZZEc6YqzHQdaOGuLRhyCl1po7DLaaPnDaE0ZYx9LeXFh0lNhf6uIt4oXEHx8fstf7h+e6XEmykAICnN5d3mN0vG5NKoFevybnNT/+jzO9D6xH17E1ixIRwTKsGcXRFzLorSrqHA7NBCn8hRKxp6sWoUJz/dvJSHpUF3NEzKIPdXC7wgTuq4FE4Dbrj4h3/pK7kwDKli4/CqpsVFbO860+tohn4LBkwDx17VybOZFMhC61CXTAEaQCvBTjVB7Y6EpCILnjDxvYE29Ar/eSl0cVHWjfQeBsGw8/CO4WJt++rgcclkW0NpzOH2liWOVBwYaTPEsfyFD2tdAJTgNjUcTDIoq9leiD1od/DD8HKq98XEDZZG/zv8vVoPlj8gfGSyLJYLb24tzrPslPJq2sF3amVcku1GwC6k5PpXtWN+iztRELdzJ8VtT0crBwxKE2FyNwCPczT/fdjBqEbR/qUxksu7NPuUjmBM0X99pl5FBEouqmJPCaGpFYQFHMFEBMNeRw4AE16qrjU7mkEbQAqPte5Scb3ZqPd/SCGVsU/z2ycMBKBCWWlieJcLHU7A=="
+      }
+     },
+     "id": "prt_0c691fcca001unxWF6iMe2dBdk",
+     "sessionID": "ses_f396f686fffeGixOUMK8X25jAC",
+     "messageID": "msg_0c691f07b001p0PytOJJp0PNy2"
+    }
+   ]
+  }
+ ]
+}

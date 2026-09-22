@@ -1,0 +1,101 @@
+{
+ "info": {
+  "id": "ses_f396b50deffeMkRLgyeq4J9AMv",
+  "slug": "happy-cactus",
+  "projectID": "83101555cb47ec2aac60beaa3444a9fffcf1229a",
+  "directory": "C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica\\semana-academica",
+  "path": "semana-academica",
+  "title": "New session - 2026-09-22T00:47:08.065Z",
+  "agent": "build",
+  "model": {
+   "id": "gemini-3.5-flash-lite",
+   "providerID": "google"
+  },
+  "version": "1.18.32",
+  "summary": {
+   "additions": 0,
+   "deletions": 0,
+   "files": 0
+  },
+  "cost": 0,
+  "tokens": {
+   "input": 0,
+   "output": 0,
+   "reasoning": 0,
+   "cache": {
+    "read": 0,
+    "write": 0
+   }
+  },
+  "time": {
+   "created": 1790038028065,
+   "updated": 1790038030236
+  }
+ },
+ "messages": [
+  {
+   "info": {
+    "role": "user",
+    "time": {
+     "created": 1790038028114
+    },
+    "agent": "build",
+    "model": {
+     "providerID": "google",
+     "modelID": "gemini-3.5-flash-lite"
+    },
+    "summary": {
+     "diffs": []
+    },
+    "id": "msg_0c694af52001iu2HcvRSOl0HeJ",
+    "sessionID": "ses_f396b50deffeMkRLgyeq4J9AMv"
+   },
+   "parts": [
+    {
+     "type": "text",
+     "text": "models",
+     "id": "prt_0c694af56001jUhB7l56FAoOzf",
+     "sessionID": "ses_f396b50deffeMkRLgyeq4J9AMv",
+     "messageID": "msg_0c694af52001iu2HcvRSOl0HeJ"
+    }
+   ]
+  },
+  {
+   "info": {
+    "parentID": "msg_0c694af52001iu2HcvRSOl0HeJ",
+    "role": "assistant",
+    "mode": "build",
+    "agent": "build",
+    "path": {
+     "cwd": "C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica\\semana-academica",
+     "root": "C:\\Users\\Rafaela Cunha\\Downloads\\TrabGustavo\\ProjetoSemanaAcademica\\ProjetoSemanaAcademica"
+    },
+    "cost": 0,
+    "tokens": {
+     "input": 0,
+     "output": 0,
+     "reasoning": 0,
+     "cache": {
+      "read": 0,
+      "write": 0
+     }
+    },
+    "modelID": "gemini-3.5-flash-lite",
+    "providerID": "google",
+    "time": {
+     "created": 1790038028165,
+     "completed": 1790038031566
+    },
+    "error": {
+     "name": "MessageAbortedError",
+     "data": {
+      "message": "Aborted"
+     }
+    },
+    "id": "msg_0c694af85001CjBHgRlEGDZw9Q",
+    "sessionID": "ses_f396b50deffeMkRLgyeq4J9AMv"
+   },
+   "parts": []
+  }
+ ]
+}

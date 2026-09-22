@@ -20,4 +20,7 @@ Requisições são chamadas ao modelo: cada passo do agente é uma. Skills conta
 | 21/09 21:16 | [TDD para fatia 2 de M2-inscricoes.md](ses_f3987bd06ffe3UDwr4P12t6k6c.md) | 28 | tdd | — | 3 / 6 | 2 | 2 | 0 | — |
 | 21/09 21:23 | [TDD da fatia 3 em specs/M2-inscricoes.md](ses_f398124b8ffeD1keZ2qpx0RrjJ.md) | 24 | tdd | — | 3 / 5 | 1 | 2 | 0 | — |
 | 21/09 21:29 | [TDD da fatia 4 em specs/M2-inscricoes.md](ses_f397b1d41ffecK5wMvDXQDU1iA.md) | 33 | tdd | — | 5 / 4 | 1 | 2 | 0 | — |
-| | **Total: 8 sessões** | 209 | grilling, to-spec, tdd (4) | — | 19 / 22 | 5 | 9 | 0 | — |
+| 21/09 21:42 | [Auditoria do módulo M2 contra especificações](ses_f396f686fffeGixOUMK8X25jAC.md) | 15 | — | auditor | 2 / 1 | 0 | 0 | 0 | — |
+| 21/09 21:47 | [New session - 2026-09-22T00:47:08.065Z](ses_f396b50deffeMkRLgyeq4J9AMv.md) | 0 | — | — | 0 / 0 | 0 | 0 | 0 | — |
+| 21/09 21:47 | [Auditoria do módulo M2 contra especificações](ses_f396a919cffePrPJPIDlusklQS.md) | 12 | — | auditor | 1 / 1 | 0 | 0 | 0 | — |
+| | **Total: 11 sessões** | 236 | grilling, to-spec, tdd (4) | auditor (2) | 22 / 24 | 5 | 9 | 0 | — |
