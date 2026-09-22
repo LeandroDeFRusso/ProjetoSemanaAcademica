@@ -8,7 +8,7 @@
       <li v-for="inscricao in inscricoes" :key="inscricao.id">
         Atividade: {{ inscricao.atividadeId }} - Status: {{ inscricao.status }}
         <span v-if="inscricao.posicaoNaEspera"> (Posição na espera: {{ inscricao.posicaoNaEspera }})</span>
-        <span v-if="inscricao.convocadaAte"> - Convocação até: {{ formatarTempoRestante(inscricao.convocadaAte) }}</span>
+        <span v-if="inscricao.convocadaAte && inscricao.status === 'convocada'"> - Convocação até: {{ formatarTempoRestante(inscricao.convocadaAte) }}</span>
         <button v-if="inscricao.status === 'convocada'" @click="confirmar(inscricao.id)">Confirmar</button>
       </li>
     </ul>

@@ -62,4 +62,30 @@ describe('MinhasInscricoes', () => {
     expect(wrapper.find('button').exists()).toBe(true);
     expect(wrapper.find('button').text()).toBe('Confirmar');
   });
+
+  it('deve mostrar posição na espera quando status for em_espera', async () => {
+    server.use(
+      http.get('/inscricoes', () => {
+        return HttpResponse.json([
+          {
+            id: 'ins_espera',
+            atividadeId: 'atv_2',
+            participanteId: 'p-carla',
+            status: 'em_espera',
+            posicaoNaEspera: 5,
+            convocadaAte: null,
+            criadaEm: '2026-10-19T08:00:00-03:00'
+          }
+        ]);
+      })
+    );
+
+    const wrapper = mount(MinhasInscricoes);
+
+    await new Promise(resolve => setTimeout(resolve, 100));
+    await wrapper.vm.$nextTick();
+
+    expect(wrapper.text()).toContain('Status: em_espera');
+    expect(wrapper.text()).toContain('Posição na espera: 5');
+  });
 });
