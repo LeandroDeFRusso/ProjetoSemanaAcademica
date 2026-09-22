@@ -1,0 +1,23 @@
+# Sessões — Victor Hugo Palermo Rando
+
+Cada execução de teste é lida pelo que mudou desde a anterior:
+
+- **Ciclo** — vermelho logo depois de mexer só em teste, e depois verde logo depois de mexer só em código. É o TDD.
+- **Nasceu verde** — verde logo depois de mexer só em teste. Ou o comportamento já existia, ou o teste não testa o que diz.
+- **Juntos** — teste e código mudaram antes da mesma execução. Não houve vermelho para ver.
+
+**Alertas:** *colou* = prompt com 10 palavras seguidas ou mais iguais às do documento de requisitos (só aparece quando o resumo é gerado com `--requisitos`); *leu* = o agente acessou um arquivo de requisitos; *anexou* = o documento foi anexado à conversa.
+
+Requisições são chamadas ao modelo: cada passo do agente é uma. Skills contam tanto a ferramenta `skill` quanto o comando `/nome`.
+
+| Início | Sessão | Requisições | Skills | Subagentes | Vermelhas / verdes | Ciclos | Nasceu verde | Juntos | Alertas |
+|---|---|---|---|---|---|---|---|---|---|
+| 21/09 23:59 | [New session - 2026-09-22T02:59:11.364Z](ses_f38f26a7bffe7vDpcEUTEBxU9R.md) | 0 | — | — | 0 / 0 | 0 | 0 | 0 | — |
+| 22/09 00:07 | [New session - 2026-09-22T03:07:22.247Z](ses_f38eaecf8ffenhTL6e5OgR3EoT.md) | 0 | — | — | 0 / 0 | 0 | 0 | 0 | — |
+| 22/09 00:10 | [New session - 2026-09-22T03:10:13.284Z](ses_f38e850dcfferhBvVvBBmv3clC.md) | 0 | — | — | 0 / 0 | 0 | 0 | 0 | — |
+| 22/09 00:11 | [New session - 2026-09-22T03:11:33.256Z](ses_f38e71877ffePp3cGuttDf5Pwl.md) | 0 | — | — | 0 / 0 | 0 | 0 | 0 | — |
+| 22/09 00:23 | [New session - 2026-09-22T03:23:30.389Z](ses_f38dc272bffeBb2jX4h7yVzFMw.md) | 0 | — | — | 0 / 0 | 0 | 0 | 0 | — |
+| 22/09 00:34 | [Cumprimento inicial](ses_f38d28674ffez2u4le54INY4D4.md) | 22 | grilling | — | 1 / 1 | 0 | 0 | 0 | — |
+| 22/09 00:53 | [Saudação inicial](ses_f38c0b4e9ffe3RjMUldc1lJavI.md) | 10 | grilling | — | 0 / 0 | 0 | 0 | 0 | — |
+| 22/09 00:56 | [Saudação inicial](ses_f38be433cffevcr3rFvv9bAs25.md) | 23 | grilling | — | 2 / 1 | 0 | 0 | 0 | — |
+| | **Total: 8 sessões** | 55 | grilling (3) | — | 3 / 2 | 0 | 0 | 0 | — |
