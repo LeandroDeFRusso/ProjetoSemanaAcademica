@@ -74,6 +74,16 @@ export function criarServidor(portaDesejada = 3000) {
       convocadaAte TEXT,
       criadaEm TEXT NOT NULL
     );
+
+    CREATE TABLE IF NOT EXISTS presencas (
+      id TEXT PRIMARY KEY,
+      encontroId TEXT NOT NULL,
+      participanteId TEXT NOT NULL,
+      origem TEXT NOT NULL,
+      lidoEm TEXT,
+      registradaEm TEXT NOT NULL,
+      justificativa TEXT
+    );
   `);
 
   function popularDadosIniciais() {
@@ -83,6 +93,7 @@ export function criarServidor(portaDesejada = 3000) {
     db.exec('DELETE FROM encontros');
     db.exec('DELETE FROM sistema');
     db.exec('DELETE FROM inscricoes');
+    db.exec('DELETE FROM presencas');
 
     const usuariosIniciais = [
       ['org-ana', 'Ana Beatriz Lima', 'organizacao'],
@@ -633,6 +644,100 @@ export function criarServidor(portaDesejada = 3000) {
         codigo,
         trocaEm,
         validoAte: valAte
+      });
+    });
+
+    // POST /encontros/:id/presencas
+    app.post('/encontros/:id/presencas', (req, res) => {
+      if (req.usuario.papel !== 'participante') {
+        return res.status(403).json({ erro: 'SOMENTE_PARTICIPANTE', mensagem: 'Apenas participante' });
+      }
+
+      const encontro = db.prepare('SELECT * FROM encontros WHERE id = ?').get(req.params.id);
+      if (!encontro) {
+        return res.status(404).json({ erro: 'NAO_ENCONTRADO', mensagem: 'Encontro não encontrado' });
+      }
+      const atividade = db.prepare('SELECT * FROM atividades WHERE id = ?').get(encontro.atividadeId);
+      if (!atividade) {
+        return res.status(404).json({ erro: 'NAO_ENCONTRADO', mensagem: 'Atividade não encontrada' });
+      }
+      if (atividade.cancelada) {
+        return res.status(422).json({ erro: 'ATIVIDADE_CANCELADA', mensagem: 'Atividade cancelada' });
+      }
+
+      const inscricao = db.prepare(`
+        SELECT * FROM inscricoes 
+        WHERE atividadeId = ? AND participanteId = ? AND status = 'confirmada'
+      `).get(atividade.id, req.usuario.id);
+
+      if (!inscricao) {
+        return res.status(403).json({ erro: 'NAO_INSCRITO', mensagem: 'Participante não inscrito' });
+      }
+
+      const relogioRow = db.prepare('SELECT valor FROM sistema WHERE chave = ?').get('relogio');
+      const agoraMs = new Date(relogioRow ? relogioRow.valor : Date.now()).getTime();
+      const inicioMs = new Date(encontro.inicio).getTime();
+      const fimMs = new Date(encontro.fim).getTime();
+      const janelaInicio = inicioMs - 15 * 60 * 1000;
+      const janelaFim = inicioMs + 30 * 60 * 1000;
+
+      const body = req.body || {};
+      const targetMs = body.lidoEm ? new Date(body.lidoEm).getTime() : agoraMs;
+      if (isNaN(targetMs)) {
+        return res.status(422).json({ erro: 'DADOS_INVALIDOS', mensagem: 'lidoEm inválido' });
+      }
+
+      if (targetMs < janelaInicio || targetMs > janelaFim) {
+        return res.status(422).json({ erro: 'FORA_DA_JANELA', mensagem: 'Fora da janela de registro' });
+      }
+
+      if (body.lidoEm) {
+        if (agoraMs > fimMs + 2 * 60 * 60 * 1000) {
+          return res.status(422).json({ erro: 'SINCRONIZACAO_TARDIA', mensagem: 'Sincronização tardia' });
+        }
+      }
+
+      const minutoTargetMs = Math.floor(targetMs / 60000) * 60000;
+      const minutoAtualCode = crypto.createHash('md5').update(`${encontro.id}-${minutoTargetMs}`).digest('hex').substring(0, 6).toUpperCase();
+      const minutoAnteriorMs = minutoTargetMs - 60000;
+      const minutoAnteriorCode = crypto.createHash('md5').update(`${encontro.id}-${minutoAnteriorMs}`).digest('hex').substring(0, 6).toUpperCase();
+
+      if (!body.codigo || (body.codigo !== minutoAtualCode && body.codigo !== minutoAnteriorCode)) {
+        return res.status(422).json({ erro: 'CODIGO_INVALIDO', mensagem: 'Código inválido' });
+      }
+
+      const existingPresenca = db.prepare('SELECT * FROM presencas WHERE encontroId = ? AND participanteId = ?').get(encontro.id, req.usuario.id);
+      if (existingPresenca) {
+        return res.status(200).json({
+          id: existingPresenca.id,
+          encontroId: existingPresenca.encontroId,
+          participanteId: existingPresenca.participanteId,
+          origem: existingPresenca.origem,
+          lidoEm: existingPresenca.lidoEm,
+          registradaEm: existingPresenca.registradaEm,
+          justificativa: existingPresenca.justificativa
+        });
+      }
+
+      const id = 'pre_' + crypto.randomBytes(4).toString('hex');
+      const origem = body.lidoEm ? 'qr_offline' : 'qr';
+      const lidoEmVal = body.lidoEm ? formatarDataIso(targetMs) : null;
+      const registradaEm = formatarDataIso(agoraMs);
+
+      db.prepare(`
+        INSERT INTO presencas (id, encontroId, participanteId, origem, lidoEm, registradaEm, justificativa)
+        VALUES (?, ?, ?, ?, ?, ?, NULL)
+      `).run(id, encontro.id, req.usuario.id, origem, lidoEmVal, registradaEm);
+
+      const nova = db.prepare('SELECT * FROM presencas WHERE id = ?').get(id);
+      return res.status(201).json({
+        id: nova.id,
+        encontroId: nova.encontroId,
+        participanteId: nova.participanteId,
+        origem: nova.origem,
+        lidoEm: nova.lidoEm,
+        registradaEm: nova.registradaEm,
+        justificativa: nova.justificativa
       });
     });
 
