@@ -62,5 +62,17 @@ export const handlers = [
   }),
   http.post('/inscricoes/:id/cancelamento', ({ params }) => {
     return HttpResponse.json({ id: params.id, status: 'cancelada' }, { status: 200 });
+  }),
+  http.get('/encontros/:id/codigo', ({ params, request }) => {
+    const auth = request.headers.get('X-Usuario');
+    if (auth === 'p-participante') {
+      return HttpResponse.json({ erro: 'SOMENTE_ORGANIZACAO', mensagem: 'Apenas organização' }, { status: 403 });
+    }
+    return HttpResponse.json({
+      encontroId: params.id,
+      codigo: 'ABC123',
+      trocaEm: new Date(Date.now() + 60000).toISOString(),
+      validoAte: new Date(Date.now() + 120000).toISOString()
+    });
   })
 ];

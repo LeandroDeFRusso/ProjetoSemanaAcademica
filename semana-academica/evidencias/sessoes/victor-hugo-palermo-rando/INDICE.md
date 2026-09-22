@@ -28,4 +28,5 @@ Requisições são chamadas ao modelo: cada passo do agente é uma. Skills conta
 | 22/09 19:04 | [TDD da fatia 3 em M3-presenca-por-qr.md](ses_f34d9df89ffeCf1vXUaEY7WzcF.md) | 47 | tdd | — | 1 / 8 | 1 | 2 | 0 | — |
 | 22/09 19:26 | [New session - 2026-09-22T22:26:26.107Z](ses_f34c5c544ffemrQ3kIgDzDYn7c.md) | 12 | tdd | — | 0 / 1 | 0 | 0 | 0 | — |
 | 22/09 19:33 | [Auditoria do módulo M3 contra specs QR](ses_f34bee576ffelhVNMnZl2wpiyl.md) | 20 | — | — | 0 / 1 | 0 | 0 | 0 | — |
-| | **Total: 16 sessões** | 242 | grilling (3), to-spec (2), tdd (4) | — | 8 / 22 | 4 | 7 | 0 | — |
+| 22/09 19:52 | [Implementação M3 tela QR e leitura offline](ses_f34ae0ad8ffefFZpoHMho9SHfL.md) | 30 | — | — | 2 / 2 | 0 | 1 | 0 | — |
+| | **Total: 17 sessões** | 272 | grilling (3), to-spec (2), tdd (4) | — | 10 / 24 | 4 | 8 | 0 | — |

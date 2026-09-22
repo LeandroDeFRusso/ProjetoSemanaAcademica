@@ -47,4 +47,5 @@ async function cancelar() {
 }
 
 onMounted(carregarDados);
+</script>
 
