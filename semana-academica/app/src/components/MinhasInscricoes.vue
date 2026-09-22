@@ -35,6 +35,16 @@ onMounted(async () => {
 });
 
 async function confirmar(id) {
-  // TODO: Implementar lógica de confirmação
+  try {
+    const res = await fetch(`/inscricoes/${id}/confirmacao`, { method: 'POST' });
+    if (!res.ok) throw new Error('Erro ao confirmar inscrição');
+    const index = inscricoes.value.findIndex(i => i.id === id);
+    if (index !== -1) {
+      inscricoes.value[index].status = 'confirmada';
+      inscricoes.value[index].convocadaAte = null;
+    }
+  } catch (e) {
+    alert(e.message);
+  }
 }
 </script>

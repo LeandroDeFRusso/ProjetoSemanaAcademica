@@ -40,7 +40,7 @@ export const handlers = [
   http.get('/atividades', ({ request }) => {
     return HttpResponse.json([
       {
-        id: 'atv_1a2b3c4d',
+        id: 'atv_atv1a2b3c4d',
         titulo: 'Flutter do zero',
         tipo: 'minicurso',
         salaId: 'lab-3',
@@ -53,5 +53,14 @@ export const handlers = [
         emEspera: 0
       }
     ]);
+  }),
+  http.post('/inscricoes/:id/confirmacao', ({ params }) => {
+    return HttpResponse.json({ id: params.id, status: 'confirmada' }, { status: 200 });
+  }),
+  http.post('/atividades/:id/inscricoes', ({ params }) => {
+    return HttpResponse.json({ id: 'ins_novo', atividadeId: params.id, status: 'confirmada' }, { status: 201 });
+  }),
+  http.post('/inscricoes/:id/cancelamento', ({ params }) => {
+    return HttpResponse.json({ id: params.id, status: 'cancelada' }, { status: 200 });
   })
 ];

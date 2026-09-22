@@ -24,4 +24,5 @@ Requisições são chamadas ao modelo: cada passo do agente é uma. Skills conta
 | 21/09 21:47 | [New session - 2026-09-22T00:47:08.065Z](ses_f396b50deffeMkRLgyeq4J9AMv.md) | 0 | — | — | 0 / 0 | 0 | 0 | 0 | — |
 | 21/09 21:47 | [Auditoria do módulo M2 contra especificações](ses_f396a919cffePrPJPIDlusklQS.md) | 12 | — | auditor | 1 / 1 | 0 | 0 | 0 | — |
 | 21/09 22:04 | [Telas M2 de inscrições e fila de espera](ses_f395b2a1affeky4X8II7kF5HB6.md) | 30 | front-end, padrao-design | — | 3 / 0 | 0 | 0 | 1 | — |
-| | **Total: 12 sessões** | 266 | grilling, to-spec, tdd (4), front-end, padrao-design | auditor (2) | 25 / 24 | 5 | 9 | 1 | — |
+| 21/09 22:36 | [Fatia 2: Telas de inscrições e espera](ses_f393e549fffe0i671Oc8VRzx59.md) | 39 | tdd, front-end | — | 4 / 2 | 0 | 0 | 0 | — |
+| | **Total: 13 sessões** | 305 | grilling, to-spec, tdd (5), front-end (2), padrao-design | auditor (2) | 29 / 26 | 5 | 9 | 1 | — |
