@@ -96,5 +96,44 @@ export const handlers = [
       trocaEm: new Date(Date.now() + 60000).toISOString(),
       validoAte: new Date(Date.now() + 120000).toISOString()
     });
+  }),
+  http.get('/encontros/:id/presencas', ({ params, request }) => {
+    const auth = request.headers.get('X-Usuario');
+    if (auth && auth.startsWith('p-')) {
+      return HttpResponse.json({ erro: 'SOMENTE_ORGANIZACAO', mensagem: 'Apenas organização' }, { status: 403 });
+    }
+    return HttpResponse.json([
+      {
+        id: 'pre_1',
+        encontroId: params.id,
+        participanteId: 'p-carla',
+        origem: 'qr',
+        lidoEm: null,
+        registradaEm: '2026-10-19T10:05:00-03:00',
+        justificativa: null
+      }
+    ]);
+  }),
+  http.post('/encontros/:id/presencas/manual', async ({ params, request }) => {
+    const auth = request.headers.get('X-Usuario');
+    if (auth && auth.startsWith('p-')) {
+      return HttpResponse.json({ erro: 'SOMENTE_ORGANIZACAO', mensagem: 'Apenas organização' }, { status: 403 });
+    }
+    const body = await request.json();
+    if (!body.justificativa || body.justificativa.length < 10) {
+      return HttpResponse.json({ erro: 'JUSTIFICATIVA_OBRIGATORIA', mensagem: 'Justificativa obrigatória (mínimo 10 caracteres)' }, { status: 422 });
+    }
+    if (body.participanteId === 'p-desconhecido') {
+      return HttpResponse.json({ erro: 'NAO_INSCRITO', mensagem: 'Não inscrito' }, { status: 403 });
+    }
+    return HttpResponse.json({
+      id: 'pre_manual_1',
+      encontroId: params.id,
+      participanteId: body.participanteId,
+      origem: 'manual',
+      lidoEm: null,
+      registradaEm: new Date().toISOString(),
+      justificativa: body.justificativa
+    }, { status: 201 });
   })
 ];
