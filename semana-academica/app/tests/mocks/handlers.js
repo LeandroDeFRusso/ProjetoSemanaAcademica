@@ -63,6 +63,28 @@ export const handlers = [
   http.post('/inscricoes/:id/cancelamento', ({ params }) => {
     return HttpResponse.json({ id: params.id, status: 'cancelada' }, { status: 200 });
   }),
+  http.post('/encontros/:id/presencas', async ({ params, request }) => {
+    const auth = request.headers.get('X-Usuario');
+    if (auth === 'org-ana') {
+      return HttpResponse.json({ erro: 'SOMENTE_PARTICIPANTE', mensagem: 'Apenas participante' }, { status: 403 });
+    }
+    const body = await request.json();
+    if (body.codigo === 'INVALID') {
+      return HttpResponse.json({ erro: 'CODIGO_INVALIDO', mensagem: 'Código inválido' }, { status: 422 });
+    }
+    if (body.codigo === 'NAO_INSCRITO') {
+      return HttpResponse.json({ erro: 'NAO_INSCRITO', mensagem: 'Não inscrito' }, { status: 403 });
+    }
+    return HttpResponse.json({
+      id: 'pre_12345678',
+      encontroId: params.id,
+      participanteId: auth || 'p-carla',
+      origem: body.lidoEm ? 'qr_offline' : 'qr',
+      lidoEm: body.lidoEm || null,
+      registradaEm: new Date().toISOString(),
+      justificativa: null
+    }, { status: 201 });
+  }),
   http.get('/encontros/:id/codigo', ({ params, request }) => {
     const auth = request.headers.get('X-Usuario');
     if (auth === 'p-participante') {
