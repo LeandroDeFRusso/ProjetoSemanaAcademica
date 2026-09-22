@@ -8,7 +8,7 @@
       <li v-for="inscricao in inscricoes" :key="inscricao.id">
         Atividade: {{ inscricao.atividadeId }} - Status: {{ inscricao.status }}
         <span v-if="inscricao.posicaoNaEspera"> (Posição na espera: {{ inscricao.posicaoNaEspera }})</span>
-        <span v-if="inscricao.convocadaAte"> - Convocação até: {{ inscricao.convocadaAte }}</span>
+        <span v-if="inscricao.convocadaAte"> - Convocação até: {{ formatarTempoRestante(inscricao.convocadaAte) }}</span>
         <button v-if="inscricao.status === 'convocada'" @click="confirmar(inscricao.id)">Confirmar</button>
       </li>
     </ul>
@@ -16,13 +16,28 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, onUnmounted } from 'vue';
 
 const inscricoes = ref([]);
 const loading = ref(true);
 const erro = ref(null);
+const agora = ref(new Date());
+let timer = null;
+
+function formatarTempoRestante(dataIso) {
+  const diffMs = new Date(dataIso) - agora.value;
+  if (diffMs <= 0) return 'Expirado';
+  const diffSegundos = Math.floor(diffMs / 1000);
+  const horas = Math.floor(diffSegundos / 3600);
+  const minutos = Math.floor((diffSegundos % 3600) / 60);
+  const segundos = diffSegundos % 60;
+  return `${horas}:${String(minutos).padStart(2, '0')}:${String(segundos).padStart(2, '0')}`;
+}
 
 onMounted(async () => {
+  timer = setInterval(() => {
+    agora.value = new Date();
+  }, 1000);
   try {
     const res = await fetch('/inscricoes');
     if (!res.ok) throw new Error('Erro ao carregar inscrições');
@@ -32,6 +47,10 @@ onMounted(async () => {
   } finally {
     loading.value = false;
   }
+});
+
+onUnmounted(() => {
+  clearInterval(timer);
 });
 
 async function confirmar(id) {
