@@ -730,16 +730,119 @@ export function criarServidor(portaDesejada = 3000) {
       `).run(id, encontro.id, req.usuario.id, origem, lidoEmVal, registradaEm);
 
       const nova = db.prepare('SELECT * FROM presencas WHERE id = ?').get(id);
-      return res.status(201).json({
-        id: nova.id,
-        encontroId: nova.encontroId,
-        participanteId: nova.participanteId,
-        origem: nova.origem,
-        lidoEm: nova.lidoEm,
-        registradaEm: nova.registradaEm,
-        justificativa: nova.justificativa
+        return res.status(201).json({
+          id: nova.id,
+          encontroId: nova.encontroId,
+          participanteId: nova.participanteId,
+          origem: nova.origem,
+          lidoEm: nova.lidoEm,
+          registradaEm: nova.registradaEm,
+          justificativa: nova.justificativa
+        });
       });
-    });
+
+      // POST /encontros/:id/presencas/manual
+      app.post('/encontros/:id/presencas/manual', (req, res) => {
+        if (req.usuario.papel !== 'organizacao') {
+          return res.status(403).json({ erro: 'SOMENTE_ORGANIZACAO', mensagem: 'Apenas organização' });
+        }
+        const encontro = db.prepare('SELECT * FROM encontros WHERE id = ?').get(req.params.id);
+        if (!encontro) {
+          return res.status(404).json({ erro: 'NAO_ENCONTRADO', mensagem: 'Encontro não encontrado' });
+        }
+        const atividade = db.prepare('SELECT * FROM atividades WHERE id = ?').get(encontro.atividadeId);
+        if (!atividade) {
+          return res.status(404).json({ erro: 'NAO_ENCONTRADO', mensagem: 'Atividade não encontrada' });
+        }
+        const body = req.body || {};
+        const participanteId = body.participanteId;
+
+        const inscricao = db.prepare(`
+          SELECT * FROM inscricoes 
+          WHERE atividadeId = ? AND participanteId = ? AND status = 'confirmada'
+        `).get(atividade.id, participanteId);
+
+        if (!inscricao) {
+          return res.status(403).json({ erro: 'NAO_INSCRITO', mensagem: 'Participante não inscrito' });
+        }
+
+        const justificativa = body.justificativa;
+        if (!justificativa || typeof justificativa !== 'string' || justificativa.trim().length < 10) {
+          return res.status(422).json({ erro: 'JUSTIFICATIVA_OBRIGATORIA', mensagem: 'Justificativa obrigatória (mínimo 10 caracteres)' });
+        }
+
+        const existingPresenca = db.prepare('SELECT * FROM presencas WHERE encontroId = ? AND participanteId = ?').get(encontro.id, participanteId);
+        if (existingPresenca) {
+          return res.status(200).json({
+            id: existingPresenca.id,
+            encontroId: existingPresenca.encontroId,
+            participanteId: existingPresenca.participanteId,
+            origem: existingPresenca.origem,
+            lidoEm: existingPresenca.lidoEm,
+            registradaEm: existingPresenca.registradaEm,
+            justificativa: existingPresenca.justificativa
+          });
+        }
+
+        const inscricoesConfirmadas = db.prepare(`
+          SELECT COUNT(*) as total FROM inscricoes 
+          WHERE atividadeId = ? AND status = 'confirmada'
+        `).get(atividade.id).total;
+
+        const limiteManuais = Math.ceil(inscricoesConfirmadas * 0.1);
+
+        const manuaisAtuais = db.prepare(`
+          SELECT COUNT(*) as total FROM presencas 
+          WHERE encontroId = ? AND origem = 'manual'
+        `).get(encontro.id).total;
+
+        if (manuaisAtuais >= limiteManuais) {
+          return res.status(422).json({ erro: 'LIMITE_DE_MANUAIS', mensagem: 'Limite de presenças manuais excedido' });
+        }
+
+        const relogioRow = db.prepare('SELECT valor FROM sistema WHERE chave = ?').get('relogio');
+        const agoraMs = new Date(relogioRow ? relogioRow.valor : Date.now()).getTime();
+
+        const id = 'pre_' + crypto.randomBytes(4).toString('hex');
+        const registradaEm = formatarDataIso(agoraMs);
+
+        db.prepare(`
+          INSERT INTO presencas (id, encontroId, participanteId, origem, lidoEm, registradaEm, justificativa)
+          VALUES (?, ?, ?, 'manual', NULL, ?, ?)
+        `).run(id, encontro.id, participanteId, registradaEm, justificativa.trim());
+
+        const nova = db.prepare('SELECT * FROM presencas WHERE id = ?').get(id);
+        return res.status(201).json({
+          id: nova.id,
+          encontroId: nova.encontroId,
+          participanteId: nova.participanteId,
+          origem: nova.origem,
+          lidoEm: nova.lidoEm,
+          registradaEm: nova.registradaEm,
+          justificativa: nova.justificativa
+        });
+      });
+
+      // GET /encontros/:id/presencas
+      app.get('/encontros/:id/presencas', (req, res) => {
+        if (req.usuario.papel !== 'organizacao') {
+          return res.status(403).json({ erro: 'SOMENTE_ORGANIZACAO', mensagem: 'Apenas organização' });
+        }
+        const encontro = db.prepare('SELECT * FROM encontros WHERE id = ?').get(req.params.id);
+        if (!encontro) {
+          return res.status(404).json({ erro: 'NAO_ENCONTRADO', mensagem: 'Encontro não encontrado' });
+        }
+        const presencas = db.prepare('SELECT * FROM presencas WHERE encontroId = ?').all(encontro.id);
+        res.json(presencas.map(p => ({
+          id: p.id,
+          encontroId: p.encontroId,
+          participanteId: p.participanteId,
+          origem: p.origem,
+          lidoEm: p.lidoEm,
+          registradaEm: p.registradaEm,
+          justificativa: p.justificativa
+        })));
+      });
 
     // GET /inscricoes/:id
     app.get('/inscricoes/:id', (req, res) => {
