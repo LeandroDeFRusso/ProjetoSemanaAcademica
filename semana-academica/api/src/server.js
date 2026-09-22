@@ -1,5 +1,6 @@
 import express from 'express';
-import { DatabaseSync } from 'node:sqlite';
+import Database from 'better-sqlite3';
+const DatabaseSync = Database;
 import crypto from 'node:crypto';
 
 const ocupadasStubs = new Map();
@@ -63,6 +64,16 @@ export function criarServidor(portaDesejada = 3000) {
       chave TEXT PRIMARY KEY,
       valor TEXT NOT NULL
     );
+
+    CREATE TABLE IF NOT EXISTS inscricoes (
+      id TEXT PRIMARY KEY,
+      atividadeId TEXT NOT NULL,
+      participanteId TEXT NOT NULL,
+      status TEXT NOT NULL,
+      posicaoNaEspera INTEGER,
+      convocadaAte TEXT,
+      criadaEm TEXT NOT NULL
+    );
   `);
 
   function popularDadosIniciais() {
@@ -71,6 +82,7 @@ export function criarServidor(portaDesejada = 3000) {
     db.exec('DELETE FROM atividades');
     db.exec('DELETE FROM encontros');
     db.exec('DELETE FROM sistema');
+    db.exec('DELETE FROM inscricoes');
 
     const usuariosIniciais = [
       ['org-ana', 'Ana Beatriz Lima', 'organizacao'],
@@ -175,6 +187,19 @@ export function criarServidor(portaDesejada = 3000) {
     res.json(salas);
   });
 
+  function getAtividadeOcupadas(atividadeId) {
+    if (ocupadasStubs.has(atividadeId)) {
+      return ocupadasStubs.get(atividadeId);
+    }
+    const row = db.prepare("SELECT COUNT(*) as cnt FROM inscricoes WHERE atividadeId = ? AND status IN ('confirmada', 'convocada')").get(atividadeId);
+    return row ? row.cnt : 0;
+  }
+
+  function getAtividadeEmEspera(atividadeId) {
+    const row = db.prepare("SELECT COUNT(*) as cnt FROM inscricoes WHERE atividadeId = ? AND status = 'em_espera'").get(atividadeId);
+    return row ? row.cnt : 0;
+  }
+
   // Helper to build activity object
   function getAtividadeObj(row) {
     const encontros = db.prepare('SELECT id, inicio, fim FROM encontros WHERE atividadeId = ? ORDER BY inicio ASC').all(row.id);
@@ -206,8 +231,9 @@ export function criarServidor(portaDesejada = 3000) {
       }
     }
 
-    const ocupadas = getOcupadas(row.id);
+    const ocupadas = getAtividadeOcupadas(row.id);
     const vagasRestantes = Math.max(0, row.vagas - ocupadas);
+    const emEspera = getAtividadeEmEspera(row.id);
 
     return {
       id: row.id,
@@ -220,7 +246,7 @@ export function criarServidor(portaDesejada = 3000) {
       situacao,
       ocupadas,
       vagasRestantes,
-      emEspera: 0
+      emEspera
     };
   }
 
@@ -435,6 +461,118 @@ export function criarServidor(portaDesejada = 3000) {
       db.prepare('UPDATE atividades SET cancelada = 1 WHERE id = ?').run(req.params.id);
       const updatedRow = db.prepare('SELECT * FROM atividades WHERE id = ?').get(req.params.id);
       res.json(getAtividadeObj(updatedRow));
+    });
+
+    // POST /atividades/:id/inscricoes
+    app.post('/atividades/:id/inscricoes', (req, res) => {
+      if (req.usuario.papel !== 'participante') {
+        return res.status(403).json({ erro: 'SOMENTE_PARTICIPANTE', mensagem: 'Apenas participante' });
+      }
+      const atividade = db.prepare('SELECT * FROM atividades WHERE id = ?').get(req.params.id);
+      if (!atividade) {
+        return res.status(404).json({ erro: 'NAO_ENCONTRADO', mensagem: 'Atividade não encontrada' });
+      }
+      if (atividade.cancelada) {
+        return res.status(422).json({ erro: 'ATIVIDADE_CANCELADA', mensagem: 'Atividade cancelada' });
+      }
+
+      const encontros = db.prepare('SELECT * FROM encontros WHERE atividadeId = ? ORDER BY inicio ASC').all(atividade.id);
+      if (encontros.length > 0) {
+        const relogioRow = db.prepare('SELECT valor FROM sistema WHERE chave = ?').get('relogio');
+        const agoraMs = new Date(relogioRow ? relogioRow.valor : Date.now()).getTime();
+        const primeiroInicioMs = new Date(encontros[0].inicio).getTime();
+        const fechamentoMs = primeiroInicioMs - 30 * 60 * 1000;
+        if (agoraMs >= fechamentoMs) {
+          return res.status(422).json({ erro: 'INSCRICOES_ENCERRADAS', mensagem: 'Inscrições encerradas' });
+        }
+      }
+
+      const inscricaoAtiva = db.prepare(`
+        SELECT * FROM inscricoes 
+        WHERE atividadeId = ? AND participanteId = ? AND status IN ('confirmada', 'em_espera', 'convocada')
+      `).get(atividade.id, req.usuario.id);
+
+      if (inscricaoAtiva) {
+        return res.status(409).json({ erro: 'JA_INSCRITO', mensagem: 'Já inscrito' });
+      }
+
+      const ocupadas = getAtividadeOcupadas(atividade.id);
+      let status = 'confirmada';
+      let posicaoNaEspera = null;
+
+      if (ocupadas >= atividade.vagas) {
+        status = 'em_espera';
+        posicaoNaEspera = getAtividadeEmEspera(atividade.id) + 1;
+      }
+
+      const id = 'ins_' + crypto.randomBytes(4).toString('hex');
+      const relogioRow = db.prepare('SELECT valor FROM sistema WHERE chave = ?').get('relogio');
+      const criadaEm = relogioRow ? relogioRow.valor : new Date().toISOString();
+
+      db.prepare(`
+        INSERT INTO inscricoes (id, atividadeId, participanteId, status, posicaoNaEspera, convocadaAte, criadaEm)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+      `).run(id, atividade.id, req.usuario.id, status, posicaoNaEspera, null, criadaEm);
+
+      const novaInscricao = db.prepare('SELECT * FROM inscricoes WHERE id = ?').get(id);
+      return res.status(201).json({
+        id: novaInscricao.id,
+        atividadeId: novaInscricao.atividadeId,
+        participanteId: novaInscricao.participanteId,
+        status: novaInscricao.status,
+        posicaoNaEspera: novaInscricao.posicaoNaEspera,
+        convocadaAte: novaInscricao.convocadaAte,
+        criadaEm: novaInscricao.criadaEm
+      });
+    });
+
+    // GET /inscricoes
+    app.get('/inscricoes', (req, res) => {
+      const { atividadeId } = req.query;
+      let query = 'SELECT * FROM inscricoes WHERE 1=1';
+      const params = [];
+
+      if (req.usuario.papel === 'participante') {
+        query += ' AND participanteId = ?';
+        params.push(req.usuario.id);
+      }
+
+      if (atividadeId) {
+        query += ' AND atividadeId = ?';
+        params.push(atividadeId);
+      }
+
+      const rows = db.prepare(query).all(...params);
+      const inscricoes = rows.map(r => ({
+        id: r.id,
+        atividadeId: r.atividadeId,
+        participanteId: r.participanteId,
+        status: r.status,
+        posicaoNaEspera: r.posicaoNaEspera,
+        convocadaAte: r.convocadaAte,
+        criadaEm: r.criadaEm
+      }));
+      res.json(inscricoes);
+    });
+
+    // GET /inscricoes/:id
+    app.get('/inscricoes/:id', (req, res) => {
+      const row = db.prepare('SELECT * FROM inscricoes WHERE id = ?').get(req.params.id);
+      if (!row) {
+        return res.status(404).json({ erro: 'NAO_ENCONTRADO', mensagem: 'Inscrição não encontrada' });
+      }
+      if (req.usuario.papel === 'participante' && row.participanteId !== req.usuario.id) {
+        return res.status(404).json({ erro: 'NAO_ENCONTRADO', mensagem: 'Inscrição não encontrada' });
+      }
+      res.json({
+        id: row.id,
+        atividadeId: row.atividadeId,
+        participanteId: row.participanteId,
+        status: row.status,
+        posicaoNaEspera: row.posicaoNaEspera,
+        convocadaAte: row.convocadaAte,
+        criadaEm: row.criadaEm
+      });
     });
 
 

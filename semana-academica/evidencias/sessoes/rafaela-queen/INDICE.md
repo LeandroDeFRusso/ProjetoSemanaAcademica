@@ -16,4 +16,5 @@ Requisições são chamadas ao modelo: cada passo do agente é uma. Skills conta
 | 21/09 20:17 | [Erro ao exportar sessão ses_f39cc3d8fffeNLkj6nxINs9gj8](ses_f39bd9637ffekUyK6wBvM36UFa.md) | 12 | — | — | 0 / 0 | 0 | 0 | 0 | — |
 | 21/09 20:30 | [Resolução de pendências em M2-inscricoes.md](ses_f39b1ed95ffeu3Yu47MnZfA5p1.md) | 17 | — | — | 0 / 0 | 0 | 0 | 0 | — |
 | 21/09 20:40 | [Geração de specs/M2-inscricoes.md](ses_f39a87949ffeXGkvnamwDpw571.md) | 8 | to-spec | — | 0 / 0 | 0 | 0 | 0 | — |
-| | **Total: 4 sessões** | 66 | grilling, to-spec | — | 0 / 0 | 0 | 0 | 0 | — |
+| 21/09 20:55 | [New session - 2026-09-21T23:55:26.661Z](ses_f399aa3baffedLK7csWCNmFWoj.md) | 58 | tdd | — | 8 / 7 | 1 | 3 | 0 | — |
+| | **Total: 5 sessões** | 124 | grilling, to-spec, tdd | — | 8 / 7 | 1 | 3 | 0 | — |
