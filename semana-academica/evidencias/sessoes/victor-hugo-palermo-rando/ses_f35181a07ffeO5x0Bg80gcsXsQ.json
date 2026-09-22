@@ -1,0 +1,905 @@
+{
+ "info": {
+  "id": "ses_f35181a07ffeO5x0Bg80gcsXsQ",
+  "slug": "clever-cabin",
+  "projectID": "83101555cb47ec2aac60beaa3444a9fffcf1229a",
+  "directory": "C:\\Users\\Drago\\Desktop\\Projeto Opencode\\ProjetoSemanaAcademica\\semana-academica",
+  "path": "semana-academica",
+  "title": "Especificação de specs/M3-presenca-por-qr.md",
+  "agent": "build",
+  "model": {
+   "id": "gemini-3.5-flash-lite",
+   "providerID": "google"
+  },
+  "version": "1.18.32",
+  "summary": {
+   "additions": 0,
+   "deletions": 0,
+   "files": 0
+  },
+  "cost": 0.06978838999999999,
+  "tokens": {
+   "input": 151141,
+   "output": 2985,
+   "reasoning": 5996,
+   "cache": {
+    "read": 66453,
+    "write": 0
+   }
+  },
+  "time": {
+   "created": 1790110590456,
+   "updated": 1790110631813
+  }
+ },
+ "messages": [
+  {
+   "info": {
+    "role": "user",
+    "time": {
+     "created": 1790110590468
+    },
+    "agent": "build",
+    "model": {
+     "providerID": "google",
+     "modelID": "gemini-3.5-flash-lite"
+    },
+    "summary": {
+     "diffs": [
+      {
+       "file": "semana-academica/specs/M3-presenca-por-qr.md",
+       "patch": "Index: semana-academica/specs/M3-presenca-por-qr.md\n===================================================================\n--- semana-academica/specs/M3-presenca-por-qr.md\t\n+++ semana-academica/specs/M3-presenca-por-qr.md\t\n@@ -0,0 +1,67 @@\n+# Spec — M3 — Presença por QR Code e Registro Manual\n+\n+## 1. Objetivo\n+Permitir que a organização gere códigos temporários para controle de presença em encontros, que participantes registrem sua presença via QR Code (com suporte a envio offline com tolerância) e que a organização realize registros manuais de presença com justificativa e limite porcentual, além de listar as presenças de um encontro.\n+\n+## 2. Fora de escopo\n+- Gestão de atividades, salas e encontros (tratado em M1).\n+- Inscrições e lista de espera em atividades (tratado em M2).\n+- Emissão de certificados e extrato de horas (tratado em M4).\n+- Painel gerencial, estatísticas e bloqueios por faltas (tratado em M5).\n+\n+## 3. Modelo\n+\n+### CodigoDoEncontro\n+- `encontroId`: string (identificador do encontro)\n+- `codigo`: string (código de 6 caracteres gerado para o minuto atual)\n+- `trocaEm`: string ISO 8601 (momento em que a tela deve buscar o próximo código)\n+- `validoAte`: string ISO 8601 (primeiro instante em que este código deixa de ser aceito)\n+\n+### Presenca\n+- `id`: string gerada automaticamente (prefixo `pre_` + 8 hexadecimais)\n+- `encontroId`: string (identificador do encontro)\n+- `participanteId`: string (identificador do participante)\n+- `origem`: string `\"qr\" | \"qr_offline\" | \"manual\"`\n+- `lidoEm`: string ISO 8601 ou `null` (instante da leitura do QR code)\n+- `registradaEm`: string ISO 8601 (momento em que o registro foi processado/salvo no sistema)\n+- `justificativa`: string ou `null` (texto descritivo, preenchido apenas quando manual)\n+\n+## 4. Endpoints\n+\n+- `GET /encontros/:id/codigo`: Retorna o código dinâmico do encontro (200 `CodigoDoEncontro`). Exclusivo para organização (`403 SOMENTE_ORGANIZACAO`).\n+- `POST /encontros/:id/presencas`: Registra a presença do participante via QR code ou offline (201 `Presenca` na primeira vez; 200 `Presenca` em tentativas duplicadas/subsequentes). Exclusivo para participantes (`403 SOMENTE_PARTICIPANTE`).\n+- `POST /encontros/:id/presencas/manual`: Registra presença manualmente pela organização (201 `Presenca` na primeira vez; 200 `Presenca` em duplicadas). Exclusivo para organização (`403 SOMENTE_ORGANIZACAO`).\n+- `GET /encontros/:id/presencas`: Retorna a lista de presenças do encontro (200 `[Presenca]`). Exclusivo para organização (`403 SOMENTE_ORGANIZACAO`).\n+\n+## 5. Regras\n+\n+- R1 (P1, RN-301, RN-302): Janela de tempo para QR e código (`GET /encontros/:id/codigo`, `POST /encontros/:id/presencas`): A janela de registro começa 15 minutos antes do início do encontro e termina 30 minutos depois do início, com as bordas incluídas. Fora dessa janela, requisições de obtenção de código (`GET /encontros/:id/codigo`) ou registro de presença (`POST /encontros/:id/presencas`) devem ser recusadas com `422 FORA_DA_JANELA`. Se a atividade estiver cancelada (`atividade.situacao === 'cancelada'`), a obtenção de código também deve ser recusada com `422 ATIVIDADE_CANCELADA`.\n+- R2 (P2, RN-303, RN-304, RN-308): Validação de código e tolerância offline (`POST /encontros/:id/presencas`): O código do encontro muda a cada minuto. O sistema aceita o código do minuto atual e o código do minuto anterior. Caso o código enviado não corresponda a nenhum desses dois válidos, a operação deve ser recusada com `422 CODIGO_INVALIDO`. O campo `lidoEm` é opcional na requisição. Quando `lidoEm` é fornecido, a validação da janela e do minuto do código considera o instante informado em `lidoEm` (momento da leitura offline) e não o momento do envio ao servidor. Quando `lidoEm` está ausente, considera-se o momento atual do envio.\n+- R3 (P2, RN-309, RN-310): Prazo de sincronização offline (`POST /encontros/:id/presencas`): O envio de presença offline (com `lidoEm` anterior ao momento de envio) pode ser feito até 2 horas depois do fim do encontro. Caso o envio ocorra após esse prazo (mais de 2 horas após o término do encontro), a operação deve ser recusada com `422 SINCRONIZACAO_TARDIA`.\n+- R4 (P3, RN-306): Verificação de inscrição prévia (`NAO_INSCRITO`): Tanto no registro de presença por QR (`POST /encontros/:id/presencas`) quanto no registro manual (`POST /encontros/:id/presencas/manual`), só pode registrar presença o participante que possui inscrição confirmada (`status === 'confirmada'`) na atividade correspondente. Caso o participante não possua inscrição confirmada, a operação deve ser recusada com `403 NAO_INSCRITO`.\n+- R5 (P4, RN-311, RN-313): Presença manual pela organização (`POST /encontros/:id/presencas/manual`): A presença manual só pode ser registrada pela organização para um participante com inscrição confirmada. É obrigatória uma justificativa com no mínimo 10 caracteres. Caso a justificativa esteja ausente ou tenha menos de 10 caracteres, a operação deve ser recusada com `422 JUSTIFICATIVA_OBRIGATORIA`. O total de presenças manuais por encontro é limitado a 10% do total de inscrições confirmadas da atividade no encontro, arredondando para cima. Caso esse limite seja excedido, a operação deve ser recusada com `422 LIMITE_DE_MANUAIS`.\n+- R6 (P5): Listagem de presenças (`GET /encontros/:id/presencas`): A listagem de presenças é exclusiva para usuários da organização (`403 SOMENTE_ORGANIZACAO`) e retorna status `200` com a lista de objetos `[Presenca]` registrados no encontro.\n+- R7 (Contrato): Restrições de papel nas rotas de presença: `GET /encontros/:id/codigo`, `POST /encontros/:id/presencas/manual` e `GET /encontros/:id/presencas` exigem papel de organização (`403 SOMENTE_ORGANIZACAO`). `POST /encontros/:id/presencas` exige papel de participante (`403 SOMENTE_PARTICIPANTE`). Tentativas por papéis inadequados ou sem autenticação respondem `401` ou `403`.\n+\n+## 6. Critérios de aceite\n+\n+1. (R1) `GET /encontros/:id/codigo` fora da janela de registro (mais de 15 min antes ou mais de 30 min depois do início) → `422 FORA_DA_JANELA`.\n+2. (R1) `GET /encontros/:id/codigo` dentro da janela válida → `200` com objeto `CodigoDoEncontro`.\n+3. (R2) `POST /encontros/:id/presencas` com código do minuto atual ou do minuto anterior → `201` (ou `200` se já registrada).\n+4. (R2) `POST /encontros/:id/presencas` com código inválido (diferente do atual e do anterior) → `422 CODIGO_INVALIDO`.\n+5. (R2) `POST /encontros/:id/presencas` validando janela e código com base em `lidoEm` (leitura offline).\n+6. (R3) `POST /encontros/:id/presencas` com `lidoEm` enviado mais de 2 horas após o fim do encontro → `422 SINCRONIZACAO_TARDIA`.\n+7. (R4) `POST /encontros/:id/presencas` ou `POST /encontros/:id/presencas/manual` por participante sem inscrição confirmada → `403 NAO_INSCRITO`.\n+8. (R5) `POST /encontros/:id/presencas/manual` com justificativa com menos de 10 caracteres ou ausente → `422 JUSTIFICATIVA_OBRIGATORIA`.\n+9. (R5) `POST /encontros/:id/presencas/manual` excedendo o limite de 10% (arredondado para cima) das inscrições confirmadas do encontro → `422 LIMITE_DE_MANUAIS`.\n+10. (R6) `GET /encontros/:id/presencas` pela organização → `200` com `[Presenca]`.\n+11. (R7) Chamada de `GET /encontros/:id/codigo` ou `POST /encontros/:id/presencas/manual` por participante → `403 SOMENTE_ORGANIZACAO`.\n+12. (R7) Chamada de `POST /encontros/:id/presencas` por usuário da organização → `403 SOMENTE_PARTICIPANTE`.\n+\n+## 7. Como isto será verificado\n+Testes automatizados via requisições HTTP (Supertest / fetch) no servidor Express (`criarServidor()`), utilizando o modo de teste com relógio controlado (`/_teste/relogio` e `/_teste/reset`) para simular o avanço do tempo, janelas de encontro, expiração de códigos e prazos de sincronização offline.\n+\n+## 8. Fatias de entrega\n+- **Fatia 1:** Geração de código do encontro e janela de tempo (`GET /encontros/:id/codigo`, `R1`, `R7`).\n+- **Fatia 2:** Registro de presença por QR code online/offline e tolerância de código e prazo (`POST /encontros/:id/presencas`, `R2`, `R3`, `R4`, `R7`).\n+- **Fatia 3:** Presença manual pela organização com justificativa e limite, e listagem de presenças (`POST /encontros/:id/presencas/manual`, `GET /encontros/:id/presencas`, `R5`, `R6`, `R7`).\n",
+       "additions": 67,
+       "deletions": 0,
+       "status": "added"
+      }
+     ]
+    },
+    "id": "msg_0cae7e604001uv01x6FKTJ0QRv",
+    "sessionID": "ses_f35181a07ffeO5x0Bg80gcsXsQ"
+   },
+   "parts": [
+    {
+     "type": "text",
+     "text": "Use a skill to-spec. Escreva specs/M3-presenca-por-qr.md a partir de entrevistas/M3-presenca-por-qr.md. Cada regra cita a pergunta (P-xx) e, se houver, a regra do documento (RN-xxx). ",
+     "id": "prt_0cae7e605001fPil2GX2ctJDRM",
+     "sessionID": "ses_f35181a07ffeO5x0Bg80gcsXsQ",
+     "messageID": "msg_0cae7e604001uv01x6FKTJ0QRv"
+    }
+   ]
+  },
+  {
+   "info": {
+    "parentID": "msg_0cae7e604001uv01x6FKTJ0QRv",
+    "role": "assistant",
+    "mode": "build",
+    "agent": "build",
+    "path": {
+     "cwd": "C:\\Users\\Drago\\Desktop\\Projeto Opencode\\ProjetoSemanaAcademica\\semana-academica",
+     "root": "C:\\Users\\Drago\\Desktop\\Projeto Opencode\\ProjetoSemanaAcademica"
+    },
+    "cost": 0.0035814,
+    "tokens": {
+     "total": 10420,
+     "input": 10213,
+     "output": 16,
+     "reasoning": 191,
+     "cache": {
+      "write": 0,
+      "read": 0
+     }
+    },
+    "modelID": "gemini-3.5-flash-lite",
+    "providerID": "google",
+    "time": {
+     "created": 1790110590476,
+     "completed": 1790110592755
+    },
+    "finish": "tool-calls",
+    "id": "msg_0cae7e60c0014ZNn6DXZCv5taM",
+    "sessionID": "ses_f35181a07ffeO5x0Bg80gcsXsQ"
+   },
+   "parts": [
+    {
+     "snapshot": "746cb47fd07b7a94c0ee3f8760737f5d63eebfff",
+     "type": "step-start",
+     "id": "prt_0cae7ed7c001PAWvidy7Fr6JOP",
+     "sessionID": "ses_f35181a07ffeO5x0Bg80gcsXsQ",
+     "messageID": "msg_0cae7e60c0014ZNn6DXZCv5taM"
+    },
+    {
+     "type": "tool",
+     "tool": "skill",
+     "callID": "G3qrMo0klTBzs5t5",
+     "state": {
+      "status": "completed",
+      "input": {
+       "name": "to-spec"
+      },
+      "output": "<skill_content name=\"to-spec\">\n# Skill: to-spec\n\n# A conversa vira contrato\r\n\r\nVocê já tem tudo o que precisa: está na conversa. **Não entreviste de novo.** Sua\r\ntarefa é escrever, num arquivo, o que já foi decidido — e nada além.\r\n\r\nRegra que ninguém decidiu **não entra**. Se faltar alguma coisa para a spec ficar de pé,\r\npare e pergunte só aquilo. Não preencha buraco com \"geralmente é assim\".\r\n\r\n## Onde escrever\r\n\r\n`spec-<recurso>.md`, na raiz do projeto. Um arquivo por recurso.\r\n\r\n## Antes de escrever\r\n\r\nLeia o repositório: convenções, vocabulário, nomes que já existem. A spec fala a língua\r\ndo projeto — se o código chama de `leitor`, a spec não inventa `usuário`.\r\n\r\nDecida também **onde isto vai ser verificado**. Prefira a costura mais externa que já\r\nexistir (aqui: HTTP, pelo `criarServidor()`). Quanto menos pontos de teste novos, melhor.\r\n\r\n## Modelo\r\n\r\n```markdown\r\n# Spec — <recurso>\r\n\r\n## 1. Objetivo\r\nUm parágrafo: que problema isto resolve, na visão de quem usa.\r\n\r\n## 2. Fora de escopo\r\nLista do que este recurso NÃO faz. Isto é tão contrato quanto o resto — é aqui que\r\nse recusa código que ninguém pediu.\r\n\r\n## 3. Modelo\r\nOs campos da entidade, com tipo e origem (informado pelo cliente / calculado / derivado).\r\nCampo derivado nunca é guardado.\r\n\r\n## 4. Endpoints\r\nMétodo, caminho, corpo esperado, status de sucesso.\r\n\r\n## 5. Regras\r\nNumeradas: R1, R2, R3… Uma regra por linha de decisão, cada uma com o número, o limite\r\nou o valor exato que foi decidido, e o status HTTP de recusa quando houver.\r\n\r\nToda regra precisa ser observável de fora. \"O sistema deve ser rápido\" não é regra.\r\n\"Devolver depois da data prevista cobra 1,50 por dia inteiro de atraso, teto de 30\" é.\r\n\r\nQuando duas regras podem recusar a mesma operação, diga qual vale primeiro.\r\n\r\n## 6. Critérios de aceite\r\nLista numerada de cenários concretos, cada um apontando a regra que ele prova:\r\n\r\n1. (R1, R3) POST /x com dados válidos → 201, campo `y` igual a Z.\r\n\r\nRegra sem pelo menos um critério é regra sem prova. Volte e escreva o critério.\r\n\r\n## 7. Como isto será verificado\r\nA costura (interface) usada nos testes e por quê.\r\n\r\n## 8. Fatias de entrega\r\nA ordem de implementação, em fatias verticais. Cada fatia é um conjunto pequeno de\r\nregras que já dá para rodar e verificar sozinho.\r\n```\r\n\r\n## Depois de escrever\r\n\r\nMostre ao usuário a lista das regras numeradas — só os números e uma linha cada — e\r\npergunte se falta alguma. É a última chance de corrigir barato.\n\nBase directory for this skill: C:\\Users\\Drago\\Desktop\\Projeto Opencode\\ProjetoSemanaAcademica\\semana-academica\\.opencode\\skills\\to-spec\nRelative paths in this skill (e.g., scripts/, reference/) are relative to this base directory.\nNote: file list is sampled.\n\n<skill_files>\n\n</skill_files>\n</skill_content>",
+      "metadata": {
+       "name": "to-spec",
+       "dir": "C:\\Users\\Drago\\Desktop\\Projeto Opencode\\ProjetoSemanaAcademica\\semana-academica\\.opencode\\skills\\to-spec",
+       "truncated": false
+      },
+      "title": "Loaded skill: to-spec",
+      "time": {
+       "start": 1790110592387,
+       "end": 1790110592432
+      }
+     },
+     "metadata": {
+      "google": {
+       "thoughtSignature": "EqMGCqAGAWkUfRNznAZg9G6iQHJB3JTN1hFXvesiZEdhNYkJsjAvS4XH63w02DUF41rgNDwpVWs14vcVP1mni7hsFoN6d07xWojhsf5sOHKOLjwc5ZXNZdC8eKaWS9K2N1HSC9PiNAN0nohK9+sPtQlJzJ2oTYQ17K6t3AGhqYoMZaK/YN+k3BGM0HQsbj3rZ2b3KSdJlfCp0iRnj5C7vH5MlmpTWhe5n7B6GO5HxC0Fayn20+qfeqHJYgXCH8YjJ2jZHjLaXcA9hOrq826yaeK/CFon3vEnAGfUnTobeTKW/7ZuFIGISU2kXTqy5icUmxws09e82qRMc8H5B7eTtRki9mfudXckDseSd1DtnwfMG8To8tgL+MAKQopzx36oylPlAiXyGu9r0u2grsaCaRpzl761oEAjgH5EiC0qDMUCSMq4anOaf1URJY6sImMiuwpoHsK77bjLX0x014ZNf+rS67pUMCsrfBk6GCUsJSrc4ZArQvoiYh93cUE97DSEL4ors17XDb01ISRHY/HwD8iEDWPklVxScK1an027j1QSMrGzbkyGmTF6CK0J+G5XPoQrXQv0hiTV/qoEo5QThM8uBE/JDKdGet73QhDD6MZ7Y+PptWSOhJz03nZOD6jnImbwjqng5MmBwZaY2EfuGlIrRI4mrXTDAI2KHOivnsgR3LTbNzuR/pC2SzBfro9D/bi2mr/sH1m0YqlFEBcWTG/VpQuBtKDlaba0U7DBdVntK0Aezyfy51BVINzqDuW/sKdYIJRxeMqWiiKNGFblX/JUhYYOaUe05CpQoqRPjMVCy7fnCt4Ub6FOdDIzkvAPBX0TsidIHP8/wUmnkctcJGp+xNrnSe2IRugjKup2jtPxGsV8lyBbqb0AwGoJqOfpRRt8d+oKteqMf1owOntyNSj2jGudoXSMQ4EhbueJX/ThWR3ydrW32Ck8CCefvnDjvp/Jp0QtfFyvxxYN1+KsqzaLbbmbQvXlkxhzBzf6yefJWiNkTgoDMXRuX15l7A2fkLoz2K6+GTK4oxJ8C0opgLhhu60ww4DG+DA5q6KBkoQTPvTsSs4="
+      }
+     },
+     "id": "prt_0cae7ed7e001PQU8GJNC12XzvL",
+     "sessionID": "ses_f35181a07ffeO5x0Bg80gcsXsQ",
+     "messageID": "msg_0cae7e60c0014ZNn6DXZCv5taM"
+    },
+    {
+     "reason": "tool-calls",
+     "snapshot": "746cb47fd07b7a94c0ee3f8760737f5d63eebfff",
+     "type": "step-finish",
+     "tokens": {
+      "total": 10420,
+      "input": 10213,
+      "output": 16,
+      "reasoning": 191,
+      "cache": {
+       "write": 0,
+       "read": 0
+      }
+     },
+     "cost": 0.0035814,
+     "id": "prt_0cae7ee54001c6wA4cLCjTbwW3",
+     "sessionID": "ses_f35181a07ffeO5x0Bg80gcsXsQ",
+     "messageID": "msg_0cae7e60c0014ZNn6DXZCv5taM"
+    }
+   ]
+  },
+  {
+   "info": {
+    "parentID": "msg_0cae7e604001uv01x6FKTJ0QRv",
+    "role": "assistant",
+    "mode": "build",
+    "agent": "build",
+    "path": {
+     "cwd": "C:\\Users\\Drago\\Desktop\\Projeto Opencode\\ProjetoSemanaAcademica\\semana-academica",
+     "root": "C:\\Users\\Drago\\Desktop\\Projeto Opencode\\ProjetoSemanaAcademica"
+    },
+    "cost": 0.0041596,
+    "tokens": {
+     "total": 11526,
+     "input": 11207,
+     "output": 102,
+     "reasoning": 217,
+     "cache": {
+      "write": 0,
+      "read": 0
+     }
+    },
+    "modelID": "gemini-3.5-flash-lite",
+    "providerID": "google",
+    "time": {
+     "created": 1790110592758,
+     "completed": 1790110595045
+    },
+    "finish": "tool-calls",
+    "id": "msg_0cae7eef60017H1GkD4JNC2Cab",
+    "sessionID": "ses_f35181a07ffeO5x0Bg80gcsXsQ"
+   },
+   "parts": [
+    {
+     "snapshot": "746cb47fd07b7a94c0ee3f8760737f5d63eebfff",
+     "type": "step-start",
+     "id": "prt_0cae7f5b500106SIln7ac9My3X",
+     "sessionID": "ses_f35181a07ffeO5x0Bg80gcsXsQ",
+     "messageID": "msg_0cae7eef60017H1GkD4JNC2Cab"
+    },
+    {
+     "type": "reasoning",
+     "text": "**Loading Skill Instructions**\n\nI've just loaded the `to-spec` skill instructions. I noted the specific prompt requested the creation of a spec file (`specs/M3-presenca-por-qr.md`) from an interview file (`entrevistas/M3-presenca-por-qr.md`). Each rule should reference the question (P-xx) and any specific conditions.\n\n\n",
+     "time": {
+      "start": 1790110594488,
+      "end": 1790110594679
+     },
+     "id": "prt_0cae7f5b8001yGho5vmRFIOgeK",
+     "sessionID": "ses_f35181a07ffeO5x0Bg80gcsXsQ",
+     "messageID": "msg_0cae7eef60017H1GkD4JNC2Cab"
+    },
+    {
+     "type": "tool",
+     "tool": "glob",
+     "callID": "DQ6qsP7GDeTHMwnT",
+     "state": {
+      "status": "completed",
+      "input": {
+       "path": "C:\\Users\\Drago\\Desktop\\Projeto Opencode\\ProjetoSemanaAcademica\\semana-academica\\specs",
+       "pattern": "*"
+      },
+      "output": "[309 caracteres omitidos]",
+      "title": "semana-academica\\specs",
+      "time": {
+       "start": 1790110594568,
+       "end": 1790110594622
+      }
+     },
+     "metadata": {
+      "google": {
+       "thoughtSignature": "EpsHCpgHAWkUfRN65Xlgd0QptFPNZj4X5nTEIfV4EbA9GmaAOhWKh+4qDSwbY5kBLV0s4CvsQJqFV/Mi+rYQ8TkNDVBRi4zQxdOsxGdIMklF6262yQPRiKefGsywUDl8L4HuSX2OEpzSb+0+cNXm9wSU6PRAlKh2PKF/+GH2shXJQokM2H8BRK/fvRbOyzPSg6EsK33bKnqiWUDeoCyiJWdY1w/axTJ1qhCn6nemI77XNBazU2iMwVlXWrcQPylfHKlsDdoRhVJdQXLRKwnC/4CquBGPogEWC2JsccVa9c2s7a6faW0lG7ndix8XZ+lYOLImDwWw118XmeGQXOLMoXHM2Tvb+GpXeO39257LysEo78Q5iOcvoi24Po0WxGT2MuMKKy9L/oP97nWxabKZYtRHOYt6MygILWBRuJUuVIbCzTNh1k5RBI23+g/JDE2n/ymg5BJtobecSK85MmAtDEBAMPZ+NJY/3xlceR7Bb6Pc5cz0RdVAmIBvIroBJ+L4irvvZ87ZaRevperok86X3ijthWBHRCxOZjwbMCIQPdoySsVg5YDiIQ99hTXKBeb5ht11I+8xDPycS6zvk7/aG+FCx0OQG6ke/kKS98NmbRIHpwbiEs0FpP7bUWrPvCvmdT8tgg5in/ZXxYhQOOG7Nid2NWDtdfuDxMJ4Ab0wXW3U1uYl8iNGD/fhQxLM14Qc7vOFOMjDnFV41Tb3lyc90u6kuez5xkKeldS0l02Ggh2pBRsLK/NLH/5rlf9pqLUUZ0fW5uYJ5Pt2t6TQ/w0prvsoG/hGBbpWquoDROPffJZAmXFejJysNwZvxhea+SStwrgudKgLaHEtrJPhLfkwAT91p/o/Uk1+hfaXzFxbOKjhW8Dqg+ecJwVejxZm54Jk6PPyH1RxhWZiCUXMRdN8nw5++7ZaC5U+znFSSYh+tQIOMM/AiDqXKUXytvnlE5OVVaYi05XS/7XCWbPwe22QhmmeFBasUmsvLMak8JXLM/HQ4QRf440Id6sK1GC6rW0SSCQPASfXeUAn+VjU/gy9TN8YyUl22wYtfuBEA9+Vr7dRtpzFNwKWsubKcxLG4D9tP5e8LhpTuTuPmw9Ti6rY37dDFrKgKwocFoNoAwxwzRopaXICh1vJa/iQ3cShr+W0nVelAKnaQUdqsUV2yMC2qghAGN45DM9IC2Le3iDhIzTp0QBxZXLvWv/CSyslhukr9hTGY2wVHDeX6h5FLQs="
+      }
+     },
+     "id": "prt_0cae7f604001g7DI2taNn1SMpY",
+     "sessionID": "ses_f35181a07ffeO5x0Bg80gcsXsQ",
+     "messageID": "msg_0cae7eef60017H1GkD4JNC2Cab"
+    },
+    {
+     "type": "tool",
+     "tool": "read",
+     "callID": "JnVlOyziJZMFrSYn",
+     "state": {
+      "status": "completed",
+      "input": {
+       "filePath": "C:\\Users\\Drago\\Desktop\\Projeto Opencode\\ProjetoSemanaAcademica\\semana-academica\\entrevistas\\M3-presenca-por-qr.md"
+      },
+      "output": "[2036 caracteres omitidos]",
+      "title": "semana-academica\\entrevistas\\M3-presenca-por-qr.md",
+      "time": {
+       "start": 1790110594661,
+       "end": 1790110594695
+      }
+     },
+     "id": "prt_0cae7f661001WJnfiq4wbLid7P",
+     "sessionID": "ses_f35181a07ffeO5x0Bg80gcsXsQ",
+     "messageID": "msg_0cae7eef60017H1GkD4JNC2Cab"
+    },
+    {
+     "reason": "tool-calls",
+     "snapshot": "746cb47fd07b7a94c0ee3f8760737f5d63eebfff",
+     "type": "step-finish",
+     "tokens": {
+      "total": 11526,
+      "input": 11207,
+      "output": 102,
+      "reasoning": 217,
+      "cache": {
+       "write": 0,
+       "read": 0
+      }
+     },
+     "cost": 0.0041596,
+     "id": "prt_0cae7f736001MLulT3DCQCKw2z",
+     "sessionID": "ses_f35181a07ffeO5x0Bg80gcsXsQ",
+     "messageID": "msg_0cae7eef60017H1GkD4JNC2Cab"
+    }
+   ]
+  },
+  {
+   "info": {
+    "parentID": "msg_0cae7e604001uv01x6FKTJ0QRv",
+    "role": "assistant",
+    "mode": "build",
+    "agent": "build",
+    "path": {
+     "cwd": "C:\\Users\\Drago\\Desktop\\Projeto Opencode\\ProjetoSemanaAcademica\\semana-academica",
+     "root": "C:\\Users\\Drago\\Desktop\\Projeto Opencode\\ProjetoSemanaAcademica"
+    },
+    "cost": 0.0039957,
+    "tokens": {
+     "total": 12505,
+     "input": 12394,
+     "output": 56,
+     "reasoning": 55,
+     "cache": {
+      "write": 0,
+      "read": 0
+     }
+    },
+    "modelID": "gemini-3.5-flash-lite",
+    "providerID": "google",
+    "time": {
+     "created": 1790110595048,
+     "completed": 1790110596864
+    },
+    "finish": "tool-calls",
+    "id": "msg_0cae7f7e80017XTdETGWUinzer",
+    "sessionID": "ses_f35181a07ffeO5x0Bg80gcsXsQ"
+   },
+   "parts": [
+    {
+     "snapshot": "746cb47fd07b7a94c0ee3f8760737f5d63eebfff",
+     "type": "step-start",
+     "id": "prt_0cae7fd73001lPNbeCPAYxB9GT",
+     "sessionID": "ses_f35181a07ffeO5x0Bg80gcsXsQ",
+     "messageID": "msg_0cae7f7e80017XTdETGWUinzer"
+    },
+    {
+     "type": "tool",
+     "tool": "read",
+     "callID": "O6ecG85omNoeWlLn",
+     "state": {
+      "status": "completed",
+      "input": {
+       "filePath": "C:\\Users\\Drago\\Desktop\\Projeto Opencode\\ProjetoSemanaAcademica\\semana-academica\\specs\\M2-inscricoes.md",
+       "limit": 200
+      },
+      "output": "[11404 caracteres omitidos]",
+      "title": "semana-academica\\specs\\M2-inscricoes.md",
+      "time": {
+       "start": 1790110596476,
+       "end": 1790110596492
+      }
+     },
+     "metadata": {
+      "google": {
+       "thoughtSignature": "ErwCCrkCAWkUfRP0Ee76C7LT3EwMLQviLPjG2KJ+VD2UpXgXZZGJEQjRYIzR2Gnvrns2lOlkqBwII3E4p8gECmZWDQkgABpw1qhjrX9p8hPgJsahCjwoGaj5zH23jn9yovXJBa+QTEFEd+eKGRqHXR1l2RcG4NqlQTbURauKYIKoUm6uN6AeFhBGbUJuY3YdjIlohiz41eUMvCHnX/pdnidwI6zJixLVxVf/pVwG2163xFcVgShHAwLt79PQNAIVlDiEME2p2W/YNegeMyZTw/FVqtMoxYhBX/82ZCodvjTLnknnzM6UXXsRLKN6Wg9xSvdeyEfUSVexEKuRpx4G/npjRG5OmaVWltuSZ6dEFvNdyys3S1cHJP0pKBe4bS9kWpqTSvt0ymqgubLNbq7w4qztNRmeck9+YrCzY1+E/A=="
+      }
+     },
+     "id": "prt_0cae7fd76001NQaIrqchKU7cg5",
+     "sessionID": "ses_f35181a07ffeO5x0Bg80gcsXsQ",
+     "messageID": "msg_0cae7f7e80017XTdETGWUinzer"
+    },
+    {
+     "reason": "tool-calls",
+     "snapshot": "746cb47fd07b7a94c0ee3f8760737f5d63eebfff",
+     "type": "step-finish",
+     "tokens": {
+      "total": 12505,
+      "input": 12394,
+      "output": 56,
+      "reasoning": 55,
+      "cache": {
+       "write": 0,
+       "read": 0
+      }
+     },
+     "cost": 0.0039957,
+     "id": "prt_0cae7fe45001oljeyqlCXf6KkH",
+     "sessionID": "ses_f35181a07ffeO5x0Bg80gcsXsQ",
+     "messageID": "msg_0cae7f7e80017XTdETGWUinzer"
+    }
+   ]
+  },
+  {
+   "info": {
+    "parentID": "msg_0cae7e604001uv01x6FKTJ0QRv",
+    "role": "assistant",
+    "mode": "build",
+    "agent": "build",
+    "path": {
+     "cwd": "C:\\Users\\Drago\\Desktop\\Projeto Opencode\\ProjetoSemanaAcademica\\semana-academica",
+     "root": "C:\\Users\\Drago\\Desktop\\Projeto Opencode\\ProjetoSemanaAcademica"
+    },
+    "cost": 0.0050669,
+    "tokens": {
+     "total": 16171,
+     "input": 16073,
+     "output": 49,
+     "reasoning": 49,
+     "cache": {
+      "write": 0,
+      "read": 0
+     }
+    },
+    "modelID": "gemini-3.5-flash-lite",
+    "providerID": "google",
+    "time": {
+     "created": 1790110596867,
+     "completed": 1790110598796
+    },
+    "finish": "tool-calls",
+    "id": "msg_0cae7ff03001zFMS6eB2wCDs4e",
+    "sessionID": "ses_f35181a07ffeO5x0Bg80gcsXsQ"
+   },
+   "parts": [
+    {
+     "snapshot": "746cb47fd07b7a94c0ee3f8760737f5d63eebfff",
+     "type": "step-start",
+     "id": "prt_0cae8051f001XQMFCvddNlnVmv",
+     "sessionID": "ses_f35181a07ffeO5x0Bg80gcsXsQ",
+     "messageID": "msg_0cae7ff03001zFMS6eB2wCDs4e"
+    },
+    {
+     "type": "tool",
+     "tool": "glob",
+     "callID": "PSvw5BMW5RUH8O9g",
+     "state": {
+      "status": "completed",
+      "input": {
+       "path": "C:\\Users\\Drago\\Desktop\\Projeto Opencode\\ProjetoSemanaAcademica\\semana-academica",
+       "pattern": "*contrato*.md"
+      },
+      "output": "[95 caracteres omitidos]",
+      "title": "semana-academica",
+      "time": {
+       "start": 1790110598436,
+       "end": 1790110598479
+      }
+     },
+     "metadata": {
+      "google": {
+       "thoughtSignature": "Er8CCrwCAWkUfROe5YH6U+U2NhJn8oKgj3yN4Cl7whPeLOks8jXE90gnrW9WZYt33Lgk7/sBUTVjlkNrgec/veqJqYl2a244S/bQLxh/7BuMo4ceZTWRc5VGa9cnx1m8EjfQBAp0uHPYrwBCQkEYBzH7ZEUhp1zm1j/JmVsNvrhctikLj3zldaxZThWsKkUE6tiSN7IQC8hWgfPL7UbTQ2SGa2U9F9oUPFJ/R2PDlQVdmkeFCkSXj6Un+TDVkGy94KRVTzIjmCePw4qkDUxDhx29lJsFrp3LdckS/SY0c90daa74h9cF9og4iuQMOm7ya000qmK95ttmy+9QPSqOvBH4UKxCqS1Zm0wxDI4tXzVPrp+uY9yOss9rf63EsKo0YF4OhQQjalMJ1WOCkDR/92DyW2jJSeTanSF9DTEMjZmohQ=="
+      }
+     },
+     "id": "prt_0cae80521001EKC5qfJ840q43e",
+     "sessionID": "ses_f35181a07ffeO5x0Bg80gcsXsQ",
+     "messageID": "msg_0cae7ff03001zFMS6eB2wCDs4e"
+    },
+    {
+     "reason": "tool-calls",
+     "snapshot": "746cb47fd07b7a94c0ee3f8760737f5d63eebfff",
+     "type": "step-finish",
+     "tokens": {
+      "total": 16171,
+      "input": 16073,
+      "output": 49,
+      "reasoning": 49,
+      "cache": {
+       "write": 0,
+       "read": 0
+      }
+     },
+     "cost": 0.0050669,
+     "id": "prt_0cae805f0001pMDV3xIlWFihne",
+     "sessionID": "ses_f35181a07ffeO5x0Bg80gcsXsQ",
+     "messageID": "msg_0cae7ff03001zFMS6eB2wCDs4e"
+    }
+   ]
+  },
+  {
+   "info": {
+    "parentID": "msg_0cae7e604001uv01x6FKTJ0QRv",
+    "role": "assistant",
+    "mode": "build",
+    "agent": "build",
+    "path": {
+     "cwd": "C:\\Users\\Drago\\Desktop\\Projeto Opencode\\ProjetoSemanaAcademica\\semana-academica",
+     "root": "C:\\Users\\Drago\\Desktop\\Projeto Opencode\\ProjetoSemanaAcademica"
+    },
+    "cost": 0.0051838,
+    "tokens": {
+     "total": 16348,
+     "input": 16221,
+     "output": 58,
+     "reasoning": 69,
+     "cache": {
+      "write": 0,
+      "read": 0
+     }
+    },
+    "modelID": "gemini-3.5-flash-lite",
+    "providerID": "google",
+    "time": {
+     "created": 1790110598799,
+     "completed": 1790110601264
+    },
+    "finish": "tool-calls",
+    "id": "msg_0cae8068f001zAinSHPPCQuvo6",
+    "sessionID": "ses_f35181a07ffeO5x0Bg80gcsXsQ"
+   },
+   "parts": [
+    {
+     "snapshot": "746cb47fd07b7a94c0ee3f8760737f5d63eebfff",
+     "type": "step-start",
+     "id": "prt_0cae80c630015kQJA101q6XiuA",
+     "sessionID": "ses_f35181a07ffeO5x0Bg80gcsXsQ",
+     "messageID": "msg_0cae8068f001zAinSHPPCQuvo6"
+    },
+    {
+     "type": "tool",
+     "tool": "grep",
+     "callID": "kF6xz2jAfN2ARrfv",
+     "state": {
+      "status": "completed",
+      "input": {
+       "pattern": "encontro|presenca|qr",
+       "path": "C:\\Users\\Drago\\Desktop\\Projeto Opencode\\ProjetoSemanaAcademica\\semana-academica\\contrato-api.md"
+      },
+      "output": "[39876 caracteres omitidos]",
+      "title": "encontro|presenca|qr",
+      "time": {
+       "start": 1790110600300,
+       "end": 1790110600823
+      }
+     },
+     "metadata": {
+      "google": {
+       "thoughtSignature": "EsYCCsMCAWkUfRMTdVgEOkVNY1wBBBIOd32rEMEPVMkRTHVlNs2Sf83FYS9BWWvwB3mUMpg0jGrRD6TTYpngo0Q5ylxWR/3CvYEpHEXQBfIzjE5SvcuD8v1Q7klTEJJvxV0vbbN7rDyca3uXjPiRLy79lsJD8FIkqepMEjI9BK9IGmyniDxx75Z6JlrYwwJ3BIvhNlpUA0PcW/QSe9IKLBO+/vXO0dXvNRR6pX+z6qWZQ1mGTP9rn001hXip3vpi8HE8x6PYxESVQ2WODpECciCBRr7f4IqgdStZs9TFS2NlwlzxAfiSutbktYAwls5i0tD3xdxAKBaf96GkJxr4n2OW/kunufxr75AJNzNRhcmITl8n3kh8P+MwVjsa9qQgpl6GSz1n1LsGeH1Im1fwlui+/49742A7HAyJjhf6LREyRNOuE2wZz8U="
+      }
+     },
+     "id": "prt_0cae80c66001ysvSo8IEFiM1IQ",
+     "sessionID": "ses_f35181a07ffeO5x0Bg80gcsXsQ",
+     "messageID": "msg_0cae8068f001zAinSHPPCQuvo6"
+    },
+    {
+     "reason": "tool-calls",
+     "snapshot": "746cb47fd07b7a94c0ee3f8760737f5d63eebfff",
+     "type": "step-finish",
+     "tokens": {
+      "total": 16348,
+      "input": 16221,
+      "output": 58,
+      "reasoning": 69,
+      "cache": {
+       "write": 0,
+       "read": 0
+      }
+     },
+     "cost": 0.0051838,
+     "id": "prt_0cae80f4f0019subyj8fhKA5uZ",
+     "sessionID": "ses_f35181a07ffeO5x0Bg80gcsXsQ",
+     "messageID": "msg_0cae8068f001zAinSHPPCQuvo6"
+    }
+   ]
+  },
+  {
+   "info": {
+    "parentID": "msg_0cae7e604001uv01x6FKTJ0QRv",
+    "role": "assistant",
+    "mode": "build",
+    "agent": "build",
+    "path": {
+     "cwd": "C:\\Users\\Drago\\Desktop\\Projeto Opencode\\ProjetoSemanaAcademica\\semana-academica",
+     "root": "C:\\Users\\Drago\\Desktop\\Projeto Opencode\\ProjetoSemanaAcademica"
+    },
+    "cost": 0.0093876,
+    "tokens": {
+     "total": 30500,
+     "input": 30392,
+     "output": 47,
+     "reasoning": 61,
+     "cache": {
+      "write": 0,
+      "read": 0
+     }
+    },
+    "modelID": "gemini-3.5-flash-lite",
+    "providerID": "google",
+    "time": {
+     "created": 1790110601269,
+     "completed": 1790110605224
+    },
+    "finish": "tool-calls",
+    "id": "msg_0cae810350010UNZPpIFj1tkzo",
+    "sessionID": "ses_f35181a07ffeO5x0Bg80gcsXsQ"
+   },
+   "parts": [
+    {
+     "snapshot": "746cb47fd07b7a94c0ee3f8760737f5d63eebfff",
+     "type": "step-start",
+     "id": "prt_0cae81cd5001QNhY3dnEemsh7E",
+     "sessionID": "ses_f35181a07ffeO5x0Bg80gcsXsQ",
+     "messageID": "msg_0cae810350010UNZPpIFj1tkzo"
+    },
+    {
+     "type": "tool",
+     "tool": "glob",
+     "callID": "p69J1RudFHkSSEDf",
+     "state": {
+      "status": "completed",
+      "input": {
+       "pattern": "**/*.md",
+       "path": "C:\\Users\\Drago\\Desktop\\Projeto Opencode\\ProjetoSemanaAcademica\\semana-academica"
+      },
+      "output": "[9360 caracteres omitidos]",
+      "title": "semana-academica",
+      "time": {
+       "start": 1790110604525,
+       "end": 1790110604636
+      }
+     },
+     "metadata": {
+      "google": {
+       "thoughtSignature": "EuUCCuICAWkUfROFuM7cBcPsNzO5fstFaoHkisIlZDyHKQFxtJN30tKPx1KmfdnZe+ExMtssRuFkKw++ctHzb4gzl06oCM8+ByxHT2mHdYgqPvuqyZtX2IF9maK6CHDBcT3T2fD6lzCxvh1z/13/urg2kAfUtdspYfbFI1Vuz8KFP4K0drsXkEUa/ISUv66mXCUgkqb1uOYEK7C7zo3sypjQtJEdWesEEJUHbgAKyV3Pgtio52hlW6hzxiUc9nyISBsg1HDifzyFl/Gj9pHqajlTp1+jPhGiC7SwsO9TSF26W7qnWoQWK40CeMQERVDuCpI0G8KI01k699TJPjfoQxSyazBMElX2iRuVgirQsFOfi0brPFH2opF2N5WryePpMu1S52Tv/xrhZuswFWexAkHbvP0/7iW5XWE4ABdmg9Far2Cu2qY9yInK7MVT1kPWdw6NqHvvG1tgne3PSxHa9H4ON9t/vmLO"
+      }
+     },
+     "id": "prt_0cae81cdc001FeF3JQtiNQ4zm6",
+     "sessionID": "ses_f35181a07ffeO5x0Bg80gcsXsQ",
+     "messageID": "msg_0cae810350010UNZPpIFj1tkzo"
+    },
+    {
+     "reason": "tool-calls",
+     "snapshot": "746cb47fd07b7a94c0ee3f8760737f5d63eebfff",
+     "type": "step-finish",
+     "tokens": {
+      "total": 30500,
+      "input": 30392,
+      "output": 47,
+      "reasoning": 61,
+      "cache": {
+       "write": 0,
+       "read": 0
+      }
+     },
+     "cost": 0.0093876,
+     "id": "prt_0cae81e57001uNOkPQj5MdHE0B",
+     "sessionID": "ses_f35181a07ffeO5x0Bg80gcsXsQ",
+     "messageID": "msg_0cae810350010UNZPpIFj1tkzo"
+    }
+   ]
+  },
+  {
+   "info": {
+    "parentID": "msg_0cae7e604001uv01x6FKTJ0QRv",
+    "role": "assistant",
+    "mode": "build",
+    "agent": "build",
+    "path": {
+     "cwd": "C:\\Users\\Drago\\Desktop\\Projeto Opencode\\ProjetoSemanaAcademica\\semana-academica",
+     "root": "C:\\Users\\Drago\\Desktop\\Projeto Opencode\\ProjetoSemanaAcademica"
+    },
+    "cost": 0.0122723,
+    "tokens": {
+     "total": 35261,
+     "input": 34491,
+     "output": 57,
+     "reasoning": 713,
+     "cache": {
+      "write": 0,
+      "read": 0
+     }
+    },
+    "modelID": "gemini-3.5-flash-lite",
+    "providerID": "google",
+    "time": {
+     "created": 1790110605233,
+     "completed": 1790110609305
+    },
+    "finish": "tool-calls",
+    "id": "msg_0cae81fb1001gArs3DXOZ4k2Fk",
+    "sessionID": "ses_f35181a07ffeO5x0Bg80gcsXsQ"
+   },
+   "parts": [
+    {
+     "snapshot": "746cb47fd07b7a94c0ee3f8760737f5d63eebfff",
+     "type": "step-start",
+     "id": "prt_0cae82bd00015li72CFb4gn2qp",
+     "sessionID": "ses_f35181a07ffeO5x0Bg80gcsXsQ",
+     "messageID": "msg_0cae81fb1001gArs3DXOZ4k2Fk"
+    },
+    {
+     "type": "reasoning",
+     "text": "**Examining M3 Data**\n\nI'm currently focused on the contents of `entrevistas/M3-presenca-por-qr.md`. I'm going to read this file carefully to understand its contents and identify any key details regarding M3. I'm also planning to scan other related files to find more context and potentially discover more specifics about M3.\n\n\n",
+     "time": {
+      "start": 1790110608343,
+      "end": 1790110608869
+     },
+     "id": "prt_0cae82bd7001SyGk29cZHTUq0c",
+     "sessionID": "ses_f35181a07ffeO5x0Bg80gcsXsQ",
+     "messageID": "msg_0cae81fb1001gArs3DXOZ4k2Fk"
+    },
+    {
+     "type": "tool",
+     "tool": "read",
+     "callID": "fpu5XfaEJUtzxY3q",
+     "state": {
+      "status": "completed",
+      "input": {
+       "limit": 200,
+       "filePath": "C:\\Users\\Drago\\Desktop\\Projeto Opencode\\ProjetoSemanaAcademica\\semana-academica\\contrato-api.md",
+       "offset": 90
+      },
+      "output": "[8551 caracteres omitidos]",
+      "title": "semana-academica\\contrato-api.md",
+      "time": {
+       "start": 1790110608863,
+       "end": 1790110608890
+      }
+     },
+     "metadata": {
+      "google": {
+       "thoughtSignature": "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"
+      }
+     },
+     "id": "prt_0cae82dc70010VaYSiPHj7e6mh",
+     "sessionID": "ses_f35181a07ffeO5x0Bg80gcsXsQ",
+     "messageID": "msg_0cae81fb1001gArs3DXOZ4k2Fk"
+    },
+    {
+     "reason": "tool-calls",
+     "snapshot": "746cb47fd07b7a94c0ee3f8760737f5d63eebfff",
+     "type": "step-finish",
+     "tokens": {
+      "total": 35261,
+      "input": 34491,
+      "output": 57,
+      "reasoning": 713,
+      "cache": {
+       "write": 0,
+       "read": 0
+      }
+     },
+     "cost": 0.0122723,
+     "id": "prt_0cae82ede001uTVgbRAvx5t6n3",
+     "sessionID": "ses_f35181a07ffeO5x0Bg80gcsXsQ",
+     "messageID": "msg_0cae81fb1001gArs3DXOZ4k2Fk"
+    }
+   ]
+  },
+  {
+   "info": {
+    "parentID": "msg_0cae7e604001uv01x6FKTJ0QRv",
+    "role": "assistant",
+    "mode": "build",
+    "agent": "build",
+    "path": {
+     "cwd": "C:\\Users\\Drago\\Desktop\\Projeto Opencode\\ProjetoSemanaAcademica\\semana-academica",
+     "root": "C:\\Users\\Drago\\Desktop\\Projeto Opencode\\ProjetoSemanaAcademica"
+    },
+    "cost": 0.02059907,
+    "tokens": {
+     "total": 46235,
+     "input": 6341,
+     "output": 2525,
+     "reasoning": 4560,
+     "cache": {
+      "write": 0,
+      "read": 32809
+     }
+    },
+    "modelID": "gemini-3.5-flash-lite",
+    "providerID": "google",
+    "time": {
+     "created": 1790110609309,
+     "completed": 1790110628754
+    },
+    "finish": "tool-calls",
+    "id": "msg_0cae82f9d0014PfSKt2B3hgrwO",
+    "sessionID": "ses_f35181a07ffeO5x0Bg80gcsXsQ"
+   },
+   "parts": [
+    {
+     "snapshot": "746cb47fd07b7a94c0ee3f8760737f5d63eebfff",
+     "type": "step-start",
+     "id": "prt_0cae84582001xwG190xzscT6de",
+     "sessionID": "ses_f35181a07ffeO5x0Bg80gcsXsQ",
+     "messageID": "msg_0cae82f9d0014PfSKt2B3hgrwO"
+    },
+    {
+     "type": "reasoning",
+     "text": "**Clarifying The Requirements**\n\nI've got a much clearer understanding after that helpful feedback! I'm now carefully reviewing the prompt's requirements, focusing on the need to translate specifications from interviews, ensuring each rule connects to a specific question (P-xx) as well.\n\n\n**Analyzing API Endpoints**\n\nI'm now diving into the API endpoints related to M3, like `/encontros/:id/codigo` and `/encontros/:id/presencas`, and their respective error codes. I'm focusing on the logic tied to time windows for QR code validity, offline attendance syncing, and error scenarios such as `FORA_DA_JANELA`, `CODIGO_INVALIDO`, and `SINCRONIZACAO_TARDIA`. I'm cross-referencing this with the interview notes and relevant rules (RN-xxx).\n\n\n**Defining Presence Functionality**\n\nI'm now focusing on defining the presence functionality for the M3 module. I'm extracting and structuring the information for the specification document, including key questions, relevant rules, and API endpoint specifics. I'm prioritizing the inclusion of detailed descriptions for error codes and role restrictions, specifically for endpoints like `/encontros/:id/presencas/manual` and `/encontros/:id/presencas`. I'm using examples from existing spec files to establish a proper framework. I have started drafting the initial structure and content for `specs/M3-presenca-por-qr.md`.\n\n\n**Outlining System Modules**\n\nI'm now identifying how the core system modules fit together. I see M3 focusing on presence, while M1 handles activities/rooms/meetings, M2 handles enrollments, M4 certificates and hours, and M5 the dashboard and stats. I'm focusing on their respective domains, so I can start to isolate specific API calls and design requirements.\n\n\n**Mapping API Restrictions**\n\nI'm now mapping the API restrictions and rules. I've focused on `GET /encontros/:id/codigo`, `POST /encontros/:id/presencas`, and `POST /encontros/:id/presencas/manual`, noting that only organizations can use the endpoints to get and list presences, while only participants can register using QR codes. I'm also examining the time window rules for QR code usage and the related endpoints. I'm documenting the respective status codes.\n\n\n**Detailing Error Scenarios**\n\nI'm now detailing the error scenarios for attendance registration. I'm focusing on cases where requests to retrieve the code (`GET /encontros/:id/codigo`) or register attendance (`POST /encontros/:id/presencas`) should be rejected with a `422 FORA_DA_JANELA` error. I'm also ensuring the API behavior is clearly defined for cancelled activities, which should return `422 ATIVIDADE_CANCELADA`. I've added notes on code validity, offline tolerances, and the `lidoEm` field, and I'm ensuring all these match the relevant rules (P2, RN-303, RN-304, RN-308, RN-309, RN-310) and are reflected in my API analysis.\n\n\n**Elaborating Sync Rules**\n\nI'm now detailing the rules for offline synchronization. Specifically, I'm focusing on the `SINCRONIZACAO_TARDIA` error code, and its relation to the `lidoEm` field. I'm clarifying that offline attendance entries (where `lidoEm` is before the sending time) are allowed up to 2 hours after the meeting. Requests made later than this are rejected with a 422 error. I'm aligning this with the rules RN-306 (P3).\n\n\n**Defining API Restrictions**\n\nI'm now detailing the rules for the presence listing endpoint (`GET /encontros/:id/presencas`), ensuring that only organization users can access it and receive a 200 status with the presence list. I'm also confirming that `GET /encontros/:id/codigo`, `POST /encontros/:id/presencas/manual`, and `GET /encontros/:id/presencas` require organization roles, while `POST /encontros/:id/presencas` needs a participant role, handling unauthorized access with 401 or 403 errors. Additionally, I'm defining the acceptance criteria.\n\n\n**Refining Error Responses**\n\nI'm now detailing error scenarios for attendance registration, especially regarding invalid codes and role restrictions. I'm focusing on scenarios with responses such as `CODIGO_INVALIDO`, `NAO_INSCRITO`, `JUSTIFICATIVA_OBRIGATORIA`, `LIMITE_DE_MANUAIS`, and `SOMENTE_ORGANIZACAO`, ensuring all the related rules are reflected in the API analysis. I'm also ensuring the manual attendance limits and justification requirements are correctly handled.\n\n\n**Defining Test Procedures**\n\nI'm now detailing automated testing via HTTP requests using Supertest or fetch within the Express server created through `criarServidor()`. I'm employing a testing mode with a controlled clock (`/_teste/relogio` and `/_teste/reset`) to simulate time progression, meeting windows, code expiration, and offline synchronization deadlines. I'm focusing on the implementation details, including the creation of tests for each defined \"slice\" or feature. I'm focusing on \"slices\" covering code generation, presence registration (both online/offline, QR code), and manual presence entry by organizations.\n\n\n",
+     "time": {
+      "start": 1790110614916,
+      "end": 1790110628184
+     },
+     "id": "prt_0cae84584001MnkEFbdmq7pnNH",
+     "sessionID": "ses_f35181a07ffeO5x0Bg80gcsXsQ",
+     "messageID": "msg_0cae82f9d0014PfSKt2B3hgrwO"
+    },
+    {
+     "type": "tool",
+     "tool": "write",
+     "callID": "VVVeCyNAfLf5CzL6",
+     "state": {
+      "status": "completed",
+      "input": {
+       "filePath": "C:\\Users\\Drago\\Desktop\\Projeto Opencode\\ProjetoSemanaAcademica\\semana-academica\\specs\\M3-presenca-por-qr.md",
+       "content": "# Spec — M3 — Presença por QR Code e Registro Manual\n\n## 1. Objetivo\nPermitir que a organização gere códigos temporários para controle de presença em encontros, que participantes registrem sua presença via QR Code (com suporte a envio offline com tolerância) e que a organização realize registros manuais de presença com justificativa e limite porcentual, além de listar as presenças de um encontro.\n\n## 2. Fora de escopo\n- Gestão de atividades, salas e encontros (tratado em M1).\n- Inscrições e lista de espera em atividades (tratado em M2).\n- Emissão de certificados e extrato de horas (tratado em M4).\n- Painel gerencial, estatísticas e bloqueios por faltas (tratado em M5).\n\n## 3. Modelo\n\n### CodigoDoEncontro\n- `encontroId`: string (identificador do encontro)\n- `codigo`: string (código de 6 caracteres gerado para o minuto atual)\n- `trocaEm`: string ISO 8601 (momento em que a tela deve buscar o próximo código)\n- `validoAte`: string ISO 8601 (primeiro instante em que este código deixa de ser aceito)\n\n### Presenca\n- `id`: string gerada automaticamente (prefixo `pre_` + 8 hexadecimais)\n- `encontroId`: string (identificador do encontro)\n- `participanteId`: string (identificador do participante)\n- `origem`: string `\"qr\" | \"qr_offline\" | \"manual\"`\n- `lidoEm`: string ISO 8601 ou `null` (instante da leitura do QR code)\n- `registradaEm`: string ISO 8601 (momento em que o registro foi processado/salvo no sistema)\n- `justificativa`: string ou `null` (texto descritivo, preenchido apenas quando manual)\n\n## 4. Endpoints\n\n- `GET /encontros/:id/codigo`: Retorna o código dinâmico do encontro (200 `CodigoDoEncontro`). Exclusivo para organização (`403 SOMENTE_ORGANIZACAO`).\n- `POST /encontros/:id/presencas`: Registra a presença do participante via QR code ou offline (201 `Presenca` na primeira vez; 200 `Presenca` em tentativas duplicadas/subsequentes). Exclusivo para participantes (`403 SOMENTE_PARTICIPANTE`).\n- `POST /encontros/:id/presencas/manual`: Registra presença manualmente pela organização (201 `Presenca` na primeira vez; 200 `Presenca` em duplicadas). Exclusivo para organização (`403 SOMENTE_ORGANIZACAO`).\n- `GET /encontros/:id/presencas`: Retorna a lista de presenças do encontro (200 `[Presenca]`). Exclusivo para organização (`403 SOMENTE_ORGANIZACAO`).\n\n## 5. Regras\n\n- R1 (P1, RN-301, RN-302): Janela de tempo para QR e código (`GET /encontros/:id/codigo`, `POST /encontros/:id/presencas`): A janela de registro começa 15 minutos antes do início do encontro e termina 30 minutos depois do início, com as bordas incluídas. Fora dessa janela, requisições de obtenção de código (`GET /encontros/:id/codigo`) ou registro de presença (`POST /encontros/:id/presencas`) devem ser recusadas com `422 FORA_DA_JANELA`. Se a atividade estiver cancelada (`atividade.situacao === 'cancelada'`), a obtenção de código também deve ser recusada com `422 ATIVIDADE_CANCELADA`.\n- R2 (P2, RN-303, RN-304, RN-308): Validação de código e tolerância offline (`POST /encontros/:id/presencas`): O código do encontro muda a cada minuto. O sistema aceita o código do minuto atual e o código do minuto anterior. Caso o código enviado não corresponda a nenhum desses dois válidos, a operação deve ser recusada com `422 CODIGO_INVALIDO`. O campo `lidoEm` é opcional na requisição. Quando `lidoEm` é fornecido, a validação da janela e do minuto do código considera o instante informado em `lidoEm` (momento da leitura offline) e não o momento do envio ao servidor. Quando `lidoEm` está ausente, considera-se o momento atual do envio.\n- R3 (P2, RN-309, RN-310): Prazo de sincronização offline (`POST /encontros/:id/presencas`): O envio de presença offline (com `lidoEm` anterior ao momento de envio) pode ser feito até 2 horas depois do fim do encontro. Caso o envio ocorra após esse prazo (mais de 2 horas após o término do encontro), a operação deve ser recusada com `422 SINCRONIZACAO_TARDIA`.\n- R4 (P3, RN-306): Verificação de inscrição prévia (`NAO_INSCRITO`): Tanto no registro de presença por QR (`POST /encontros/:id/presencas`) quanto no registro manual (`POST /encontros/:id/presencas/manual`), só pode registrar presença o participante que possui inscrição confirmada (`status === 'confirmada'`) na atividade correspondente. Caso o participante não possua inscrição confirmada, a operação deve ser recusada com `403 NAO_INSCRITO`.\n- R5 (P4, RN-311, RN-313): Presença manual pela organização (`POST /encontros/:id/presencas/manual`): A presença manual só pode ser registrada pela organização para um participante com inscrição confirmada. É obrigatória uma justificativa com no mínimo 10 caracteres. Caso a justificativa esteja ausente ou tenha menos de 10 caracteres, a operação deve ser recusada com `422 JUSTIFICATIVA_OBRIGATORIA`. O total de presenças manuais por encontro é limitado a 10% do total de inscrições confirmadas da atividade no encontro, arredondando para cima. Caso esse limite seja excedido, a operação deve ser recusada com `422 LIMITE_DE_MANUAIS`.\n- R6 (P5): Listagem de presenças (`GET /encontros/:id/presencas`): A listagem de presenças é exclusiva para usuários da organização (`403 SOMENTE_ORGANIZACAO`) e retorna status `200` com a lista de objetos `[Presenca]` registrados no encontro.\n- R7 (Contrato): Restrições de papel nas rotas de presença: `GET /encontros/:id/codigo`, `POST /encontros/:id/presencas/manual` e `GET /encontros/:id/presencas` exigem papel de organização (`403 SOMENTE_ORGANIZACAO`). `POST /encontros/:id/presencas` exige papel de participante (`403 SOMENTE_PARTICIPANTE`). Tentativas por papéis inadequados ou sem autenticação respondem `401` ou `403`.\n\n## 6. Critérios de aceite\n\n1. (R1) `GET /encontros/:id/codigo` fora da janela de registro (mais de 15 min antes ou mais de 30 min depois do início) → `422 FORA_DA_JANELA`.\n2. (R1) `GET /encontros/:id/codigo` dentro da janela válida → `200` com objeto `CodigoDoEncontro`.\n3. (R2) `POST /encontros/:id/presencas` com código do minuto atual ou do minuto anterior → `201` (ou `200` se já registrada).\n4. (R2) `POST /encontros/:id/presencas` com código inválido (diferente do atual e do anterior) → `422 CODIGO_INVALIDO`.\n5. (R2) `POST /encontros/:id/presencas` validando janela e código com base em `lidoEm` (leitura offline).\n6. (R3) `POST /encontros/:id/presencas` com `lidoEm` enviado mais de 2 horas após o fim do encontro → `422 SINCRONIZACAO_TARDIA`.\n7. (R4) `POST /encontros/:id/presencas` ou `POST /encontros/:id/presencas/manual` por participante sem inscrição confirmada → `403 NAO_INSCRITO`.\n8. (R5) `POST /encontros/:id/presencas/manual` com justificativa com menos de 10 caracteres ou ausente → `422 JUSTIFICATIVA_OBRIGATORIA`.\n9. (R5) `POST /encontros/:id/presencas/manual` excedendo o limite de 10% (arredondado para cima) das inscrições confirmadas do encontro → `422 LIMITE_DE_MANUAIS`.\n10. (R6) `GET /encontros/:id/presencas` pela organização → `200` com `[Presenca]`.\n11. (R7) Chamada de `GET /encontros/:id/codigo` ou `POST /encontros/:id/presencas/manual` por participante → `403 SOMENTE_ORGANIZACAO`.\n12. (R7) Chamada de `POST /encontros/:id/presencas` por usuário da organização → `403 SOMENTE_PARTICIPANTE`.\n\n## 7. Como isto será verificado\nTestes automatizados via requisições HTTP (Supertest / fetch) no servidor Express (`criarServidor()`), utilizando o modo de teste com relógio controlado (`/_teste/relogio` e `/_teste/reset`) para simular o avanço do tempo, janelas de encontro, expiração de códigos e prazos de sincronização offline.\n\n## 8. Fatias de entrega\n- **Fatia 1:** Geração de código do encontro e janela de tempo (`GET /encontros/:id/codigo`, `R1`, `R7`).\n- **Fatia 2:** Registro de presença por QR code online/offline e tolerância de código e prazo (`POST /encontros/:id/presencas`, `R2`, `R3`, `R4`, `R7`).\n- **Fatia 3:** Presença manual pela organização com justificativa e limite, e listagem de presenças (`POST /encontros/:id/presencas/manual`, `GET /encontros/:id/presencas`, `R5`, `R6`, `R7`).\n"
+      },
+      "output": "Wrote file successfully.",
+      "metadata": {
+       "diagnostics": {},
+       "filepath": "C:\\Users\\Drago\\Desktop\\Projeto Opencode\\ProjetoSemanaAcademica\\semana-academica\\specs\\M3-presenca-por-qr.md",
+       "exists": false,
+       "truncated": false
+      },
+      "title": "semana-academica\\specs\\M3-presenca-por-qr.md",
+      "time": {
+       "start": 1790110628182,
+       "end": 1790110628191
+      }
+     },
+     "metadata": {
+      "google": {
+       "thoughtSignature": "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"
+      }
+     },
+     "id": "prt_0cae87951001v0lDUSbVb7V1AF",
+     "sessionID": "ses_f35181a07ffeO5x0Bg80gcsXsQ",
+     "messageID": "msg_0cae82f9d0014PfSKt2B3hgrwO"
+    },
+    {
+     "reason": "tool-calls",
+     "snapshot": "bc2af02772e5ab3457d9d6367e0a7561983637e2",
+     "type": "step-finish",
+     "tokens": {
+      "total": 46235,
+      "input": 6341,
+      "output": 2525,
+      "reasoning": 4560,
+      "cache": {
+       "write": 0,
+       "read": 32809
+      }
+     },
+     "cost": 0.02059907,
+     "id": "prt_0cae87aba001BKUXeixjdik2Nd",
+     "sessionID": "ses_f35181a07ffeO5x0Bg80gcsXsQ",
+     "messageID": "msg_0cae82f9d0014PfSKt2B3hgrwO"
+    },
+    {
+     "type": "patch",
+     "hash": "746cb47fd07b7a94c0ee3f8760737f5d63eebfff",
+     "files": [
+      "C:/Users/Drago/Desktop/Projeto Opencode/ProjetoSemanaAcademica/semana-academica/specs/M3-presenca-por-qr.md"
+     ],
+     "id": "prt_0cae87b900012z5l3weE33wx6k",
+     "sessionID": "ses_f35181a07ffeO5x0Bg80gcsXsQ",
+     "messageID": "msg_0cae82f9d0014PfSKt2B3hgrwO"
+    }
+   ]
+  },
+  {
+   "info": {
+    "parentID": "msg_0cae7e604001uv01x6FKTJ0QRv",
+    "role": "assistant",
+    "mode": "build",
+    "agent": "build",
+    "path": {
+     "cwd": "C:\\Users\\Drago\\Desktop\\Projeto Opencode\\ProjetoSemanaAcademica\\semana-academica",
+     "root": "C:\\Users\\Drago\\Desktop\\Projeto Opencode\\ProjetoSemanaAcademica"
+    },
+    "cost": 0.00554202,
+    "tokens": {
+     "total": 47609,
+     "input": 13809,
+     "output": 75,
+     "reasoning": 81,
+     "cache": {
+      "write": 0,
+      "read": 33644
+     }
+    },
+    "modelID": "gemini-3.5-flash-lite",
+    "providerID": "google",
+    "time": {
+     "created": 1790110628758,
+     "completed": 1790110631808
+    },
+    "finish": "stop",
+    "id": "msg_0cae87b96001hxoUcNEaOkGqSK",
+    "sessionID": "ses_f35181a07ffeO5x0Bg80gcsXsQ"
+   },
+   "parts": [
+    {
+     "snapshot": "bc2af02772e5ab3457d9d6367e0a7561983637e2",
+     "type": "step-start",
+     "id": "prt_0cae885e2001ZwkhvlpUX1bp1M",
+     "sessionID": "ses_f35181a07ffeO5x0Bg80gcsXsQ",
+     "messageID": "msg_0cae87b96001hxoUcNEaOkGqSK"
+    },
+    {
+     "type": "text",
+     "text": "Criado `specs/M3-presenca-por-qr.md` com base em `entrevistas/M3-presenca-por-qr.md`, contendo a especificação completa, regras com citações de perguntas (P-xx) e regras (RN-xxx), critérios de aceite, verificação e fatias de entrega.",
+     "time": {
+      "start": 1790110631396,
+      "end": 1790110631484
+     },
+     "id": "prt_0cae885e4001cPokXm3ppn1SB6",
+     "sessionID": "ses_f35181a07ffeO5x0Bg80gcsXsQ",
+     "messageID": "msg_0cae87b96001hxoUcNEaOkGqSK"
+    },
+    {
+     "reason": "stop",
+     "snapshot": "bc2af02772e5ab3457d9d6367e0a7561983637e2",
+     "type": "step-finish",
+     "tokens": {
+      "total": 47609,
+      "input": 13809,
+      "output": 75,
+      "reasoning": 81,
+      "cache": {
+       "write": 0,
+       "read": 33644
+      }
+     },
+     "cost": 0.00554202,
+     "id": "prt_0cae886e1001F9620kGFV03bpA",
+     "sessionID": "ses_f35181a07ffeO5x0Bg80gcsXsQ",
+     "messageID": "msg_0cae87b96001hxoUcNEaOkGqSK"
+    }
+   ]
+  }
+ ]
+}

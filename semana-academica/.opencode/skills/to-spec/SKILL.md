@@ -17,7 +17,7 @@ pare e pergunte só aquilo. Não preencha buraco com "geralmente é assim".
 
 ## Antes de escrever
 
-Leia o repositório: convenções, vocabulário, nomes que já existem. A spec fala a língua
+Leia o reporqositório: convenções, vocabulário, nomes que já existem. A spec fala a língua
 do projeto — se o código chama de `leitor`, a spec não inventa `usuário`.
 
 Decida também **onde isto vai ser verificado**. Prefira a costura mais externa que já
