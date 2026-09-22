@@ -505,6 +505,43 @@ export function criarServidor(portaDesejada = 3000) {
         posicaoNaEspera = getAtividadeEmEspera(atividade.id) + 1;
       }
 
+      if (status === 'confirmada') {
+        // R4: Conflito de horário
+        const novosEncontros = db.prepare('SELECT inicio, fim FROM encontros WHERE atividadeId = ?').all(atividade.id);
+        const encontrosAtivos = db.prepare(`
+          SELECT e.inicio, e.fim 
+          FROM inscricoes i
+          JOIN encontros e ON i.atividadeId = e.atividadeId
+          WHERE i.participanteId = ? AND i.status IN ('confirmada', 'convocada')
+        `).all(req.usuario.id);
+
+        for (const novo of novosEncontros) {
+          const novoInicio = new Date(novo.inicio).getTime();
+          const novoFim = new Date(novo.fim).getTime();
+          for (const ativo of encontrosAtivos) {
+            const ativoInicio = new Date(ativo.inicio).getTime();
+            const ativoFim = new Date(ativo.fim).getTime();
+            if (novoInicio < ativoFim && novoFim > ativoInicio) {
+              return res.status(409).json({ erro: 'CONFLITO_DE_HORARIO', mensagem: 'Conflito de horário' });
+            }
+          }
+        }
+
+        // R5: Limite de minicursos
+        if (atividade.tipo === 'minicurso') {
+          const minicursosAtivos = db.prepare(`
+            SELECT COUNT(*) as cnt 
+            FROM inscricoes i
+            JOIN atividades a ON i.atividadeId = a.id
+            WHERE i.participanteId = ? AND a.tipo = 'minicurso' AND i.status IN ('confirmada', 'convocada')
+          `).get(req.usuario.id);
+
+          if (minicursosAtivos && minicursosAtivos.cnt >= 3) {
+            return res.status(422).json({ erro: 'LIMITE_DE_MINICURSOS', mensagem: 'Limite de minicursos atingido' });
+          }
+        }
+      }
+
       const id = 'ins_' + crypto.randomBytes(4).toString('hex');
       const relogioRow = db.prepare('SELECT valor FROM sistema WHERE chave = ?').get('relogio');
       const criadaEm = relogioRow ? relogioRow.valor : new Date().toISOString();
