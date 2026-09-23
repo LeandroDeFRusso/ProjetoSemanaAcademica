@@ -1,0 +1,1769 @@
+{
+ "info": {
+  "id": "ses_f3374e882ffenhMKEo3sBlbmjA",
+  "slug": "gentle-engine",
+  "projectID": "83101555cb47ec2aac60beaa3444a9fffcf1229a",
+  "directory": "C:\\Users\\acura\\Desktop\\Trabalho Final Queiroz\\ProjetoSemanaAcademica\\semana-academica",
+  "path": "semana-academica",
+  "title": "Fatia 3 - M4: Certificados e extrato de horas",
+  "agent": "build",
+  "model": {
+   "id": "gemini-3.5-flash-lite",
+   "providerID": "google"
+  },
+  "version": "1.18.32",
+  "summary": {
+   "additions": 0,
+   "deletions": 0,
+   "files": 0
+  },
+  "cost": 0.08831114000000001,
+  "tokens": {
+   "input": 219683,
+   "output": 1063,
+   "reasoning": 2269,
+   "cache": {
+    "read": 469208,
+    "write": 0
+   }
+  },
+  "time": {
+   "created": 1790138062717,
+   "updated": 1790138206085
+  }
+ },
+ "messages": [
+  {
+   "info": {
+    "role": "user",
+    "time": {
+     "created": 1790138062733
+    },
+    "agent": "build",
+    "model": {
+     "providerID": "google",
+     "modelID": "gemini-3.5-flash-lite"
+    },
+    "summary": {
+     "diffs": []
+    },
+    "id": "msg_0cc8b178d001qVP5x9a9RbgFPx",
+    "sessionID": "ses_f3374e882ffenhMKEo3sBlbmjA"
+   },
+   "parts": [
+    {
+     "type": "text",
+     "text": "Use as skills padrao-design e front-end. Implemente só a Fatia  3 - M4: meus certificados; extrato de horas; verificação pública de certificado pelo código.",
+     "id": "prt_0cc8b178d002eyq1FvpoBgTBzZ",
+     "sessionID": "ses_f3374e882ffenhMKEo3sBlbmjA",
+     "messageID": "msg_0cc8b178d001qVP5x9a9RbgFPx"
+    }
+   ]
+  },
+  {
+   "info": {
+    "parentID": "msg_0cc8b178d001qVP5x9a9RbgFPx",
+    "role": "assistant",
+    "mode": "build",
+    "agent": "build",
+    "path": {
+     "cwd": "C:\\Users\\acura\\Desktop\\Trabalho Final Queiroz\\ProjetoSemanaAcademica\\semana-academica",
+     "root": "C:\\Users\\acura\\Desktop\\Trabalho Final Queiroz\\ProjetoSemanaAcademica"
+    },
+    "cost": 0.0034636,
+    "tokens": {
+     "total": 10372,
+     "input": 10212,
+     "output": 15,
+     "reasoning": 145,
+     "cache": {
+      "write": 0,
+      "read": 0
+     }
+    },
+    "modelID": "gemini-3.5-flash-lite",
+    "providerID": "google",
+    "time": {
+     "created": 1790138062745,
+     "completed": 1790138065582
+    },
+    "finish": "tool-calls",
+    "id": "msg_0cc8b17990010OI6H9tqvH3xj6",
+    "sessionID": "ses_f3374e882ffenhMKEo3sBlbmjA"
+   },
+   "parts": [
+    {
+     "snapshot": "6f1a00423a7ee723365316c2c7697c97538b72c7",
+     "type": "step-start",
+     "id": "prt_0cc8b1eed001nFPLjrrlLkepF7",
+     "sessionID": "ses_f3374e882ffenhMKEo3sBlbmjA",
+     "messageID": "msg_0cc8b17990010OI6H9tqvH3xj6"
+    },
+    {
+     "type": "tool",
+     "tool": "glob",
+     "callID": "b6WsxfKboDV9n4xS",
+     "state": {
+      "status": "completed",
+      "input": {
+       "pattern": "**/*"
+      },
+      "output": "[13001 caracteres omitidos]",
+      "title": "semana-academica",
+      "time": {
+       "start": 1790138064627,
+       "end": 1790138064896
+      }
+     },
+     "metadata": {
+      "google": {
+       "thoughtSignature": "EtkFCtYFAWkUfROjWejkqvGU/icn3gXJcWtQCjdU64PDdKC+h3Ob8IF+bxKIKMXA5Br2lUzYDz1lfac3+fa8HRLfxbL1PJF8vhtoTbThDBog1LfyGsAoxkdkHDIS+r421ozvUjpEs4Cj7QTy531GRTk5yLKqx8wkB5tRIDaB4doSPTjGPC4VBesAt/OMooV+1yWpSct1+L4aCkF+IL6entF19SvWxRUmmO8Wbw/1/T17OY2ekRNYSMjHmKQr1M+7klO4QPDwI5AhG6DJHmoCu7PB3E+Yy/X05gVEQD1uksiDk0/sJZ6Semfc2a36G3V/0Wi8RRJe5FAZDgJla21hWMcMrNh+sLKn4TMIvdTj+pS62vvxGt7F7NAZO8fbRZypE8u3hfrRB1COjo5PswZMLzZVB5xvFQwJN1fUn7FivD/O29Vx27ONeL6gnK8E4nlAgh+aSq65qMuLOglzLDqymq2qypEADXFQX8oVDuvlXn3HsPj3bg49aekbC2o/T6YLchBJiQpWk9nLnbr6CYa4cDAVoXKVvaDHxlFk3B8oZ6GPgcV5DqTcZcN2kNKfoPBALRMa6RUudQ35e2R55ajDy+fH3Oq2wSP5cxfnxFjP1tb5tNiYLPxYarVqPvt5Z1bJOpGCK+pHOLNuTUHdosD1l0jq+CkgSe0HTkoASUHJ3E9sTg6e7rARdTNG3PwWm+ifOovTZY+6MnsvKxczcVVBv/SGZiEKnEbmVjPcsE7KE8/wjpkxAcTCqMJ1oAnZBCOtBhfr1vBxCPzdr4fa6b33Wyl9PSopW62FE/4WcOJ74ok1CW5Oskxb75ATbceuIhMbRBvGJ4HsmunGHweacjtln0AhEG9Ks2ADxvNJ31sp3NY5zUvaFirkzgbrTvQj7TkXT1IvSNe9jLysa2h+SZ7rjRRvev8D/b2qpfa2guMrWdKJ6tvVd7kx0P3nZqTKwlqaHF0FlhiioiNtLCrJ"
+      }
+     },
+     "id": "prt_0cc8b1eef001dZKMVpUFA9bngu",
+     "sessionID": "ses_f3374e882ffenhMKEo3sBlbmjA",
+     "messageID": "msg_0cc8b17990010OI6H9tqvH3xj6"
+    },
+    {
+     "reason": "tool-calls",
+     "snapshot": "6f1a00423a7ee723365316c2c7697c97538b72c7",
+     "type": "step-finish",
+     "tokens": {
+      "total": 10372,
+      "input": 10212,
+      "output": 15,
+      "reasoning": 145,
+      "cache": {
+       "write": 0,
+       "read": 0
+      }
+     },
+     "cost": 0.0034636,
+     "id": "prt_0cc8b2154001MHYUalVUaj5rYD",
+     "sessionID": "ses_f3374e882ffenhMKEo3sBlbmjA",
+     "messageID": "msg_0cc8b17990010OI6H9tqvH3xj6"
+    }
+   ]
+  },
+  {
+   "info": {
+    "parentID": "msg_0cc8b178d001qVP5x9a9RbgFPx",
+    "role": "assistant",
+    "mode": "build",
+    "agent": "build",
+    "path": {
+     "cwd": "C:\\Users\\acura\\Desktop\\Trabalho Final Queiroz\\ProjetoSemanaAcademica\\semana-academica",
+     "root": "C:\\Users\\acura\\Desktop\\Trabalho Final Queiroz\\ProjetoSemanaAcademica"
+    },
+    "cost": 0.0054192,
+    "tokens": {
+     "total": 15732,
+     "input": 15414,
+     "output": 57,
+     "reasoning": 261,
+     "cache": {
+      "write": 0,
+      "read": 0
+     }
+    },
+    "modelID": "gemini-3.5-flash-lite",
+    "providerID": "google",
+    "time": {
+     "created": 1790138065590,
+     "completed": 1790138068606
+    },
+    "finish": "tool-calls",
+    "id": "msg_0cc8b22b6001QbqP7Ru925fpCr",
+    "sessionID": "ses_f3374e882ffenhMKEo3sBlbmjA"
+   },
+   "parts": [
+    {
+     "snapshot": "6f1a00423a7ee723365316c2c7697c97538b72c7",
+     "type": "step-start",
+     "id": "prt_0cc8b2bcd001NgN0b8Bl35J6Pi",
+     "sessionID": "ses_f3374e882ffenhMKEo3sBlbmjA",
+     "messageID": "msg_0cc8b22b6001QbqP7Ru925fpCr"
+    },
+    {
+     "type": "tool",
+     "tool": "read",
+     "callID": "SKgyHDPoT5XXTHpU",
+     "state": {
+      "status": "completed",
+      "input": {
+       "filePath": "C:\\Users\\acura\\Desktop\\Trabalho Final Queiroz\\ProjetoSemanaAcademica\\semana-academica\\.opencode\\skills\\padrao-design\\SKILL.md"
+      },
+      "output": "[2771 caracteres omitidos]",
+      "title": "semana-academica\\.opencode\\skills\\padrao-design\\SKILL.md",
+      "time": {
+       "start": 1790138067923,
+       "end": 1790138067932
+      }
+     },
+     "metadata": {
+      "google": {
+       "thoughtSignature": "EvUHCvIHAWkUfRMnK+cVE93uO1Rd0l388ZBqq9LTX7AeTtx1cf1nDHc8CX/DLatbtO6unM8ccO7UelTMIkoFSWoGUDgYN95drr1K0VjZivH/I7112FuSNoOfNkXNALZe9MBpUHJ1a4D+DwEcVv7tY2MXkoZKW2CjrPe39ST4nkxg5WElHpy83FshlKdSxnfRhKG38sq6ByTzJwkD5nE+vROgYD+Tdon5zFMUskQRjDBFESnS9H/Sc1UwN1Z/L7z7CBGtfSq7PTchub2ZOYnEyyEwdQqr5ae71M/7YH72JrmoO1ltzzwWjbSBb1zETSgriRWAq4FyAmkdLPtLZS8ZpMcZio0oR9gL/1NvakL6Ol4oRtQGynwGHnNHOEYOz3JBoHkay3iNaoMLqYrS2E0HwNw4kFS9jq0ruHsO2XWcZv5yh1VFJ0z8B3auI6WEua/0iAuFdZvM/YDKL6lje3twXsMYsygTXBbkzgQspPt3+AW0rFOD8l9L9tB0KeufbN7mG8lqYn/qTR168SjQbvFtaNGKedstesJPT0fylJiew3Jfp7PdoOtSINJCeJT8mBrUszFIkjhAU1VozotE7QNzEX7cJNPdXYDsd7wJX6Ss6zSWTUfxuy7UrptNRGiG2j2YaIKDdhC6cjlYKoRbIOesKe52k9iEe0f/07A3/93OkMI712ngiFf/PImr4PBGjRiyuUtz0D1wxj8EBb+ZCT2GJufZPGuIdLBNX3nhoI3S/CP+RS9KkuMxd8rMvgezNV+H9ZQJhjYVfaGhO3j7OnGK4UV3ngc0PD9bdvZhzRKSxK4f4WVunhNP73ZyuRiC9sT2mLnBsuXnbrd0/47l0Ui2OlxmIlHHp5Uqw1d2smB/BuekQJ4/JdXtHkv0t9YJg/mqgjEmQFn0+wVrYtOVM5/QkntRbTZWotzG20wvaZcg6KAn4ZwqakTE5A4DK9+lSOWre8NjV2AMyBmiSwIYIxfxQYwYGTCegaoLyGRiJ0q1/PQmrPXUYCCVraruB/vsqFAoJO2DtcXze3qQ7kEnJc5xO/HAUPdOiCxXepaS+ImN+wJnfAo3T8247oolVk6uq9asrciFoI9Hh9sssw92ljondM/OX6AdjnlAmIX/pyDdM9amgyix2z9LPkgJfE2VqsR9o1rZ1XUYc6kJLUP90TYSwiPYVME150dm3WgZDI2okrkZMoq7HhwpCcKHDifNpkhWA4KTk3gEqbF9hJ7NCq/6noqMxLtJBAgNfqwXlN+wje8zfixOKOgN1XY/PbLtDQ0vGt60fWLbdAAB2Qb632RaFCcnZjHWibfQ9vynkrfngU7ZLMrs2y1qVx0u/EzgQx9fyf9KFdtBXEQ="
+      }
+     },
+     "id": "prt_0cc8b2bcf0012EqkCWFueEW5jF",
+     "sessionID": "ses_f3374e882ffenhMKEo3sBlbmjA",
+     "messageID": "msg_0cc8b22b6001QbqP7Ru925fpCr"
+    },
+    {
+     "reason": "tool-calls",
+     "snapshot": "6f1a00423a7ee723365316c2c7697c97538b72c7",
+     "type": "step-finish",
+     "tokens": {
+      "total": 15732,
+      "input": 15414,
+      "output": 57,
+      "reasoning": 261,
+      "cache": {
+       "write": 0,
+       "read": 0
+      }
+     },
+     "cost": 0.0054192,
+     "id": "prt_0cc8b2d340012yltbPQBrXLiBj",
+     "sessionID": "ses_f3374e882ffenhMKEo3sBlbmjA",
+     "messageID": "msg_0cc8b22b6001QbqP7Ru925fpCr"
+    }
+   ]
+  },
+  {
+   "info": {
+    "parentID": "msg_0cc8b178d001qVP5x9a9RbgFPx",
+    "role": "assistant",
+    "mode": "build",
+    "agent": "build",
+    "path": {
+     "cwd": "C:\\Users\\acura\\Desktop\\Trabalho Final Queiroz\\ProjetoSemanaAcademica\\semana-academica",
+     "root": "C:\\Users\\acura\\Desktop\\Trabalho Final Queiroz\\ProjetoSemanaAcademica"
+    },
+    "cost": 0.0052414,
+    "tokens": {
+     "total": 16760,
+     "input": 16663,
+     "output": 56,
+     "reasoning": 41,
+     "cache": {
+      "write": 0,
+      "read": 0
+     }
+    },
+    "modelID": "gemini-3.5-flash-lite",
+    "providerID": "google",
+    "time": {
+     "created": 1790138068608,
+     "completed": 1790138070884
+    },
+    "finish": "tool-calls",
+    "id": "msg_0cc8b2e80001iXJfsZMHZEJpx6",
+    "sessionID": "ses_f3374e882ffenhMKEo3sBlbmjA"
+   },
+   "parts": [
+    {
+     "snapshot": "6f1a00423a7ee723365316c2c7697c97538b72c7",
+     "type": "step-start",
+     "id": "prt_0cc8b3498001REHYDJAUlWvrxC",
+     "sessionID": "ses_f3374e882ffenhMKEo3sBlbmjA",
+     "messageID": "msg_0cc8b2e80001iXJfsZMHZEJpx6"
+    },
+    {
+     "type": "tool",
+     "tool": "read",
+     "callID": "PSWIkgh5OeVVXyuj",
+     "state": {
+      "status": "completed",
+      "input": {
+       "filePath": "C:\\Users\\acura\\Desktop\\Trabalho Final Queiroz\\ProjetoSemanaAcademica\\semana-academica\\.opencode\\skills\\front-end\\SKILL.md"
+      },
+      "output": "[4079 caracteres omitidos]",
+      "title": "semana-academica\\.opencode\\skills\\front-end\\SKILL.md",
+      "time": {
+       "start": 1790138070174,
+       "end": 1790138070181
+      }
+     },
+     "metadata": {
+      "google": {
+       "thoughtSignature": "EusBCugBAWkUfRNnl+7TPLMYlw1nBUoMJQKUFLsNovG+XJ4LIQSpOtDi3cgw5X3G7uQue18OiH7VdH03eRlGc0c+r3XhWO3TWtNKvhaZjQRFUpIqQRRNMzV3/a5vj/UDdN7GFLoiIwit86M4Qn1uoJ6PC767TEjDoOyd+QbOmPQ1wRx0RxUwGm3XZfHvvH0eHa0JUXsBDaLu3x567KS25qY4YosLUypmdDHEZxNlFojeJf5wFDJ93RWKaE7mBHYBfrTjiLGt7w39m+me7BMxsj7eCWYS/t/ynM/xe1Gng4c2tjZcisPbOuZBJU2Dgw=="
+      }
+     },
+     "id": "prt_0cc8b349a001Vd4TfDKA6RRkJK",
+     "sessionID": "ses_f3374e882ffenhMKEo3sBlbmjA",
+     "messageID": "msg_0cc8b2e80001iXJfsZMHZEJpx6"
+    },
+    {
+     "reason": "tool-calls",
+     "snapshot": "6f1a00423a7ee723365316c2c7697c97538b72c7",
+     "type": "step-finish",
+     "tokens": {
+      "total": 16760,
+      "input": 16663,
+      "output": 56,
+      "reasoning": 41,
+      "cache": {
+       "write": 0,
+       "read": 0
+      }
+     },
+     "cost": 0.0052414,
+     "id": "prt_0cc8b3607001Zpx0jDyn9pPHLc",
+     "sessionID": "ses_f3374e882ffenhMKEo3sBlbmjA",
+     "messageID": "msg_0cc8b2e80001iXJfsZMHZEJpx6"
+    }
+   ]
+  },
+  {
+   "info": {
+    "parentID": "msg_0cc8b178d001qVP5x9a9RbgFPx",
+    "role": "assistant",
+    "mode": "build",
+    "agent": "build",
+    "path": {
+     "cwd": "C:\\Users\\acura\\Desktop\\Trabalho Final Queiroz\\ProjetoSemanaAcademica\\semana-academica",
+     "root": "C:\\Users\\acura\\Desktop\\Trabalho Final Queiroz\\ProjetoSemanaAcademica"
+    },
+    "cost": 0.00244636,
+    "tokens": {
+     "total": 18197,
+     "input": 5822,
+     "output": 52,
+     "reasoning": 81,
+     "cache": {
+      "write": 0,
+      "read": 12242
+     }
+    },
+    "modelID": "gemini-3.5-flash-lite",
+    "providerID": "google",
+    "time": {
+     "created": 1790138070887,
+     "completed": 1790138073156
+    },
+    "finish": "tool-calls",
+    "id": "msg_0cc8b37670016gkQ0TQ9mOEV2S",
+    "sessionID": "ses_f3374e882ffenhMKEo3sBlbmjA"
+   },
+   "parts": [
+    {
+     "snapshot": "6f1a00423a7ee723365316c2c7697c97538b72c7",
+     "type": "step-start",
+     "id": "prt_0cc8b3d90001Oj18xM8LJpYiuX",
+     "sessionID": "ses_f3374e882ffenhMKEo3sBlbmjA",
+     "messageID": "msg_0cc8b37670016gkQ0TQ9mOEV2S"
+    },
+    {
+     "type": "tool",
+     "tool": "read",
+     "callID": "eWoMukUWNMr2uyre",
+     "state": {
+      "status": "completed",
+      "input": {
+       "filePath": "C:\\Users\\acura\\Desktop\\Trabalho Final Queiroz\\ProjetoSemanaAcademica\\semana-academica\\specs\\M4-certificados.md"
+      },
+      "output": "[7691 caracteres omitidos]",
+      "title": "semana-academica\\specs\\M4-certificados.md",
+      "time": {
+       "start": 1790138072469,
+       "end": 1790138072475
+      }
+     },
+     "metadata": {
+      "google": {
+       "thoughtSignature": "EogDCoUDAWkUfRNlokq77tEQCr/gAbhqAeuMQSUcKLGRkLyiNJSqtHli5Yw3DiYZmBRApuTEkMg75lswi9LaSdKEaD9MPj/LJ8liZKLu6G5hklmLJ8KZaItrd5GkCF+G0nSmCqBxVEL+uSXbsMnbpL6D2OEQmqvPM814jhhInDwAT4zMNQ5c0nODC3sNxj3dz1drccu0yU2wK/pu3YirK9+Tep4+veJY0h5C045xxC3xqToYh4kpFuY92hcnxi6rA2j4d5IVAzO+gKHwm7j2OaI+iTJpsqDOlQrsfJMDZKkYh9gpZYRiFw0MfkdYPb5ZWZYnOjWWGh/yIb7bg6ASTVs1CWNVKr/KA7gYGyEGmSW9UcF6swHsx8fDqCN7ur4Zh2p6PhDdk3fhjvlU9VGEn9eMIfpEiLI1Jhk2XvJNO26P/Fg8I5shGwFtRyLmus6kTOTu6KZUPAq/eF3SnVORigewzNl2aclM94tt0UCJ4125slhYsGOtFBKJnz7dSxpmRlOlyFAhfqSRY8s="
+      }
+     },
+     "id": "prt_0cc8b3d92001nFhO4PGC9mxADH",
+     "sessionID": "ses_f3374e882ffenhMKEo3sBlbmjA",
+     "messageID": "msg_0cc8b37670016gkQ0TQ9mOEV2S"
+    },
+    {
+     "reason": "tool-calls",
+     "snapshot": "6f1a00423a7ee723365316c2c7697c97538b72c7",
+     "type": "step-finish",
+     "tokens": {
+      "total": 18197,
+      "input": 5822,
+      "output": 52,
+      "reasoning": 81,
+      "cache": {
+       "write": 0,
+       "read": 12242
+      }
+     },
+     "cost": 0.00244636,
+     "id": "prt_0cc8b3eeb001gv9PKE844mD84N",
+     "sessionID": "ses_f3374e882ffenhMKEo3sBlbmjA",
+     "messageID": "msg_0cc8b37670016gkQ0TQ9mOEV2S"
+    }
+   ]
+  },
+  {
+   "info": {
+    "parentID": "msg_0cc8b178d001qVP5x9a9RbgFPx",
+    "role": "assistant",
+    "mode": "build",
+    "agent": "build",
+    "path": {
+     "cwd": "C:\\Users\\acura\\Desktop\\Trabalho Final Queiroz\\ProjetoSemanaAcademica\\semana-academica",
+     "root": "C:\\Users\\acura\\Desktop\\Trabalho Final Queiroz\\ProjetoSemanaAcademica"
+    },
+    "cost": 0.00221119,
+    "tokens": {
+     "total": 20844,
+     "input": 4355,
+     "output": 15,
+     "reasoning": 151,
+     "cache": {
+      "write": 0,
+      "read": 16323
+     }
+    },
+    "modelID": "gemini-3.5-flash-lite",
+    "providerID": "google",
+    "time": {
+     "created": 1790138073159,
+     "completed": 1790138075822
+    },
+    "finish": "tool-calls",
+    "id": "msg_0cc8b4047001JwNwICVG0AgKEp",
+    "sessionID": "ses_f3374e882ffenhMKEo3sBlbmjA"
+   },
+   "parts": [
+    {
+     "snapshot": "6f1a00423a7ee723365316c2c7697c97538b72c7",
+     "type": "step-start",
+     "id": "prt_0cc8b4751001r3oapRmoiiWm77",
+     "sessionID": "ses_f3374e882ffenhMKEo3sBlbmjA",
+     "messageID": "msg_0cc8b4047001JwNwICVG0AgKEp"
+    },
+    {
+     "type": "tool",
+     "tool": "glob",
+     "callID": "NkNO99kOPbDNzKY6",
+     "state": {
+      "status": "completed",
+      "input": {
+       "pattern": "api/**/*"
+      },
+      "output": "[12458 caracteres omitidos]",
+      "title": "semana-academica",
+      "time": {
+       "start": 1790138074966,
+       "end": 1790138075169
+      }
+     },
+     "metadata": {
+      "google": {
+       "thoughtSignature": "EsgFCsUFAWkUfRMMTPxLeZLhN0lnSMncvGyFZ5ZHFf3Uu+2iDXyldDQul2Jhj5uAQ4PukFtHDY9NqCerrl3F0k2Cn+3VflSINRJ8bnNBKKYEOBHuKhFeUYL2Ci1aM3Ip+rqwYxAfqLyzQDf86b+RcE+ONdbmFYaR6KyIWZghUOPeCPG/saCq6tweV7Du7++CeIJEddOmPt7fAkR1IxBCPdPdGicFxLdnOqMrFgIeBNhtagD2Bfcs/JKsGc9YN9jZOE7M9MeahcKPX8lWFg4CcdD533ZaOhELhazIKUGU7jV19im+Fo7JW4VuWEvYPpcwPtES5tFr+LBkivDA0FYR1B2e8jYbK0LPZDAlFgfouQ1ZlOjo//HAS1v0sBl9mlEIxgoGJmoOVKPyRe3XmvBfDhpCtUypd6HRcCrh898LGyAatXaymJBB0XcmHCwjY2xB+694v7YBpmg20RsXCcfs3oc8vpnSe0PUx5yjMu3AlENYdWkdya79uYZzUY7ho4qHWMxT1oJA9kXpNqSKhGfDJwFRWTlCtoLvPtKZiDkGz3StGquTfGnOiXT2OE71l6v8+OUT6RcZZdNLeHjWIySdh0nzDjxUUXWOIDBrWAbvnZYEef1srNGiguwdmxfiMsYfI6xEnP2A2Ecun+a50HbkBj13UIZWT8nynHerHneCaD2rYc18DElXYzW/ewPBOxs8bnVzfBOaMzIHyvfKHSuHCn1nb8qstFOSgmuPSAeoH2sJHu8sqLBrjUXm3YIWp30ZixTHwutHj1vHlr2MhHyGX7RK6lyQ0+sI2WLn0m9gS86xjwvX4VgyHejceq1Y3dnjZHVIVj2AeHEF2W5M0M/GO42P2kr+1Mqv+l/sEY3G3i9k2LY+Q6Z0+uV2v20rYiy6TO07cKNtCkGWJvkKi4gZf2LBdN2QZK9bWlT94dNSlALDpjig4YESejKOMg=="
+      }
+     },
+     "id": "prt_0cc8b4753001NTLutIn16KlzFD",
+     "sessionID": "ses_f3374e882ffenhMKEo3sBlbmjA",
+     "messageID": "msg_0cc8b4047001JwNwICVG0AgKEp"
+    },
+    {
+     "reason": "tool-calls",
+     "snapshot": "6f1a00423a7ee723365316c2c7697c97538b72c7",
+     "type": "step-finish",
+     "tokens": {
+      "total": 20844,
+      "input": 4355,
+      "output": 15,
+      "reasoning": 151,
+      "cache": {
+       "write": 0,
+       "read": 16323
+      }
+     },
+     "cost": 0.00221119,
+     "id": "prt_0cc8b496b001kur6FtqZnC1x1Z",
+     "sessionID": "ses_f3374e882ffenhMKEo3sBlbmjA",
+     "messageID": "msg_0cc8b4047001JwNwICVG0AgKEp"
+    }
+   ]
+  },
+  {
+   "info": {
+    "parentID": "msg_0cc8b178d001qVP5x9a9RbgFPx",
+    "role": "assistant",
+    "mode": "build",
+    "agent": "build",
+    "path": {
+     "cwd": "C:\\Users\\acura\\Desktop\\Trabalho Final Queiroz\\ProjetoSemanaAcademica\\semana-academica",
+     "root": "C:\\Users\\acura\\Desktop\\Trabalho Final Queiroz\\ProjetoSemanaAcademica"
+    },
+    "cost": 0.00351811,
+    "tokens": {
+     "total": 25446,
+     "input": 8986,
+     "output": 59,
+     "reasoning": 74,
+     "cache": {
+      "write": 0,
+      "read": 16327
+     }
+    },
+    "modelID": "gemini-3.5-flash-lite",
+    "providerID": "google",
+    "time": {
+     "created": 1790138075825,
+     "completed": 1790138078159
+    },
+    "finish": "tool-calls",
+    "id": "msg_0cc8b4ab1001h46sEvAPytEJ8j",
+    "sessionID": "ses_f3374e882ffenhMKEo3sBlbmjA"
+   },
+   "parts": [
+    {
+     "snapshot": "6f1a00423a7ee723365316c2c7697c97538b72c7",
+     "type": "step-start",
+     "id": "prt_0cc8b511d001L8naplqk4EZt1T",
+     "sessionID": "ses_f3374e882ffenhMKEo3sBlbmjA",
+     "messageID": "msg_0cc8b4ab1001h46sEvAPytEJ8j"
+    },
+    {
+     "type": "tool",
+     "tool": "read",
+     "callID": "Op53weFhcevMV1uj",
+     "state": {
+      "status": "completed",
+      "input": {
+       "filePath": "C:\\Users\\acura\\Desktop\\Trabalho Final Queiroz\\ProjetoSemanaAcademica\\semana-academica\\api\\verificacoes\\m4-fatia3.spec.js"
+      },
+      "output": "[5604 caracteres omitidos]",
+      "title": "semana-academica\\api\\verificacoes\\m4-fatia3.spec.js",
+      "time": {
+       "start": 1790138077474,
+       "end": 1790138077480
+      }
+     },
+     "metadata": {
+      "google": {
+       "thoughtSignature": "EtsCCtgCAWkUfROsedVz0OE1yXlovnFpmpFR24Y8aUjbQ8x6/uGhxjBIn3A+dWRi0jNrfPBbPDbAirpSzM9oeANRhzLSgppvG4xupTsQT/G7qgbr3vj5a5J4UZDkgk6m5Ob9nLdPUAKn2L5fXAOq62EuMoFNVK+x580wIbSRO1vlNuZ1kzcv7JmLuPPSotasTonmGsCl4Agl6yf+d52qSJxbuC0xaHdILQszklAT41BVaTuWD7qikV8xphwVShVqiCtJvCAiYFZWEzfiAAB/DQzGvTLg1/Ni6HbvBl0Lbcrr+I+w8l1K9Ou0xiDEyw1rsh9skIBSt4GFAHl+JHc2FMHrOKxxtl+NIhrCx+elRfboazvKjDjoLNleIrCCTR+VMtwu4A0+NfkZFQxadhZHQe3sFRJZppvn5GAYTM7PRmDprQ0tPvFurHOTlzW9ub14H2DDKiXWFPDTWos3REE="
+      }
+     },
+     "id": "prt_0cc8b511e001bPBtDCquVKKHmg",
+     "sessionID": "ses_f3374e882ffenhMKEo3sBlbmjA",
+     "messageID": "msg_0cc8b4ab1001h46sEvAPytEJ8j"
+    },
+    {
+     "reason": "tool-calls",
+     "snapshot": "6f1a00423a7ee723365316c2c7697c97538b72c7",
+     "type": "step-finish",
+     "tokens": {
+      "total": 25446,
+      "input": 8986,
+      "output": 59,
+      "reasoning": 74,
+      "cache": {
+       "write": 0,
+       "read": 16327
+      }
+     },
+     "cost": 0.00351811,
+     "id": "prt_0cc8b52760019Lzz36vaR8RaHC",
+     "sessionID": "ses_f3374e882ffenhMKEo3sBlbmjA",
+     "messageID": "msg_0cc8b4ab1001h46sEvAPytEJ8j"
+    }
+   ]
+  },
+  {
+   "info": {
+    "parentID": "msg_0cc8b178d001qVP5x9a9RbgFPx",
+    "role": "assistant",
+    "mode": "build",
+    "agent": "build",
+    "path": {
+     "cwd": "C:\\Users\\acura\\Desktop\\Trabalho Final Queiroz\\ProjetoSemanaAcademica\\semana-academica",
+     "root": "C:\\Users\\acura\\Desktop\\Trabalho Final Queiroz\\ProjetoSemanaAcademica"
+    },
+    "cost": 0.00411398,
+    "tokens": {
+     "total": 27556,
+     "input": 11114,
+     "output": 48,
+     "reasoning": 68,
+     "cache": {
+      "write": 0,
+      "read": 16326
+     }
+    },
+    "modelID": "gemini-3.5-flash-lite",
+    "providerID": "google",
+    "time": {
+     "created": 1790138078162,
+     "completed": 1790138080979
+    },
+    "finish": "tool-calls",
+    "id": "msg_0cc8b53d2001pokYa5BcdbU8gg",
+    "sessionID": "ses_f3374e882ffenhMKEo3sBlbmjA"
+   },
+   "parts": [
+    {
+     "snapshot": "6f1a00423a7ee723365316c2c7697c97538b72c7",
+     "type": "step-start",
+     "id": "prt_0cc8b5c10001rgP7AAKJUKi7Cl",
+     "sessionID": "ses_f3374e882ffenhMKEo3sBlbmjA",
+     "messageID": "msg_0cc8b53d2001pokYa5BcdbU8gg"
+    },
+    {
+     "type": "tool",
+     "tool": "read",
+     "callID": "BA7qpWDveqTFey1G",
+     "state": {
+      "status": "completed",
+      "input": {
+       "filePath": "C:\\Users\\acura\\Desktop\\Trabalho Final Queiroz\\ProjetoSemanaAcademica\\semana-academica\\api\\package.json"
+      },
+      "output": "[540 caracteres omitidos]",
+      "title": "semana-academica\\api\\package.json",
+      "time": {
+       "start": 1790138080278,
+       "end": 1790138080283
+      }
+     },
+     "metadata": {
+      "google": {
+       "thoughtSignature": "EvQCCvECAWkUfRMKGVzDA0uXDsIKyuQ4dGwQf9UxOFV+VyfvVTLFaNXpxKFIiR0nH+gBuRUU7Z94O3Qr8H47iIbqjqD2sjaZbsfingpsDEPzoA8NR6+N4djOQ1pvlZnzi/QXrmkj9atyQgzn1dBSPQ/csezmngnt28ZN2aZcy8prQt+eDFcjOun6hpGCoXfvPd2QuphG1LUQmHZ5v9lnrc90p6cl20PbJuOHrGsPKBSGs8DyjoaAXu9F1j2Q9VLd6x7cN/gMH9Ze8eY58pQr4CBisGFszVORWyzPNKA5MlgpGtIDDB1a2LpkFUPcCVrU4ae7MVOOijsAZEVcwHzmWcLyhMtkYfbTKicPH4EFH48fPbVnlOcuoskGfDvX8TYLrpfOO/wQq5XS2PsRTVhFaI/l5OzSkg91T4Wjy17uiCdip1QzJOkdpmo2gDKQktn8U0frYuUvGHGNLXeEG/RNsMyqgEdk5ZC4lWzWz8mRXqysnS9w4iNS"
+      }
+     },
+     "id": "prt_0cc8b5c12001Re2xCbKjjKXx6t",
+     "sessionID": "ses_f3374e882ffenhMKEo3sBlbmjA",
+     "messageID": "msg_0cc8b53d2001pokYa5BcdbU8gg"
+    },
+    {
+     "reason": "tool-calls",
+     "snapshot": "6f1a00423a7ee723365316c2c7697c97538b72c7",
+     "type": "step-finish",
+     "tokens": {
+      "total": 27556,
+      "input": 11114,
+      "output": 48,
+      "reasoning": 68,
+      "cache": {
+       "write": 0,
+       "read": 16326
+      }
+     },
+     "cost": 0.00411398,
+     "id": "prt_0cc8b5d74001y76QDKEPljcM7X",
+     "sessionID": "ses_f3374e882ffenhMKEo3sBlbmjA",
+     "messageID": "msg_0cc8b53d2001pokYa5BcdbU8gg"
+    }
+   ]
+  },
+  {
+   "info": {
+    "parentID": "msg_0cc8b178d001qVP5x9a9RbgFPx",
+    "role": "assistant",
+    "mode": "build",
+    "agent": "build",
+    "path": {
+     "cwd": "C:\\Users\\acura\\Desktop\\Trabalho Final Queiroz\\ProjetoSemanaAcademica\\semana-academica",
+     "root": "C:\\Users\\acura\\Desktop\\Trabalho Final Queiroz\\ProjetoSemanaAcademica"
+    },
+    "cost": 0.00408303,
+    "tokens": {
+     "total": 27859,
+     "input": 11478,
+     "output": 48,
+     "reasoning": 12,
+     "cache": {
+      "write": 0,
+      "read": 16321
+     }
+    },
+    "modelID": "gemini-3.5-flash-lite",
+    "providerID": "google",
+    "time": {
+     "created": 1790138080983,
+     "completed": 1790138083248
+    },
+    "finish": "tool-calls",
+    "id": "msg_0cc8b5ed7001PQZLehhDm0KPO6",
+    "sessionID": "ses_f3374e882ffenhMKEo3sBlbmjA"
+   },
+   "parts": [
+    {
+     "snapshot": "6f1a00423a7ee723365316c2c7697c97538b72c7",
+     "type": "step-start",
+     "id": "prt_0cc8b6505001A9M8xGAKnr99NZ",
+     "sessionID": "ses_f3374e882ffenhMKEo3sBlbmjA",
+     "messageID": "msg_0cc8b5ed7001PQZLehhDm0KPO6"
+    },
+    {
+     "type": "tool",
+     "tool": "read",
+     "callID": "QqNG64ZnB3zv9tgP",
+     "state": {
+      "status": "completed",
+      "input": {
+       "filePath": "C:\\Users\\acura\\Desktop\\Trabalho Final Queiroz\\ProjetoSemanaAcademica\\semana-academica\\app\\package.json"
+      },
+      "output": "[1140 caracteres omitidos]",
+      "title": "semana-academica\\app\\package.json",
+      "time": {
+       "start": 1790138082570,
+       "end": 1790138082576
+      }
+     },
+     "metadata": {
+      "google": {
+       "thoughtSignature": "EoMBCoABAWkUfROwwbruKc+pdW9P0S1PLBFZfE5YM28zy3CpizAS21cHDyxBGklDkpC0TSp0e3k+QklJCkEtbMsqOmUX3i5QggjRleKKejnAmhsAblTDTxyoEAmXyy+Ynk7IAdX2yYHlh81ah/AsaWNaVuV9aoHu+V0lsV884KPymXz6IMU="
+      }
+     },
+     "id": "prt_0cc8b65060017yBY6vg4NeWiZ5",
+     "sessionID": "ses_f3374e882ffenhMKEo3sBlbmjA",
+     "messageID": "msg_0cc8b5ed7001PQZLehhDm0KPO6"
+    },
+    {
+     "reason": "tool-calls",
+     "snapshot": "6f1a00423a7ee723365316c2c7697c97538b72c7",
+     "type": "step-finish",
+     "tokens": {
+      "total": 27859,
+      "input": 11478,
+      "output": 48,
+      "reasoning": 12,
+      "cache": {
+       "write": 0,
+       "read": 16321
+      }
+     },
+     "cost": 0.00408303,
+     "id": "prt_0cc8b6667001bToqjU5uQzGLLB",
+     "sessionID": "ses_f3374e882ffenhMKEo3sBlbmjA",
+     "messageID": "msg_0cc8b5ed7001PQZLehhDm0KPO6"
+    }
+   ]
+  },
+  {
+   "info": {
+    "parentID": "msg_0cc8b178d001qVP5x9a9RbgFPx",
+    "role": "assistant",
+    "mode": "build",
+    "agent": "build",
+    "path": {
+     "cwd": "C:\\Users\\acura\\Desktop\\Trabalho Final Queiroz\\ProjetoSemanaAcademica\\semana-academica",
+     "root": "C:\\Users\\acura\\Desktop\\Trabalho Final Queiroz\\ProjetoSemanaAcademica"
+    },
+    "cost": 0.00432728,
+    "tokens": {
+     "total": 28412,
+     "input": 12001,
+     "output": 52,
+     "reasoning": 43,
+     "cache": {
+      "write": 0,
+      "read": 16316
+     }
+    },
+    "modelID": "gemini-3.5-flash-lite",
+    "providerID": "google",
+    "time": {
+     "created": 1790138083251,
+     "completed": 1790138088063
+    },
+    "finish": "tool-calls",
+    "id": "msg_0cc8b67b3001QOu1ppzUbP2RyI",
+    "sessionID": "ses_f3374e882ffenhMKEo3sBlbmjA"
+   },
+   "parts": [
+    {
+     "snapshot": "6f1a00423a7ee723365316c2c7697c97538b72c7",
+     "type": "step-start",
+     "id": "prt_0cc8b6e850012xYMqW0E6K0yVy",
+     "sessionID": "ses_f3374e882ffenhMKEo3sBlbmjA",
+     "messageID": "msg_0cc8b67b3001QOu1ppzUbP2RyI"
+    },
+    {
+     "type": "tool",
+     "tool": "bash",
+     "callID": "eHDN4dk4nW6M67zz",
+     "state": {
+      "status": "completed",
+      "input": {
+       "workdir": "C:\\Users\\acura\\Desktop\\Trabalho Final Queiroz\\ProjetoSemanaAcademica\\semana-academica\\api",
+       "command": "npm test"
+      },
+      "output": "\n> semana-academica-api@1.0.0 test\n> node --test verificacoes/**/*.spec.js\n\nTAP version 13\n# (node:16472) ExperimentalWarning: SQLite is an experimental feature and might change at any time\n# (Use `node --trace-warnings ...` to show where the warning was created)\n# Subtest: Critério 9b: PATCH alterando só título numa atividade cancelada retorna 422 ATIVIDADE_CANCELADA\nok 1 - Critério 9b: PATCH alterando só título numa atividade cancelada retorna 422 ATIVIDADE_CANCELADA\n  ---\n  duration_ms: 198.7424\n  type: 'test'\n  ...\n# Subtest: Critério 12: cancelar atividade já iniciada (não cancelada) retorna 422 ATIVIDADE_JA_INICIADA\nok 2 - Critério 12: cancelar atividade já iniciada (não cancelada) retorna 422 ATIVIDADE_JA_INICIADA\n  ---\n  duration_ms: 63.5384\n  type: 'test'\n  ...\n# Subtest: Critério 12b: cancelar atividade já cancelada retorna 422 ATIVIDADE_CANCELADA\nok 3 - Critério 12b: cancelar atividade já cancelada retorna 422 ATIVIDADE_CANCELADA\n  ---\n  duration_ms: 43.0801\n  type: 'test'\n  ...\n# Subtest: Critério 12c: cancelar atividade já iniciada E já cancelada retorna 422 ATIVIDADE_CANCELADA provando a ordem\nok 4 - Critério 12c: cancelar atividade já iniciada E já cancelada retorna 422 ATIVIDADE_CANCELADA provando a ordem\n  ---\n  duration_ms: 114.6817\n  type: 'test'\n  ...\n# Subtest: Critério 16: situacao exatamente no instante do fim do último encontro é encerrada, não em_andamento\nok 5 - Critério 16: situacao exatamente no instante do fim do último encontro é encerrada, não em_andamento\n  ---\n  duration_ms: 51.524\n  type: 'test'\n  ...\n# (node:25468) ExperimentalWarning: SQLite is an experimental feature and might change at any time\n# (Use `node --trace-warnings ...` to show where the warning was created)\n# Subtest: GET /salas retorna a lista de salas\nok 6 - GET /salas retorna a lista de salas\n  ---\n  duration_ms: 143.4061\n  type: 'test'\n  ...\n# Subtest: GET /atividades filtra por dia e tipo, ordena por R10 e calcula situacao por R12\nok 7 - GET /atividades filtra por dia e tipo, ordena por R10 e calcula situacao por R12\n  ---\n  duration_ms: 249.5346\n  type: 'test'\n  ...\n# Subtest: GET /atividades inclui atividades canceladas na listagem (R10)\nok 8 - GET /atividades inclui atividades canceladas na listagem (R10)\n  ---\n  duration_ms: 50.1829\n  type: 'test'\n  ...\n# (node:29992) ExperimentalWarning: SQLite is an experimental feature and might change at any time\n# (Use `node --trace-warnings ...` to show where the warning was created)\n# Subtest: POST /atividades por participante retorna 403 SOMENTE_ORGANIZACAO\nok 9 - POST /atividades por participante retorna 403 SOMENTE_ORGANIZACAO\n  ---\n  duration_ms: 191.0291\n  type: 'test'\n  ...\n# Subtest: POST /atividades com minicurso contendo 1 encontro retorna 422 QUANTIDADE_DE_ENCONTROS\nok 10 - POST /atividades com minicurso contendo 1 encontro retorna 422 QUANTIDADE_DE_ENCONTROS\n  ---\n  duration_ms: 77.7985\n  type: 'test'\n  ...\n# Subtest: POST /atividades com palestra contendo 2 encontros retorna 422 QUANTIDADE_DE_ENCONTROS\nok 11 - POST /atividades com palestra contendo 2 encontros retorna 422 QUANTIDADE_DE_ENCONTROS\n  ---\n  duration_ms: 37.5318\n  type: 'test'\n  ...\n# Subtest: POST /atividades com encontro de 30 minutos retorna 422 ENCONTRO_INVALIDO\nok 12 - POST /atividades com encontro de 30 minutos retorna 422 ENCONTRO_INVALIDO\n  ---\n  duration_ms: 17.0684\n  type: 'test'\n  ...\n# Subtest: POST /atividades com encontro fora do período do evento retorna 422 ENCONTRO_INVALIDO\nok 13 - POST /atividades com encontro fora do período do evento retorna 422 ENCONTRO_INVALIDO\n  ---\n  duration_ms: 45.0428\n  type: 'test'\n  ...\n# Subtest: POST /atividades com vagas acima da capacidade da sala retorna 422 VAGAS_ACIMA_DA_CAPACIDADE\nok 14 - POST /atividades com vagas acima da capacidade da sala retorna 422 VAGAS_ACIMA_DA_CAPACIDADE\n  ---\n  duration_ms: 17.3467\n  type: 'test'\n  ...\n# Subtest: POST /atividades com conflito de sala (menos de 15 min de intervalo) retorna 409 CONFLITO_DE_SALA\nok 15 - POST /atividades com conflito de sala (menos de 15 min de intervalo) retorna 409 CONFLITO_DE_SALA\n  ---\n  duration_ms: 44.9368\n  type: 'test'\n  ...\n# Subtest: POST /atividades com sucesso calcula cargaHorariaMinutos corretamente e ignora valor enviado (R5)\nok 16 - POST /atividades com sucesso calcula cargaHorariaMinutos corretamente e ignora valor enviado (R5)\n  ---\n  duration_ms: 22.5237\n  type: 'test'\n  ...\n# Subtest: POST /atividades com encontro de 5 horas retorna 422 ENCONTRO_INVALIDO\nok 17 - POST /atividades com encontro de 5 horas retorna 422 ENCONTRO_INVALIDO\n  ---\n  duration_ms: 23.3831\n  type: 'test'\n  ...\n# Subtest: POST /atividades com encontro cruzando a meia-noite retorna 422 ENCONTRO_INVALIDO\nok 18 - POST /atividades com encontro cruzando a meia-noite retorna 422 ENCONTRO_INVALIDO\n  ---\n  duration_ms: 20.4862\n  type: 'test'\n  ...\n# Subtest: POST /atividades com encontros sobrepostos na mesma atividade retorna 422 ENCONTRO_INVALIDO\nok 19 - POST /atividades com encontros sobrepostos na mesma atividade retorna 422 ENCONTRO_INVALIDO\n  ---\n  duration_ms: 13.5343\n  type: 'test'\n  ...\n# Subtest: POST /atividades com vagas <= 0 retorna 422 VAGAS_ACIMA_DA_CAPACIDADE\nok 20 - POST /atividades com vagas <= 0 retorna 422 VAGAS_ACIMA_DA_CAPACIDADE\n  ---\n  duration_ms: 13.8588\n  type: 'test'\n  ...\n# Subtest: POST /atividades com horário conflitante em sala cuja atividade existente está cancelada permite criar (201)\nok 21 - POST /atividades com horário conflitante em sala cuja atividade existente está cancelada permite criar (201)\n  ---\n  duration_ms: 29.8124\n  type: 'test'\n  ...\n# (node:34896) ExperimentalWarning: SQLite is an experimental feature and might change at any time\n# (Use `node --trace-warnings ...` to show where the warning was created)\n# Subtest: PATCH /atividades/:id por participante retorna 403 SOMENTE_ORGANIZACAO\nok 22 - PATCH /atividades/:id por participante retorna 403 SOMENTE_ORGANIZACAO\n  ---\n  duration_ms: 164.6947\n  type: 'test'\n  ...\n# Subtest: PATCH /atividades/:id alterando salaId, tipo ou encontros retorna 422 CAMPO_NAO_EDITAVEL\nok 23 - PATCH /atividades/:id alterando salaId, tipo ou encontros retorna 422 CAMPO_NAO_EDITAVEL\n  ---\n  duration_ms: 44.8937\n  type: 'test'\n  ...\n# Subtest: PATCH /atividades/:id alterando titulo e vagas válidos retorna 200 Atividade\nok 24 - PATCH /atividades/:id alterando titulo e vagas válidos retorna 200 Atividade\n  ---\n  duration_ms: 60.2068\n  type: 'test'\n  ...\n# Subtest: PATCH /atividades/:id definindo vagas <= 0 retorna 422 VAGAS_ACIMA_DA_CAPACIDADE\nok 25 - PATCH /atividades/:id definindo vagas <= 0 retorna 422 VAGAS_ACIMA_DA_CAPACIDADE\n  ---\n  duration_ms: 56.518\n  type: 'test'\n  ...\n# Subtest: R7: PATCH /atividades/:id reduzindo vagas abaixo das inscrições ocupadas retorna 409 VAGAS_ABAIXO_DOS_INSCRITOS [via stub M2]\nok 26 - R7: PATCH /atividades/:id reduzindo vagas abaixo das inscrições ocupadas retorna 409 VAGAS_ABAIXO_DOS_INSCRITOS [via stub M2]\n  ---\n  duration_ms: 43.3307\n  type: 'test'\n  ...\n# Subtest: PATCH /atividades/:id alterando tipo retorna 422 CAMPO_NAO_EDITAVEL\nok 27 - PATCH /atividades/:id alterando tipo retorna 422 CAMPO_NAO_EDITAVEL\n  ---\n  duration_ms: 32.856\n  type: 'test'\n  ...\n# Subtest: PATCH /atividades/:id alterando encontros retorna 422 CAMPO_NAO_EDITAVEL\nok 28 - PATCH /atividades/:id alterando encontros retorna 422 CAMPO_NAO_EDITAVEL\n  ---\n  duration_ms: 31.0156\n  type: 'test'\n  ...\n# (node:26140) ExperimentalWarning: SQLite is an experimental feature and might change at any time\n# (Use `node --trace-warnings ...` to show where the warning was created)\n# Subtest: POST /atividades/:id/cancelamento por participante retorna 403 SOMENTE_ORGANIZACAO\nok 29 - POST /atividades/:id/cancelamento por participante retorna 403 SOMENTE_ORGANIZACAO\n  ---\n  duration_ms: 187.8711\n  type: 'test'\n  ...\n# Subtest: POST /atividades/:id/cancelamento com sucesso por organizador retorna 200 Atividade cancelada\nok 30 - POST /atividades/:id/cancelamento com sucesso por organizador retorna 200 Atividade cancelada\n  ---\n  duration_ms: 56.3554\n  type: 'test'\n  ...\n# Subtest: POST /atividades/:id/cancelamento em atividade que já iniciou retorna 422 ATIVIDADE_JA_INICIADA\nok 31 - POST /atividades/:id/cancelamento em atividade que já iniciou retorna 422 ATIVIDADE_JA_INICIADA\n  ---\n  duration_ms: 94.9931\n  type: 'test'\n  ...\n# Subtest: POST /atividades/:id/cancelamento em atividade já cancelada retorna 422 ATIVIDADE_CANCELADA\nok 32 - POST /atividades/:id/cancelamento em atividade já cancelada retorna 422 ATIVIDADE_CANCELADA\n  ---\n  duration_ms: 30.6192\n  type: 'test'\n  ...\n# Subtest: POST /atividades/:id/cancelamento em atividade que já iniciou E já está cancelada retorna 422 ATIVIDADE_CANCELADA (prova a ordem)\nok 33 - POST /atividades/:id/cancelamento em atividade que já iniciou E já está cancelada retorna 422 ATIVIDADE_CANCELADA (prova a ordem)\n  ---\n  duration_ms: 42.9086\n  type: 'test'\n  ...\n# (node:34760) ExperimentalWarning: SQLite is an experimental feature and might change at any time\n# (Use `node --trace-warnings ...` to show where the warning was created)\n# Subtest: participante realiza inscricao direta com vaga disponivel (R3)\nok 34 - participante realiza inscricao direta com vaga disponivel (R3)\n  ---\n  duration_ms: 208.2563\n  type: 'test'\n  ...\n# Subtest: participante realiza inscricao em espera quando atividade esta lotada (R3)\nok 35 - participante realiza inscricao em espera quando atividade esta lotada (R3)\n  ---\n  duration_ms: 67.693\n  type: 'test'\n  ...\n# Subtest: inscricao realizada apos o fechamento retorna 422 INSCRICOES_ENCERRADAS (R1)\nok 36 - inscricao realizada apos o fechamento retorna 422 INSCRICOES_ENCERRADAS (R1)\n  ---\n  duration_ms: 40.8025\n  type: 'test'\n  ...\n# Subtest: usuario da organizacao tentando realizar inscricao recebe 403 SOMENTE_PARTICIPANTE (R9)\nok 37 - usuario da organizacao tentando realizar inscricao recebe 403 SOMENTE_PARTICIPANTE (R9)\n  ---\n  duration_ms: 49.1314\n  type: 'test'\n  ...\n# Subtest: participante tenta realizar nova inscricao em atividade que ja possui inscricao ativa retorna 409 JA_INSCRITO (R2)\nok 38 - participante tenta realizar nova inscricao em atividade que ja possui inscricao ativa retorna 409 JA_INSCRITO (R2)\n  ---\n  duration_ms: 66.1567\n  type: 'test'\n  ...\n# (node:28640) ExperimentalWarning: SQLite is an experimental feature and might change at any time\n# (Use `node --trace-warnings ...` to show where the warning was created)\n# Subtest: participante tenta inscricao direta com sobreposicao de horario de outra atividade confirmada retorna 409 CONFLITO_DE_HORARIO (R4)\nok 39 - participante tenta inscricao direta com sobreposicao de horario de outra atividade confirmada retorna 409 CONFLITO_DE_HORARIO (R4)\n  ---\n  duration_ms: 298.8811\n  type: 'test'\n  ...\n# Subtest: participante realiza inscricao em horario que apenas encosta (10:00-12:00 e 12:00-14:00) com sucesso (R4)\nok 40 - participante realiza inscricao em horario que apenas encosta (10:00-12:00 e 12:00-14:00) com sucesso (R4)\n  ---\n  duration_ms: 111.9156\n  type: 'test'\n  ...\n# Subtest: participante tenta inscricao direta em um 4.º minicurso ocupando vaga retorna 422 LIMITE_DE_MINICURSOS (R5)\nok 41 - participante tenta inscricao direta em um 4.º minicurso ocupando vaga retorna 422 LIMITE_DE_MINICURSOS (R5)\n  ---\n  duration_ms: 134.7496\n  type: 'test'\n  ...\n# Subtest: minicursos em espera e palestras nao contam para o limite de minicursos (R5, Criterio 11)\nok 42 - minicursos em espera e palestras nao contam para o limite de minicursos (R5, Criterio 11)\n  ---\n  duration_ms: 137.3963\n  type: 'test'\n  ...\n# (node:25112) ExperimentalWarning: SQLite is an experimental feature and might change at any time\n# (Use `node --trace-warnings ...` to show where the warning was created)\n# Subtest: participante tenta cancelar inscricao apos o inicio da atividade retorna 422 ATIVIDADE_JA_INICIADA (R8)\nok 43 - participante tenta cancelar inscricao apos o inicio da atividade retorna 422 ATIVIDADE_JA_INICIADA (R8)\n  ---\n  duration_ms: 220.8454\n  type: 'test'\n  ...\n# Subtest: participante tenta cancelar inscricao ja cancelada retorna 422 INSCRICAO_INATIVA (R8)\nok 44 - participante tenta cancelar inscricao ja cancelada retorna 422 INSCRICAO_INATIVA (R8)\n  ---\n  duration_ms: 137.416\n  type: 'test'\n  ...\n# Subtest: participante tenta cancelar inscricao de outro participante retorna 404 NAO_ENCONTRADO (R2, Criterio 5)\nok 45 - participante tenta cancelar inscricao de outro participante retorna 404 NAO_ENCONTRADO (R2, Criterio 5)\n  ---\n  duration_ms: 57.2187\n  type: 'test'\n  ...\n# Subtest: usuario da organizacao tenta cancelar inscricao retorna 403 SOMENTE_PARTICIPANTE (R9)\nok 46 - usuario da organizacao tenta cancelar inscricao retorna 403 SOMENTE_PARTICIPANTE (R9)\n  ---\n  duration_ms: 54.5692\n  type: 'test'\n  ...\n# (node:35100) ExperimentalWarning: SQLite is an experimental feature and might change at any time\n# (Use `node --trace-warnings ...` to show where the warning was created)\n# Subtest: cancelamento de inscricao confirmada convoca automaticamente o primeiro da espera com status convocada e prazo de 2 horas (R6, Criterio 12)\nok 47 - cancelamento de inscricao confirmada convoca automaticamente o primeiro da espera com status convocada e prazo de 2 horas (R6, Criterio 12)\n  ---\n  duration_ms: 330.6878\n  type: 'test'\n  ...\n# Subtest: tentativa de confirmar inscricao sem convocacao retorna 422 SEM_CONVOCACAO (R7, Criterio 13)\nok 48 - tentativa de confirmar inscricao sem convocacao retorna 422 SEM_CONVOCACAO (R7, Criterio 13)\n  ---\n  duration_ms: 65.9336\n  type: 'test'\n  ...\n# Subtest: confirmacao valida de convocacao retorna 200 com status confirmada (R7, Criterio 14)\nok 49 - confirmacao valida de convocacao retorna 200 com status confirmada (R7, Criterio 14)\n  ---\n  duration_ms: 90.8116\n  type: 'test'\n  ...\n# Subtest: tentativa de confirmar apos convocadaAte retorna 422 CONVOCACAO_EXPIRADA e convoca proximo em cascata (R6, R7, Criterio 13)\nok 50 - tentativa de confirmar apos convocadaAte retorna 422 CONVOCACAO_EXPIRADA e convoca proximo em cascata (R6, R7, Criterio 13)\n  ---\n  duration_ms: 73.3648\n  type: 'test'\n  ...\n# (node:27452) ExperimentalWarning: SQLite is an experimental feature and might change at any time\n# (Use `node --trace-warnings ...` to show where the warning was created)\n# Subtest: GET /encontros/:id/codigo dentro da janela valida retorna 200 com CodigoDoEncontro (R1)\nok 51 - GET /encontros/:id/codigo dentro da janela valida retorna 200 com CodigoDoEncontro (R1)\n  ---\n  duration_ms: 259.3744\n  type: 'test'\n  ...\n# Subtest: GET /encontros/:id/codigo fora da janela de registro (mais de 15 min antes) retorna 422 FORA_DA_JANELA (R1)\nok 52 - GET /encontros/:id/codigo fora da janela de registro (mais de 15 min antes) retorna 422 FORA_DA_JANELA (R1)\n  ---\n  duration_ms: 53.2553\n  type: 'test'\n  ...\n# Subtest: GET /encontros/:id/codigo fora da janela de registro (mais de 30 min depois) retorna 422 FORA_DA_JANELA (R1)\nok 53 - GET /encontros/:id/codigo fora da janela de registro (mais de 30 min depois) retorna 422 FORA_DA_JANELA (R1)\n  ---\n  duration_ms: 45.1608\n  type: 'test'\n  ...\n# Subtest: GET /encontros/:id/codigo com atividade cancelada retorna 422 ATIVIDADE_CANCELADA (R1)\nok 54 - GET /encontros/:id/codigo com atividade cancelada retorna 422 ATIVIDADE_CANCELADA (R1)\n  ---\n  duration_ms: 45.2074\n  type: 'test'\n  ...\n# Subtest: GET /encontros/:id/codigo por participante retorna 403 SOMENTE_ORGANIZACAO (R7)\nok 55 - GET /encontros/:id/codigo por participante retorna 403 SOMENTE_ORGANIZACAO (R7)\n  ---\n  duration_ms: 48.2955\n  type: 'test'\n  ...\n# (node:35676) ExperimentalWarning: SQLite is an experimental feature and might change at any time\n# (Use `node --trace-warnings ...` to show where the warning was created)\n# Subtest: POST /encontros/:id/presencas por usuario da organizacao retorna 403 SOMENTE_PARTICIPANTE (R7)\nok 56 - POST /encontros/:id/presencas por usuario da organizacao retorna 403 SOMENTE_PARTICIPANTE (R7)\n  ---\n  duration_ms: 339.9496\n  type: 'test'\n  ...\n# Subtest: POST /encontros/:id/presencas por participante sem inscricao confirmada retorna 403 NAO_INSCRITO (R4)\nok 57 - POST /encontros/:id/presencas por participante sem inscricao confirmada retorna 403 NAO_INSCRITO (R4)\n  ---\n  duration_ms: 39.7405\n  type: 'test'\n  ...\n# Subtest: POST /encontros/:id/presencas com codigo valido retorna 201 na primeira vez e 200 nas subsequentes (R2)\nok 58 - POST /encontros/:id/presencas com codigo valido retorna 201 na primeira vez e 200 nas subsequentes (R2)\n  ---\n  duration_ms: 95.7199\n  type: 'test'\n  ...\n# Subtest: POST /encontros/:id/presencas com codigo invalido retorna 422 CODIGO_INVALIDO (R2)\nok 59 - POST /encontros/:id/presencas com codigo invalido retorna 422 CODIGO_INVALIDO (R2)\n  ---\n  duration_ms: 48.8095\n  type: 'test'\n  ...\n# Subtest: POST /encontros/:id/presencas com lidoEm (offline) validando janela e codigo e aceitando tolerancia do minuto anterior (R2)\nok 60 - POST /encontros/:id/presencas com lidoEm (offline) validando janela e codigo e aceitando tolerancia do minuto anterior (R2)\n  ---\n  duration_ms: 105.2798\n  type: 'test'\n  ...\n# Subtest: POST /encontros/:id/presencas com lidoEm enviado mais de 2 horas apos o fim do encontro retorna 422 SINCRONIZACAO_TARDIA (R3)\nok 61 - POST /encontros/:id/presencas com lidoEm enviado mais de 2 horas apos o fim do encontro retorna 422 SINCRONIZACAO_TARDIA (R3)\n  ---\n  duration_ms: 107.1125\n  type: 'test'\n  ...\n# (node:21512) ExperimentalWarning: SQLite is an experimental feature and might change at any time\n# (Use `node --trace-warnings ...` to show where the warning was created)\n# Subtest: POST /encontros/:id/presencas/manual por participante retorna 403 SOMENTE_ORGANIZACAO (R7)\nok 62 - POST /encontros/:id/presencas/manual por participante retorna 403 SOMENTE_ORGANIZACAO (R7)\n  ---\n  duration_ms: 95.5012\n  type: 'test'\n  ...\n# Subtest: GET /encontros/:id/presencas por participante retorna 403 SOMENTE_ORGANIZACAO (R6, R7)\nok 63 - GET /encontros/:id/presencas por participante retorna 403 SOMENTE_ORGANIZACAO (R6, R7)\n  ---\n  duration_ms: 42.7551\n  type: 'test'\n  ...\n# Subtest: POST /encontros/:id/presencas/manual por participante sem inscricao confirmada retorna 403 NAO_INSCRITO (R4)\nok 64 - POST /encontros/:id/presencas/manual por participante sem inscricao confirmada retorna 403 NAO_INSCRITO (R4)\n  ---\n  duration_ms: 32.4867\n  type: 'test'\n  ...\n# Subtest: POST /encontros/:id/presencas/manual com justificativa com menos de 10 caracteres ou ausente retorna 422 JUSTIFICATIVA_OBRIGATORIA (R5)\nok 65 - POST /encontros/:id/presencas/manual com justificativa com menos de 10 caracteres ou ausente retorna 422 JUSTIFICATIVA_OBRIGATORIA (R5)\n  ---\n  duration_ms: 59.1615\n  type: 'test'\n  ...\n# Subtest: POST /encontros/:id/presencas/manual com sucesso retorna 201 na primeira vez e 200 nas subsequentes/duplicadas (R5)\nok 66 - POST /encontros/:id/presencas/manual com sucesso retorna 201 na primeira vez e 200 nas subsequentes/duplicadas (R5)\n  ---\n  duration_ms: 47.8897\n  type: 'test'\n  ...\n# Subtest: GET /encontros/:id/presencas pela organizacao retorna 200 com [Presenca] (R6)\nok 67 - GET /encontros/:id/presencas pela organizacao retorna 200 com [Presenca] (R6)\n  ---\n  duration_ms: 60.9467\n  type: 'test'\n  ...\n# Subtest: POST /encontros/:id/presencas/manual excedendo o limite de 10% das inscricoes confirmadas retorna 422 LIMITE_DE_MANUAIS (R5)\nok 68 - POST /encontros/:id/presencas/manual excedendo o limite de 10% das inscricoes confirmadas retorna 422 LIMITE_DE_MANUAIS (R5)\n  ---\n  duration_ms: 76.9555\n  type: 'test'\n  ...\n# (node:34084) ExperimentalWarning: SQLite is an experimental feature and might change at any time\n# (Use `node --trace-warnings ...` to show where the warning was created)\n# Subtest: POST /atividades/:id/certificado por usuario da organizacao retorna 403 (R6)\nok 69 - POST /atividades/:id/certificado por usuario da organizacao retorna 403 (R6)\n  ---\n  duration_ms: 98.4992\n  type: 'test'\n  ...\n# Subtest: POST /atividades/:id/certificado antes do fim do ultimo encontro retorna 422 ATIVIDADE_NAO_ENCERRADA (R2)\nok 70 - POST /atividades/:id/certificado antes do fim do ultimo encontro retorna 422 ATIVIDADE_NAO_ENCERRADA (R2)\n  ---\n  duration_ms: 56.6269\n  type: 'test'\n  ...\n# Subtest: POST /atividades/:id/certificado com frequencia inferior a 75% retorna 422 PRESENCA_INSUFICIENTE (R1)\nok 71 - POST /atividades/:id/certificado com frequencia inferior a 75% retorna 422 PRESENCA_INSUFICIENTE (R1)\n  ---\n  duration_ms: 75.4779\n  type: 'test'\n  ...\n# Subtest: POST /atividades/:id/certificado com frequencia >= 75% gera certificado (201 na 1a, 200 nas seguintes) e GET /certificados lista (R3, R6)\nok 72 - POST /atividades/:id/certificado com frequencia >= 75% gera certificado (201 na 1a, 200 nas seguintes) e GET /certificados lista (R3, R6)\n  ---\n  duration_ms: 107.613\n  type: 'test'\n  ...\n# Subtest: GET /certificados sem autenticacao retorna 401 e por organizacao retorna 403 (R6)\nok 73 - GET /certificados sem autenticacao retorna 401 e por organizacao retorna 403 (R6)\n  ---\n  duration_ms: 13.9349\n  type: 'test'\n  ...\n# Subtest: GET /extrato sem autenticacao retorna 401 e por organizacao retorna 403 (R6)\nok 74 - GET /extrato sem autenticacao retorna 401 e por organizacao retorna 403 (R6)\n  ---\n  duration_ms: 15.4028\n  type: 'test'\n  ...\n# (node:35628) ExperimentalWarning: SQLite is an experimental feature and might change at any time\n# (Use `node --trace-warnings ...` to show where the warning was created)\n# Subtest: GET /extrato calcula extrato com somas brutas (R4, R6)\nok 75 - GET /extrato calcula extrato com somas brutas (R4, R6)\n  ---\n  duration_ms: 188.7912\n  type: 'test'\n  ...\n# Subtest: GET /extrato aplica tetos de aproveitamento (R4)\nok 76 - GET /extrato aplica tetos de aproveitamento (R4)\n  ---\n  duration_ms: 182.9287\n  type: 'test'\n  ...\n# (node:33800) ExperimentalWarning: SQLite is an experimental feature and might change at any time\n# (Use `node --trace-warnings ...` to show where the warning was created)\n# Subtest: GET /certificados/:codigo com código válido retorna 200 (R5)\nok 77 - GET /certificados/:codigo com código válido retorna 200 (R5)\n  ---\n  duration_ms: 161.7651\n  type: 'test'\n  ...\n# Subtest: GET /certificados/:codigo com código inexistente ou inválido retorna 404 (R5)\nok 78 - GET /certificados/:codigo com código inexistente ou inválido retorna 404 (R5)\n  ---\n  duration_ms: 11.938\n  type: 'test'\n  ...\n1..78\n# tests 78\n# suites 0\n# pass 78\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 1608.5928\n",
+      "metadata": {
+       "output": "\n> semana-academica-api@1.0.0 test\n> node --test verificacoes/**/*.spec.js\n\nTAP version 13\n# (node:16472) ExperimentalWarning: SQLite is an experimental feature and might change at any time\n# (Use `node --trace-warnings ...` to show where the warning was created)\n# Subtest: Critério 9b: PATCH alterando só título numa atividade cancelada retorna 422 ATIVIDADE_CANCELADA\nok 1 - Critério 9b: PATCH alterando só título numa atividade cancelada retorna 422 ATIVIDADE_CANCELADA\n  ---\n  duration_ms: 198.7424\n  type: 'test'\n  ...\n# Subtest: Critério 12: cancelar atividade já iniciada (não cancelada) retorna 422 ATIVIDADE_JA_INICIADA\nok 2 - Critério 12: cancelar atividade já iniciada (não cancelada) retorna 422 ATIVIDADE_JA_INICIADA\n  ---\n  duration_ms: 63.5384\n  type: 'test'\n  ...\n# Subtest: Critério 12b: cancelar atividade já cancelada retorna 422 ATIVIDADE_CANCELADA\nok 3 - Critério 12b: cancelar atividade já cancelada retorna 422 ATIVIDADE_CANCELADA\n  ---\n  duration_ms: 43.0801\n  type: 'test'\n  ...\n# Subtest: Critério 12c: cancelar atividade já iniciada E já cancelada retorna 422 ATIVIDADE_CANCELADA provando a ordem\nok 4 - Critério 12c: cancelar atividade já iniciada E já cancelada retorna 422 ATIVIDADE_CANCELADA provando a ordem\n  ---\n  duration_ms: 114.6817\n  type: 'test'\n  ...\n# Subtest: Critério 16: situacao exatamente no instante do fim do último encontro é encerrada, não em_andamento\nok 5 - Critério 16: situacao exatamente no instante do fim do último encontro é encerrada, não em_andamento\n  ---\n  duration_ms: 51.524\n  type: 'test'\n  ...\n# (node:25468) ExperimentalWarning: SQLite is an experimental feature and might change at any time\n# (Use `node --trace-warnings ...` to show where the warning was created)\n# Subtest: GET /salas retorna a lista de salas\nok 6 - GET /salas retorna a lista de salas\n  ---\n  duration_ms: 143.4061\n  type: 'test'\n  ...\n# Subtest: GET /atividades filtra por dia e tipo, ordena por R10 e calcula situacao por R12\nok 7 - GET /atividades filtra por dia e tipo, ordena por R10 e calcula situacao por R12\n  ---\n  duration_ms: 249.5346\n  type: 'test'\n  ...\n# Subtest: GET /atividades inclui atividades canceladas na listagem (R10)\nok 8 - GET /atividades inclui atividades canceladas na listagem (R10)\n  ---\n  duration_ms: 50.1829\n  type: 'test'\n  ...\n# (node:29992) ExperimentalWarning: SQLite is an experimental feature and might change at any time\n# (Use `node --trace-warnings ...` to show where the warning was created)\n# Subtest: POST /atividades por participante retorna 403 SOMENTE_ORGANIZACAO\nok 9 - POST /atividades por participante retorna 403 SOMENTE_ORGANIZACAO\n  ---\n  duration_ms: 191.0291\n  type: 'test'\n  ...\n# Subtest: POST /atividades com minicurso contendo 1 encontro retorna 422 QUANTIDADE_DE_ENCONTROS\nok 10 - POST /atividades com minicurso contendo 1 encontro retorna 422 QUANTIDADE_DE_ENCONTROS\n  ---\n  duration_ms: 77.7985\n  type: 'test'\n  ...\n# Subtest: POST /atividades com palestra contendo 2 encontros retorna 422 QUANTIDADE_DE_ENCONTROS\nok 11 - POST /atividades com palestra contendo 2 encontros retorna 422 QUANTIDADE_DE_ENCONTROS\n  ---\n  duration_ms: 37.5318\n  type: 'test'\n  ...\n# Subtest: POST /atividades com encontro de 30 minutos retorna 422 ENCONTRO_INVALIDO\nok 12 - POST /atividades com encontro de 30 minutos retorna 422 ENCONTRO_INVALIDO\n  ---\n  duration_ms: 17.0684\n  type: 'test'\n  ...\n# Subtest: POST /atividades com encontro fora do período do evento retorna 422 ENCONTRO_INVALIDO\nok 13 - POST /atividades com encontro fora do período do evento retorna 422 ENCONTRO_INVALIDO\n  ---\n  duration_ms: 45.0428\n  type: 'test'\n  ...\n# Subtest: POST /atividades com vagas acima da capacidade da sala retorna 422 VAGAS_ACIMA_DA_CAPACIDADE\nok 14 - POST /atividades com vagas acima da capacidade da sala retorna 422 VAGAS_ACIMA_DA_CAPACIDADE\n  ---\n  duration_ms: 17.3467\n  type: 'test'\n  ...\n# Subtest: POST /atividades com conflito de sala (menos de 15 min de intervalo) retorna 409 CONFLITO_DE_SALA\nok 15 - POST /atividades com conflito de sala (menos de 15 min de intervalo) retorna 409 CONFLITO_DE_SALA\n  ---\n  duration_ms: 44.9368\n  type: 'test'\n  ...\n# Subtest: POST /atividades com sucesso calcula cargaHorariaMinutos corretamente e ignora valor enviado (R5)\nok 16 - POST /atividades com sucesso calcula cargaHorariaMinutos corretamente e ignora valor enviado (R5)\n  ---\n  duration_ms: 22.5237\n  type: 'test'\n  ...\n# Subtest: POST /atividades com encontro de 5 horas retorna 422 ENCONTRO_INVALIDO\nok 17 - POST /atividades com encontro de 5 horas retorna 422 ENCONTRO_INVALIDO\n  ---\n  duration_ms: 23.3831\n  type: 'test'\n  ...\n# Subtest: POST /atividades com encontro cruzando a meia-noite retorna 422 ENCONTRO_INVALIDO\nok 18 - POST /atividades com encontro cruzando a meia-noite retorna 422 ENCONTRO_INVALIDO\n  ---\n  duration_ms: 20.4862\n  type: 'test'\n  ...\n# Subtest: POST /atividades com encontros sobrepostos na mesma atividade retorna 422 ENCONTRO_INVALIDO\nok 19 - POST /atividades com encontros sobrepostos na mesma atividade retorna 422 ENCONTRO_INVALIDO\n  ---\n  duration_ms: 13.5343\n  type: 'test'\n  ...\n# Subtest: POST /atividades com vagas <= 0 retorna 422 VAGAS_ACIMA_DA_CAPACIDADE\nok 20 - POST /atividades com vagas <= 0 retorna 422 VAGAS_ACIMA_DA_CAPACIDADE\n  ---\n  duration_ms: 13.8588\n  type: 'test'\n  ...\n# Subtest: POST /atividades com horário conflitante em sala cuja atividade existente está cancelada permite criar (201)\nok 21 - POST /atividades com horário conflitante em sala cuja atividade existente está cancelada permite criar (201)\n  ---\n  duration_ms: 29.8124\n  type: 'test'\n  ...\n# (node:34896) ExperimentalWarning: SQLite is an experimental feature and might change at any time\n# (Use `node --trace-warnings ...` to show where the warning was created)\n# Subtest: PATCH /atividades/:id por participante retorna 403 SOMENTE_ORGANIZACAO\nok 22 - PATCH /atividades/:id por participante retorna 403 SOMENTE_ORGANIZACAO\n  ---\n  duration_ms: 164.6947\n  type: 'test'\n  ...\n# Subtest: PATCH /atividades/:id alterando salaId, tipo ou encontros retorna 422 CAMPO_NAO_EDITAVEL\nok 23 - PATCH /atividades/:id alterando salaId, tipo ou encontros retorna 422 CAMPO_NAO_EDITAVEL\n  ---\n  duration_ms: 44.8937\n  type: 'test'\n  ...\n# Subtest: PATCH /atividades/:id alterando titulo e vagas válidos retorna 200 Atividade\nok 24 - PATCH /atividades/:id alterando titulo e vagas válidos retorna 200 Atividade\n  ---\n  duration_ms: 60.2068\n  type: 'test'\n  ...\n# Subtest: PATCH /atividades/:id definindo vagas <= 0 retorna 422 VAGAS_ACIMA_DA_CAPACIDADE\nok 25 - PATCH /atividades/:id definindo vagas <= 0 retorna 422 VAGAS_ACIMA_DA_CAPACIDADE\n  ---\n  duration_ms: 56.518\n  type: 'test'\n  ...\n# Subtest: R7: PATCH /atividades/:id reduzindo vagas abaixo das inscrições ocupadas retorna 409 VAGAS_ABAIXO_DOS_INSCRITOS [via stub M2]\nok 26 - R7: PATCH /atividades/:id reduzindo vagas abaixo das inscrições ocupadas retorna 409 VAGAS_ABAIXO_DOS_INSCRITOS [via stub M2]\n  ---\n  duration_ms: 43.3307\n  type: 'test'\n  ...\n# Subtest: PATCH /atividades/:id alterando tipo retorna 422 CAMPO_NAO_EDITAVEL\nok 27 - PATCH /atividades/:id alterando tipo retorna 422 CAMPO_NAO_EDITAVEL\n  ---\n  duration_ms: 32.856\n  type: 'test'\n  ...\n# Subtest: PATCH /atividades/:id alterando encontros retorna 422 CAMPO_NAO_EDITAVEL\nok 28 - PATCH /atividades/:id alterando encontros retorna 422 CAMPO_NAO_EDITAVEL\n  ---\n  duration_ms: 31.0156\n  type: 'test'\n  ...\n# (node:26140) ExperimentalWarning: SQLite is an experimental feature and might change at any time\n# (Use `node --trace-warnings ...` to show where the warning was created)\n# Subtest: POST /atividades/:id/cancelamento por participante retorna 403 SOMENTE_ORGANIZACAO\nok 29 - POST /atividades/:id/cancelamento por participante retorna 403 SOMENTE_ORGANIZACAO\n  ---\n  duration_ms: 187.8711\n  type: 'test'\n  ...\n# Subtest: POST /atividades/:id/cancelamento com sucesso por organizador retorna 200 Atividade cancelada\nok 30 - POST /atividades/:id/cancelamento com sucesso por organizador retorna 200 Atividade cancelada\n  ---\n  duration_ms: 56.3554\n  type: 'test'\n  ...\n# Subtest: POST /atividades/:id/cancelamento em atividade que já iniciou retorna 422 ATIVIDADE_JA_INICIADA\nok 31 - POST /atividades/:id/cancelamento em atividade que já iniciou retorna 422 ATIVIDADE_JA_INICIADA\n  ---\n  duration_ms: 94.9931\n  type: 'test'\n  ...\n# Subtest: POST /atividades/:id/cancelamento em atividade já cancelada retorna 422 ATIVIDADE_CANCELADA\nok 32 - POST /atividades/:id/cancelamento em atividade já cancelada retorna 422 ATIVIDADE_CANCELADA\n  ---\n  duration_ms: 30.6192\n  type: 'test'\n  ...\n# Subtest: POST /atividades/:id/cancelamento em atividade que já iniciou E já está cancelada retorna 422 ATIVIDADE_CANCELADA (prova a ordem)\nok 33 - POST /atividades/:id/cancelamento em atividade que já iniciou E já está cancelada retorna 422 ATIVIDADE_CANCELADA (prova a ordem)\n  ---\n  duration_ms: 42.9086\n  type: 'test'\n  ...\n# (node:34760) ExperimentalWarning: SQLite is an experimental feature and might change at any time\n# (Use `node --trace-warnings ...` to show where the warning was created)\n# Subtest: participante realiza inscricao direta com vaga disponivel (R3)\nok 34 - participante realiza inscricao direta com vaga disponivel (R3)\n  ---\n  duration_ms: 208.2563\n  type: 'test'\n  ...\n# Subtest: participante realiza inscricao em espera quando atividade esta lotada (R3)\nok 35 - participante realiza inscricao em espera quando atividade esta lotada (R3)\n  ---\n  duration_ms: 67.693\n  type: 'test'\n  ...\n# Subtest: inscricao realizada apos o fechamento retorna 422 INSCRICOES_ENCERRADAS (R1)\nok 36 - inscricao realizada apos o fechamento retorna 422 INSCRICOES_ENCERRADAS (R1)\n  ---\n  duration_ms: 40.8025\n  type: 'test'\n  ...\n# Subtest: usuario da organizacao tentando realizar inscricao recebe 403 SOMENTE_PARTICIPANTE (R9)\nok 37 - usuario da organizacao tentando realizar inscricao recebe 403 SOMENTE_PARTICIPANTE (R9)\n  ---\n  duration_ms: 49.1314\n  type: 'test'\n  ...\n# Subtest: participante tenta realizar nova inscricao em atividade que ja possui inscricao ativa retorna 409 JA_INSCRITO (R2)\nok 38 - participante tenta realizar nova inscricao em atividade que ja possui inscricao ativa retorna 409 JA_INSCRITO (R2)\n  ---\n  duration_ms: 66.1567\n  type: 'test'\n  ...\n# (node:28640) ExperimentalWarning: SQLite is an experimental feature and might change at any time\n# (Use `node --trace-warnings ...` to show where the warning was created)\n# Subtest: participante tenta inscricao direta com sobreposicao de horario de outra atividade confirmada retorna 409 CONFLITO_DE_HORARIO (R4)\nok 39 - participante tenta inscricao direta com sobreposicao de horario de outra atividade confirmada retorna 409 CONFLITO_DE_HORARIO (R4)\n  ---\n  duration_ms: 298.8811\n  type: 'test'\n  ...\n# Subtest: participante realiza inscricao em horario que apenas encosta (10:00-12:00 e 12:00-14:00) com sucesso (R4)\nok 40 - participante realiza inscricao em horario que apenas encosta (10:00-12:00 e 12:00-14:00) com sucesso (R4)\n  ---\n  duration_ms: 111.9156\n  type: 'test'\n  ...\n# Subtest: participante tenta inscricao direta em um 4.º minicurso ocupando vaga retorna 422 LIMITE_DE_MINICURSOS (R5)\nok 41 - participante tenta inscricao direta em um 4.º minicurso ocupando vaga retorna 422 LIMITE_DE_MINICURSOS (R5)\n  ---\n  duration_ms: 134.7496\n  type: 'test'\n  ...\n# Subtest: minicursos em espera e palestras nao contam para o limite de minicursos (R5, Criterio 11)\nok 42 - minicursos em espera e palestras nao contam para o limite de minicursos (R5, Criterio 11)\n  ---\n  duration_ms: 137.3963\n  type: 'test'\n  ...\n# (node:25112) ExperimentalWarning: SQLite is an experimental feature and might change at any time\n# (Use `node --trace-warnings ...` to show where the warning was created)\n# Subtest: participante tenta cancelar inscricao apos o inicio da atividade retorna 422 ATIVIDADE_JA_INICIADA (R8)\nok 43 - participante tenta cancelar inscricao apos o inicio da atividade retorna 422 ATIVIDADE_JA_INICIADA (R8)\n  ---\n  duration_ms: 220.8454\n  type: 'test'\n  ...\n# Subtest: participante tenta cancelar inscricao ja cancelada retorna 422 INSCRICAO_INATIVA (R8)\nok 44 - participante tenta cancelar inscricao ja cancelada retorna 422 INSCRICAO_INATIVA (R8)\n  ---\n  duration_ms: 137.416\n  type: 'test'\n  ...\n# Subtest: participante tenta cancelar inscricao de outro participante retorna 404 NAO_ENCONTRADO (R2, Criterio 5)\nok 45 - participante tenta cancelar inscricao de outro participante retorna 404 NAO_ENCONTRADO (R2, Criterio 5)\n  ---\n  duration_ms: 57.2187\n  type: 'test'\n  ...\n# Subtest: usuario da organizacao tenta cancelar inscricao retorna 403 SOMENTE_PARTICIPANTE (R9)\nok 46 - usuario da organizacao tenta cancelar inscricao retorna 403 SOMENTE_PARTICIPANTE (R9)\n  ---\n  duration_ms: 54.5692\n  type: 'test'\n  ...\n# (node:35100) ExperimentalWarning: SQLite is an experimental feature and might change at any time\n# (Use `node --trace-warnings ...` to show where the warning was created)\n# Subtest: cancelamento de inscricao confirmada convoca automaticamente o primeiro da espera com status convocada e prazo de 2 horas (R6, Criterio 12)\nok 47 - cancelamento de inscricao confirmada convoca automaticamente o primeiro da espera com status convocada e prazo de 2 horas (R6, Criterio 12)\n  ---\n  duration_ms: 330.6878\n  type: 'test'\n  ...\n# Subtest: tentativa de confirmar inscricao sem convocacao retorna 422 SEM_CONVOCACAO (R7, Criterio 13)\nok 48 - tentativa de confirmar inscricao sem convocacao retorna 422 SEM_CONVOCACAO (R7, Criterio 13)\n  ---\n  duration_ms: 65.9336\n  type: 'test'\n  ...\n# Subtest: confirmacao valida de convocacao retorna 200 com status confirmada (R7, Criterio 14)\nok 49 - confirmacao valida de convocacao retorna 200 com status confirmada (R7, Criterio 14)\n  ---\n  duration_ms: 90.8116\n  type: 'test'\n  ...\n# Subtest: tentativa de confirmar apos convocadaAte retorna 422 CONVOCACAO_EXPIRADA e convoca proximo em cascata (R6, R7, Criterio 13)\nok 50 - tentativa de confirmar apos convocadaAte retorna 422 CONVOCACAO_EXPIRADA e convoca proximo em cascata (R6, R7, Criterio 13)\n  ---\n  duration_ms: 73.3648\n  type: 'test'\n  ...\n# (node:27452) ExperimentalWarning: SQLite is an experimental feature and might change at any time\n# (Use `node --trace-warnings ...` to show where the warning was created)\n# Subtest: GET /encontros/:id/codigo dentro da janela valida retorna 200 com CodigoDoEncontro (R1)\nok 51 - GET /encontros/:id/codigo dentro da janela valida retorna 200 com CodigoDoEncontro (R1)\n  ---\n  duration_ms: 259.3744\n  type: 'test'\n  ...\n# Subtest: GET /encontros/:id/codigo fora da janela de registro (mais de 15 min antes) retorna 422 FORA_DA_JANELA (R1)\nok 52 - GET /encontros/:id/codigo fora da janela de registro (mais de 15 min antes) retorna 422 FORA_DA_JANELA (R1)\n  ---\n  duration_ms: 53.2553\n  type: 'test'\n  ...\n# Subtest: GET /encontros/:id/codigo fora da janela de registro (mais de 30 min depois) retorna 422 FORA_DA_JANELA (R1)\nok 53 - GET /encontros/:id/codigo fora da janela de registro (mais de 30 min depois) retorna 422 FORA_DA_JANELA (R1)\n  ---\n  duration_ms: 45.1608\n  type: 'test'\n  ...\n# Subtest: GET /encontros/:id/codigo com atividade cancelada retorna 422 ATIVIDADE_CANCELADA (R1)\nok 54 - GET /encontros/:id/codigo com atividade cancelada retorna 422 ATIVIDADE_CANCELADA (R1)\n  ---\n  duration_ms: 45.2074\n  type: 'test'\n  ...\n# Subtest: GET /encontros/:id/codigo por participante retorna 403 SOMENTE_ORGANIZACAO (R7)\nok 55 - GET /encontros/:id/codigo por participante retorna 403 SOMENTE_ORGANIZACAO (R7)\n  ---\n  duration_ms: 48.2955\n  type: 'test'\n  ...\n# (node:35676) ExperimentalWarning: SQLite is an experimental feature and might change at any time\n# (Use `node --trace-warnings ...` to show where the warning was created)\n# Subtest: POST /encontros/:id/presencas por usuario da organizacao retorna 403 SOMENTE_PARTICIPANTE (R7)\nok 56 - POST /encontros/:id/presencas por usuario da organizacao retorna 403 SOMENTE_PARTICIPANTE (R7)\n  ---\n  duration_ms: 339.9496\n  type: 'test'\n  ...\n# Subtest: POST /encontros/:id/presencas por participante sem inscricao confirmada retorna 403 NAO_INSCRITO (R4)\nok 57 - POST /encontros/:id/presencas por participante sem inscricao confirmada retorna 403 NAO_INSCRITO (R4)\n  ---\n  duration_ms: 39.7405\n  type: 'test'\n  ...\n# Subtest: POST /encontros/:id/presencas com codigo valido retorna 201 na primeira vez e 200 nas subsequentes (R2)\nok 58 - POST /encontros/:id/presencas com codigo valido retorna 201 na primeira vez e 200 nas subsequentes (R2)\n  ---\n  duration_ms: 95.7199\n  type: 'test'\n  ...\n# Subtest: POST /encontros/:id/presencas com codigo invalido retorna 422 CODIGO_INVALIDO (R2)\nok 59 - POST /encontros/:id/presencas com codigo invalido retorna 422 CODIGO_INVALIDO (R2)\n  ---\n  duration_ms: 48.8095\n  type: 'test'\n  ...\n# Subtest: POST /encontros/:id/presencas com lidoEm (offline) validando janela e codigo e aceitando tolerancia do minuto anterior (R2)\nok 60 - POST /encontros/:id/presencas com lidoEm (offline) validando janela e codigo e aceitando tolerancia do minuto anterior (R2)\n  ---\n  duration_ms: 105.2798\n  type: 'test'\n  ...\n# Subtest: POST /encontros/:id/presencas com lidoEm enviado mais de 2 horas apos o fim do encontro retorna 422 SINCRONIZACAO_TARDIA (R3)\nok 61 - POST /encontros/:id/presencas com lidoEm enviado mais de 2 horas apos o fim do encontro retorna 422 SINCRONIZACAO_TARDIA (R3)\n  ---\n  duration_ms: 107.1125\n  type: 'test'\n  ...\n# (node:21512) ExperimentalWarning: SQLite is an experimental feature and might change at any time\n# (Use `node --trace-warnings ...` to show where the warning was created)\n# Subtest: POST /encontros/:id/presencas/manual por participante retorna 403 SOMENTE_ORGANIZACAO (R7)\nok 62 - POST /encontros/:id/presencas/manual por participante retorna 403 SOMENTE_ORGANIZACAO (R7)\n  ---\n  duration_ms: 95.5012\n  type: 'test'\n  ...\n# Subtest: GET /encontros/:id/presencas por participante retorna 403 SOMENTE_ORGANIZACAO (R6, R7)\nok 63 - GET /encontros/:id/presencas por participante retorna 403 SOMENTE_ORGANIZACAO (R6, R7)\n  ---\n  duration_ms: 42.7551\n  type: 'test'\n  ...\n# Subtest: POST /encontros/:id/presencas/manual por participante sem inscricao confirmada retorna 403 NAO_INSCRITO (R4)\nok 64 - POST /encontros/:id/presencas/manual por participante sem inscricao confirmada retorna 403 NAO_INSCRITO (R4)\n  ---\n  duration_ms: 32.4867\n  type: 'test'\n  ...\n# Subtest: POST /encontros/:id/presencas/manual com justificativa com menos de 10 caracteres ou ausente retorna 422 JUSTIFICATIVA_OBRIGATORIA (R5)\nok 65 - POST /encontros/:id/presencas/manual com justificativa com menos de 10 caracteres ou ausente retorna 422 JUSTIFICATIVA_OBRIGATORIA (R5)\n  ---\n  duration_ms: 59.1615\n  type: 'test'\n  ...\n# Subtest: POST /encontros/:id/presencas/manual com sucesso retorna 201 na primeira vez e 200 nas subsequentes/duplicadas (R5)\nok 66 - POST /encontros/:id/presencas/manual com sucesso retorna 201 na primeira vez e 200 nas subsequentes/duplicadas (R5)\n  ---\n  duration_ms: 47.8897\n  type: 'test'\n  ...\n# Subtest: GET /encontros/:id/presencas pela organizacao retorna 200 com [Presenca] (R6)\nok 67 - GET /encontros/:id/presencas pela organizacao retorna 200 com [Presenca] (R6)\n  ---\n  duration_ms: 60.9467\n  type: 'test'\n  ...\n# Subtest: POST /encontros/:id/presencas/manual excedendo o limite de 10% das inscricoes confirmadas retorna 422 LIMITE_DE_MANUAIS (R5)\nok 68 - POST /encontros/:id/presencas/manual excedendo o limite de 10% das inscricoes confirmadas retorna 422 LIMITE_DE_MANUAIS (R5)\n  ---\n  duration_ms: 76.9555\n  type: 'test'\n  ...\n# (node:34084) ExperimentalWarning: SQLite is an experimental feature and might change at any time\n# (Use `node --trace-warnings ...` to show where the warning was created)\n# Subtest: POST /atividades/:id/certificado por usuario da organizacao retorna 403 (R6)\nok 69 - POST /atividades/:id/certificado por usuario da organizacao retorna 403 (R6)\n  ---\n  duration_ms: 98.4992\n  type: 'test'\n  ...\n# Subtest: POST /atividades/:id/certificado antes do fim do ultimo encontro retorna 422 ATIVIDADE_NAO_ENCERRADA (R2)\nok 70 - POST /atividades/:id/certificado antes do fim do ultimo encontro retorna 422 ATIVIDADE_NAO_ENCERRADA (R2)\n  ---\n  duration_ms: 56.6269\n  type: 'test'\n  ...\n# Subtest: POST /atividades/:id/certificado com frequencia inferior a 75% retorna 422 PRESENCA_INSUFICIENTE (R1)\nok 71 - POST /atividades/:id/certificado com frequencia inferior a 75% retorna 422 PRESENCA_INSUFICIENTE (R1)\n  ---\n  duration_ms: 75.4779\n  type: 'test'\n  ...\n# Subtest: POST /atividades/:id/certificado com frequencia >= 75% gera certificado (201 na 1a, 200 nas seguintes) e GET /certificados lista (R3, R6)\nok 72 - POST /atividades/:id/certificado com frequencia >= 75% gera certificado (201 na 1a, 200 nas seguintes) e GET /certificados lista (R3, R6)\n  ---\n  duration_ms: 107.613\n  type: 'test'\n  ...\n# Subtest: GET /certificados sem autenticacao retorna 401 e por organizacao retorna 403 (R6)\nok 73 - GET /certificados sem autenticacao retorna 401 e por organizacao retorna 403 (R6)\n  ---\n  duration_ms: 13.9349\n  type: 'test'\n  ...\n# Subtest: GET /extrato sem autenticacao retorna 401 e por organizacao retorna 403 (R6)\nok 74 - GET /extrato sem autenticacao retorna 401 e por organizacao retorna 403 (R6)\n  ---\n  duration_ms: 15.4028\n  type: 'test'\n  ...\n# (node:35628) ExperimentalWarning: SQLite is an experimental feature and might change at any time\n# (Use `node --trace-warnings ...` to show where the warning was created)\n# Subtest: GET /extrato calcula extrato com somas brutas (R4, R6)\nok 75 - GET /extrato calcula extrato com somas brutas (R4, R6)\n  ---\n  duration_ms: 188.7912\n  type: 'test'\n  ...\n# Subtest: GET /extrato aplica tetos de aproveitamento (R4)\nok 76 - GET /extrato aplica tetos de aproveitamento (R4)\n  ---\n  duration_ms: 182.9287\n  type: 'test'\n  ...\n# (node:33800) ExperimentalWarning: SQLite is an experimental feature and might change at any time\n# (Use `node --trace-warnings ...` to show where the warning was created)\n# Subtest: GET /certificados/:codigo com código válido retorna 200 (R5)\nok 77 - GET /certificados/:codigo com código válido retorna 200 (R5)\n  ---\n  duration_ms: 161.7651\n  type: 'test'\n  ...\n# Subtest: GET /certificados/:codigo com código inexistente ou inválido retorna 404 (R5)\nok 78 - GET /certificados/:codigo com código inexistente ou inválido retorna 404 (R5)\n  ---\n  duration_ms: 11.938\n  type: 'test'\n  ...\n1..78\n# tests 78\n# suites 0\n# pass 78\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 1608.5928\n",
+       "exit": 0,
+       "truncated": false
+      },
+      "title": "npm test",
+      "time": {
+       "start": 1790138085010,
+       "end": 1790138087378
+      }
+     },
+     "metadata": {
+      "google": {
+       "thoughtSignature": "ErICCq8CAWkUfRNYAkzrgk5jYrDo/cW4UwPQ/TJVdDfKUKKozZwlPaXt2/uhsOWfLoTkaSL6O8tzZrO7nnJuXNlqNISwqGd/MbVJ+4nZ2WtVHfiIa3q6NDiee6VD0odCo9wQn0jJaQXeeNt6KpW66yaoI3AfUHXI+jlqnPMnH5rVQveA0Bxp0g4UhGx8bk9DbRDXF4tFgntO4WvUyPniLR0+GegWQkub7MZotkibOSOnKKG6uBasvhxljQ10CFoBTxojevPoGleXpp0Otx4izVxHXML/4/h3RFVWlpApXW6xDC+N9elANVRXi8FWUDd886qQZDGFxiIGNoScK9ZUdJtyeNi4Ny9AZu4maKTXZ4ntzFqYnL9M7Pwyi+s1ehLZZLAXGZwR5VuwOoWThPneJ+P3bls7"
+      }
+     },
+     "id": "prt_0cc8b6e87001425BI6VkmDOx5D",
+     "sessionID": "ses_f3374e882ffenhMKEo3sBlbmjA",
+     "messageID": "msg_0cc8b67b3001QOu1ppzUbP2RyI"
+    },
+    {
+     "reason": "tool-calls",
+     "snapshot": "6f1a00423a7ee723365316c2c7697c97538b72c7",
+     "type": "step-finish",
+     "tokens": {
+      "total": 28412,
+      "input": 12001,
+      "output": 52,
+      "reasoning": 43,
+      "cache": {
+       "write": 0,
+       "read": 16316
+      }
+     },
+     "cost": 0.00432728,
+     "id": "prt_0cc8b792600107tOz0uEaJiWFj",
+     "sessionID": "ses_f3374e882ffenhMKEo3sBlbmjA",
+     "messageID": "msg_0cc8b67b3001QOu1ppzUbP2RyI"
+    }
+   ]
+  },
+  {
+   "info": {
+    "parentID": "msg_0cc8b178d001qVP5x9a9RbgFPx",
+    "role": "assistant",
+    "mode": "build",
+    "agent": "build",
+    "path": {
+     "cwd": "C:\\Users\\acura\\Desktop\\Trabalho Final Queiroz\\ProjetoSemanaAcademica\\semana-academica",
+     "root": "C:\\Users\\acura\\Desktop\\Trabalho Final Queiroz\\ProjetoSemanaAcademica"
+    },
+    "cost": 0.00690661,
+    "tokens": {
+     "total": 36653,
+     "input": 20181,
+     "output": 21,
+     "reasoning": 124,
+     "cache": {
+      "write": 0,
+      "read": 16327
+     }
+    },
+    "modelID": "gemini-3.5-flash-lite",
+    "providerID": "google",
+    "time": {
+     "created": 1790138088066,
+     "completed": 1790138090837
+    },
+    "finish": "tool-calls",
+    "id": "msg_0cc8b7a82001Q2gGQRgHNCHsmY",
+    "sessionID": "ses_f3374e882ffenhMKEo3sBlbmjA"
+   },
+   "parts": [
+    {
+     "snapshot": "6f1a00423a7ee723365316c2c7697c97538b72c7",
+     "type": "step-start",
+     "id": "prt_0cc8b81d40010SyeC3iqjL6iwe",
+     "sessionID": "ses_f3374e882ffenhMKEo3sBlbmjA",
+     "messageID": "msg_0cc8b7a82001Q2gGQRgHNCHsmY"
+    },
+    {
+     "type": "tool",
+     "tool": "glob",
+     "callID": "6MQhyYiypzn0d15m",
+     "state": {
+      "status": "completed",
+      "input": {
+       "pattern": "**/*",
+       "path": "app"
+      },
+      "output": "[12389 caracteres omitidos]",
+      "title": "semana-academica\\app",
+      "time": {
+       "start": 1790138089945,
+       "end": 1790138090174
+      }
+     },
+     "metadata": {
+      "google": {
+       "thoughtSignature": "EpAFCo0FAWkUfRNIab67yoWL7HMVvPZIT70XWyL9qOc9mPeW7hrU8SdNHMXp716m08y/sZebMpIlNlv5uprfr64W+Kg8xF/F6ccq9kORR2dY6qzRNr/sQ3M4+Bjvy9Suw6PrJeybxG/OOanwI2ixUv7WGD2AosusbXJ+Ae562VtUwvsjucIHp89cj/784Aw1f7EiKVBreytn43fo6KrXc5ztShea+SeA3dfJBA3Ss5TGTuDyFWMpmMje9d7nSH4clXs0XSiInYMH1FWBr8vniJXA+qykDbddnb4sQSCIVOs1Z4lNLDXyB78DoqWoGslAi2H/DEPU/tfI51YhoTUfFN+wW0cJ4mfK3lSmz8rshXDAmurSwAFt3VT8Fw0An+hIrO6oznnWmsupMXPu6UHvDkDYFnC1xDGsDSN8B+cWTwUvjh2aZMRjHuNMXTHHsBRgGhq5xhSAuQicy0F2n1vIM5CqxjagdJfwJt8zTVTKdw6iCJ1DZVS/GSFbIcg8Qw/AbMJhXzJYDW3ioqkHpzh10ghvwHBkA0goQjexbEehh5tujgW3Xd1LBl21dji8c6GamooLaWWrw7Msgu8elM2/JBoHvd1EO4ZKv00NOZclFCtowN2HgtG0/hzHSZzoBQC9WkLru2rOv5neeJACOnXWz7TI/zG7BOqnl0K0v+NiTbkSs4b+A3Wehqp26y+i2ZA9vhHMCRvzD/HTVskBGrOtxZDk2KIMncov1ea1GmMf2vHdjENnF8M2QriD2nepmk077iAJYocq5SYl1j8t3tMnDvL5W91X9XtbneRpGMTp565cuk/ZgE56f8oFhvmAUtz3cZVjxT8OLbC1R/aHrQhzQOUV3IyRlpufmLQY+N5NrORX84M="
+      }
+     },
+     "id": "prt_0cc8b81d6001uTU4xFdq2u7zVj",
+     "sessionID": "ses_f3374e882ffenhMKEo3sBlbmjA",
+     "messageID": "msg_0cc8b7a82001Q2gGQRgHNCHsmY"
+    },
+    {
+     "reason": "tool-calls",
+     "snapshot": "6f1a00423a7ee723365316c2c7697c97538b72c7",
+     "type": "step-finish",
+     "tokens": {
+      "total": 36653,
+      "input": 20181,
+      "output": 21,
+      "reasoning": 124,
+      "cache": {
+       "write": 0,
+       "read": 16327
+      }
+     },
+     "cost": 0.00690661,
+     "id": "prt_0cc8b840a001ZYM3RbhPu0ZOy0",
+     "sessionID": "ses_f3374e882ffenhMKEo3sBlbmjA",
+     "messageID": "msg_0cc8b7a82001Q2gGQRgHNCHsmY"
+    }
+   ]
+  },
+  {
+   "info": {
+    "parentID": "msg_0cc8b178d001qVP5x9a9RbgFPx",
+    "role": "assistant",
+    "mode": "build",
+    "agent": "build",
+    "path": {
+     "cwd": "C:\\Users\\acura\\Desktop\\Trabalho Final Queiroz\\ProjetoSemanaAcademica\\semana-academica",
+     "root": "C:\\Users\\acura\\Desktop\\Trabalho Final Queiroz\\ProjetoSemanaAcademica"
+    },
+    "cost": 0.00418157,
+    "tokens": {
+     "total": 41381,
+     "input": 8456,
+     "output": 56,
+     "reasoning": 210,
+     "cache": {
+      "write": 0,
+      "read": 32659
+     }
+    },
+    "modelID": "gemini-3.5-flash-lite",
+    "providerID": "google",
+    "time": {
+     "created": 1790138090841,
+     "completed": 1790138093650
+    },
+    "finish": "tool-calls",
+    "id": "msg_0cc8b8559001a73o1K7B1gfB5A",
+    "sessionID": "ses_f3374e882ffenhMKEo3sBlbmjA"
+   },
+   "parts": [
+    {
+     "snapshot": "6f1a00423a7ee723365316c2c7697c97538b72c7",
+     "type": "step-start",
+     "id": "prt_0cc8b8d95001oDXj6A51g73EdT",
+     "sessionID": "ses_f3374e882ffenhMKEo3sBlbmjA",
+     "messageID": "msg_0cc8b8559001a73o1K7B1gfB5A"
+    },
+    {
+     "type": "tool",
+     "tool": "read",
+     "callID": "hRQitfJNGxTMKXIS",
+     "state": {
+      "status": "completed",
+      "input": {
+       "filePath": "C:\\Users\\acura\\Desktop\\Trabalho Final Queiroz\\ProjetoSemanaAcademica\\semana-academica\\app\\tests\\VerificacaoCertificado.test.js"
+      },
+      "output": "[1963 caracteres omitidos]",
+      "title": "semana-academica\\app\\tests\\VerificacaoCertificado.test.js",
+      "time": {
+       "start": 1790138092955,
+       "end": 1790138092960
+      }
+     },
+     "metadata": {
+      "google": {
+       "thoughtSignature": "EqwGCqkGAWkUfRO4C2+8y8B8YH3MuJPm5d96UsHUN69SDLmUVpW/a6LoQhLzzCR+mn8RPZ5pSZvlq/YfD3V2WzT4mnvnKOVLobBrzw2lwjPBy3uK56GPGKHmL09g5lN50T2kxdB59c9MKG2IRY7d3GdnIk96Hanfj8u+USIfBEPZiYEqAPcP9gmq7QqUTZWZmx7VAiXscqAq+/iQJMi8lBmXbZodNXKnkTNPSjbf8898UaEXpKD50EfXGFoOFSRxtr2P92x6mnbogqagK5bp5Aia4g1hvBmU8s0LIo4FwE/cGFhjS7veerxroel1/J51bv1oH7LwnerVrGyv+UAYp/Xtlsz0LIZBocGHcf1DKctL1FefW10i+GC7X8dXCQ2+mZ1cfzPQd38RFH/PzGAI3hQNtSvWmRuv8vPeDkGOAvb7xA9U7MsT6rm2W1t9wzE+zSnlBGbqEFC8vnIuL3Mlkd7iJVVopFzD3uN+4BWmM16WzELYt+smRnsGyFl6iwYK55baBLB41w6AofskwGVHrpb0icPHnz5/GhOYa+t0xRjNJ73xKYsGnoMtaSZq4OvknXWfU8doIlBHFo3DdPC4Sg3282GJ1Q4ZD/JRK6I1+OXRhx9QH+TCqk9JjiNvHmuFxob0YikZs6ONrho1K2/eaKGCWEdgKDBCfLPwaGj2MWfHm/+sA2q4vRT/C23Go5LXEnsdm3Umu8WAXXDdDYKXhQbfctK0sdKjadcYfv1ZnKhAio2PY3FHubmo2naDtfsEjGY/qAA6UfMINUFoN4U1DqPSICq+CIHXVdP/a/vNOfePKOwmIqmbRRYoFxcIWhCkDt6bLFX/VXIYKKvOoNMZyyJBYkSIHZR1s1Nr+CemHbYRw8pQgYqddoJJSMWXl4OrcO9LMBDd2RpjrFg77MHncBmYXJmc6QLRjIfFiFVl71W/bK308pgBLca7pXCc8lW2RmhqXt+duGQQDO43Ddh4Q9qAAB3c+zc78CQBzq9Y87JHey9KXdnjVfYAXJnKcx45bjJLiYd0K+LgtyXZUlvLey/R4QFVSPKMqxqbT0EHz04XGu1UBEGYcwFJNOrUwWU="
+      }
+     },
+     "id": "prt_0cc8b8d97001qxf6fRrQGXLxcC",
+     "sessionID": "ses_f3374e882ffenhMKEo3sBlbmjA",
+     "messageID": "msg_0cc8b8559001a73o1K7B1gfB5A"
+    },
+    {
+     "reason": "tool-calls",
+     "snapshot": "6f1a00423a7ee723365316c2c7697c97538b72c7",
+     "type": "step-finish",
+     "tokens": {
+      "total": 41381,
+      "input": 8456,
+      "output": 56,
+      "reasoning": 210,
+      "cache": {
+       "write": 0,
+       "read": 32659
+      }
+     },
+     "cost": 0.00418157,
+     "id": "prt_0cc8b8f03001KfnYEUlgyzq28w",
+     "sessionID": "ses_f3374e882ffenhMKEo3sBlbmjA",
+     "messageID": "msg_0cc8b8559001a73o1K7B1gfB5A"
+    }
+   ]
+  },
+  {
+   "info": {
+    "parentID": "msg_0cc8b178d001qVP5x9a9RbgFPx",
+    "role": "assistant",
+    "mode": "build",
+    "agent": "build",
+    "path": {
+     "cwd": "C:\\Users\\acura\\Desktop\\Trabalho Final Queiroz\\ProjetoSemanaAcademica\\semana-academica",
+     "root": "C:\\Users\\acura\\Desktop\\Trabalho Final Queiroz\\ProjetoSemanaAcademica"
+    },
+    "cost": 0.00415649,
+    "tokens": {
+     "total": 42194,
+     "input": 9398,
+     "output": 56,
+     "reasoning": 87,
+     "cache": {
+      "write": 0,
+      "read": 32653
+     }
+    },
+    "modelID": "gemini-3.5-flash-lite",
+    "providerID": "google",
+    "time": {
+     "created": 1790138093654,
+     "completed": 1790138096230
+    },
+    "finish": "tool-calls",
+    "id": "msg_0cc8b9056001nqn0mL5kFH1LKp",
+    "sessionID": "ses_f3374e882ffenhMKEo3sBlbmjA"
+   },
+   "parts": [
+    {
+     "snapshot": "6f1a00423a7ee723365316c2c7697c97538b72c7",
+     "type": "step-start",
+     "id": "prt_0cc8b97a6001MXEsGVgJs79BeZ",
+     "sessionID": "ses_f3374e882ffenhMKEo3sBlbmjA",
+     "messageID": "msg_0cc8b9056001nqn0mL5kFH1LKp"
+    },
+    {
+     "type": "tool",
+     "tool": "read",
+     "callID": "lJ9GX59RWqVUfThE",
+     "state": {
+      "status": "completed",
+      "input": {
+       "filePath": "C:\\Users\\acura\\Desktop\\Trabalho Final Queiroz\\ProjetoSemanaAcademica\\semana-academica\\app\\src\\components\\VerificacaoCertificado.vue"
+      },
+      "output": "[2019 caracteres omitidos]",
+      "title": "semana-academica\\app\\src\\components\\VerificacaoCertificado.vue",
+      "time": {
+       "start": 1790138095530,
+       "end": 1790138095536
+      }
+     },
+     "metadata": {
+      "google": {
+       "thoughtSignature": "EooDCocDAWkUfRNg4iyM9QUvOblzrB8zfhGbar3KSIXhdT9TKUe1mPNAQUPhKSVOiUiH8l8uocYn3gv2HxCOmBf8eu/xiD66Z+srkw1jJhrZL9Zi2NxxwnHtB9UJLKWwBIe9EnK143gTGJ5CkUMtjKu9Rbks4VYp05WKwiAjKfvam/leqO296bEa5Vk9YLgE30TtyuOQPRXRDuI7GeI+5I7Ya1xnmJh71YuFkte9NWaAYl5tlj/fUMOWJYxltMGO1zdBA+Rtz8gfdhGiZS89HcNOcT1WN18jUdXFCgNPfrMDO3gHoamqLu/LkRH9WcAVjC6qYg5AmX59bM1HfbQ32Q/n/k6uHwqYbQmslOHEJ2/U4G9RabJi8UVqsC7fRROJ8gGVvJDgHBIDe9gMP2o+aT8bqbpBylc37SAsJHUMKBjIhOWwYocQJx5AL3EcWzryCOts3oGN+tHF1pQ6/FCyLQ5EuwmsQn3B+M3MbdM8fCk6F4usLwIgWg9y29gKKHYy4QHKt97jhbahuD3LQA=="
+      }
+     },
+     "id": "prt_0cc8b97a7001uY7AHYLv1jOshn",
+     "sessionID": "ses_f3374e882ffenhMKEo3sBlbmjA",
+     "messageID": "msg_0cc8b9056001nqn0mL5kFH1LKp"
+    },
+    {
+     "reason": "tool-calls",
+     "snapshot": "6f1a00423a7ee723365316c2c7697c97538b72c7",
+     "type": "step-finish",
+     "tokens": {
+      "total": 42194,
+      "input": 9398,
+      "output": 56,
+      "reasoning": 87,
+      "cache": {
+       "write": 0,
+       "read": 32653
+      }
+     },
+     "cost": 0.00415649,
+     "id": "prt_0cc8b991e001sUHc8vIVvjaM7J",
+     "sessionID": "ses_f3374e882ffenhMKEo3sBlbmjA",
+     "messageID": "msg_0cc8b9056001nqn0mL5kFH1LKp"
+    }
+   ]
+  },
+  {
+   "info": {
+    "parentID": "msg_0cc8b178d001qVP5x9a9RbgFPx",
+    "role": "assistant",
+    "mode": "build",
+    "agent": "build",
+    "path": {
+     "cwd": "C:\\Users\\acura\\Desktop\\Trabalho Final Queiroz\\ProjetoSemanaAcademica\\semana-academica",
+     "root": "C:\\Users\\acura\\Desktop\\Trabalho Final Queiroz\\ProjetoSemanaAcademica"
+    },
+    "cost": 0.00438844,
+    "tokens": {
+     "total": 43080,
+     "input": 10305,
+     "output": 55,
+     "reasoning": 72,
+     "cache": {
+      "write": 0,
+      "read": 32648
+     }
+    },
+    "modelID": "gemini-3.5-flash-lite",
+    "providerID": "google",
+    "time": {
+     "created": 1790138096234,
+     "completed": 1790138098697
+    },
+    "finish": "tool-calls",
+    "id": "msg_0cc8b9a6a001PPsdpuxfAFuaq1",
+    "sessionID": "ses_f3374e882ffenhMKEo3sBlbmjA"
+   },
+   "parts": [
+    {
+     "snapshot": "6f1a00423a7ee723365316c2c7697c97538b72c7",
+     "type": "step-start",
+     "id": "prt_0cc8ba133001Sp84jWvbahTPwT",
+     "sessionID": "ses_f3374e882ffenhMKEo3sBlbmjA",
+     "messageID": "msg_0cc8b9a6a001PPsdpuxfAFuaq1"
+    },
+    {
+     "type": "tool",
+     "tool": "read",
+     "callID": "7gV0hI0s9nh5mWNA",
+     "state": {
+      "status": "completed",
+      "input": {
+       "filePath": "C:\\Users\\acura\\Desktop\\Trabalho Final Queiroz\\ProjetoSemanaAcademica\\semana-academica\\app\\tests\\MeusCertificados.test.js"
+      },
+      "output": "[3121 caracteres omitidos]",
+      "title": "semana-academica\\app\\tests\\MeusCertificados.test.js",
+      "time": {
+       "start": 1790138097977,
+       "end": 1790138097984
+      }
+     },
+     "metadata": {
+      "google": {
+       "thoughtSignature": "EtkCCtYCAWkUfRP7djkCmLRRDp6WQRiD26c3kv6XDWxwRL06T/ULU61kxBVWAk0AdQGW03gadwxhMS04AVDlwBAV8lCc8l2vdti+CYvIuH4eH018qmlWlpDK8QMX6cukbyFzQ7Jkpee1S1pokegH3kiOp1NlgFEDYR/gb/q6YNfqNsz04rSodni70ZeyPhgoEPOUKIk+yHfDcbCzYzEoSv0XxISJUNskcpNxH91flb34kM3EpQDOFw6RhDem9/Dql+DWwp02mGZTIa4Zk1LwK+JElvPw0po+Dj+6T5ZZwBIAABv9T0UTSG9kobux2zR1VHpcoyO+nKfkBn2NNTTiWdxg7k9yE7WQFq7iwX6SPfoYH2uVyTbq4FxaU/zZ+2nx1py6DnSC2F+09dnIuTyK5VfI42jtK90gig0O5J7MSLy0h8MGFxoOAvr7ZNmhM4kW0Y4FOGszrD/6Qe94"
+      }
+     },
+     "id": "prt_0cc8ba135001STHiNBH1SGmx0g",
+     "sessionID": "ses_f3374e882ffenhMKEo3sBlbmjA",
+     "messageID": "msg_0cc8b9a6a001PPsdpuxfAFuaq1"
+    },
+    {
+     "reason": "tool-calls",
+     "snapshot": "6f1a00423a7ee723365316c2c7697c97538b72c7",
+     "type": "step-finish",
+     "tokens": {
+      "total": 43080,
+      "input": 10305,
+      "output": 55,
+      "reasoning": 72,
+      "cache": {
+       "write": 0,
+       "read": 32648
+      }
+     },
+     "cost": 0.00438844,
+     "id": "prt_0cc8ba2b8001i4Ym6s2zdj8JMg",
+     "sessionID": "ses_f3374e882ffenhMKEo3sBlbmjA",
+     "messageID": "msg_0cc8b9a6a001PPsdpuxfAFuaq1"
+    }
+   ]
+  },
+  {
+   "info": {
+    "parentID": "msg_0cc8b178d001qVP5x9a9RbgFPx",
+    "role": "assistant",
+    "mode": "build",
+    "agent": "build",
+    "path": {
+     "cwd": "C:\\Users\\acura\\Desktop\\Trabalho Final Queiroz\\ProjetoSemanaAcademica\\semana-academica",
+     "root": "C:\\Users\\acura\\Desktop\\Trabalho Final Queiroz\\ProjetoSemanaAcademica"
+    },
+    "cost": 0.00472322,
+    "tokens": {
+     "total": 44295,
+     "input": 11538,
+     "output": 55,
+     "reasoning": 58,
+     "cache": {
+      "write": 0,
+      "read": 32644
+     }
+    },
+    "modelID": "gemini-3.5-flash-lite",
+    "providerID": "google",
+    "time": {
+     "created": 1790138098702,
+     "completed": 1790138174070
+    },
+    "finish": "tool-calls",
+    "id": "msg_0cc8ba40e0018h1Zijx9gyTbbz",
+    "sessionID": "ses_f3374e882ffenhMKEo3sBlbmjA"
+   },
+   "parts": [
+    {
+     "snapshot": "6f1a00423a7ee723365316c2c7697c97538b72c7",
+     "type": "step-start",
+     "id": "prt_0cc8cc7a9001UhgXmoMnPJgpWP",
+     "sessionID": "ses_f3374e882ffenhMKEo3sBlbmjA",
+     "messageID": "msg_0cc8ba40e0018h1Zijx9gyTbbz"
+    },
+    {
+     "type": "tool",
+     "tool": "read",
+     "callID": "8D349lyHzrLrgvhN",
+     "state": {
+      "status": "completed",
+      "input": {
+       "filePath": "C:\\Users\\acura\\Desktop\\Trabalho Final Queiroz\\ProjetoSemanaAcademica\\semana-academica\\app\\src\\components\\MeusCertificados.vue"
+      },
+      "output": "[2910 caracteres omitidos]",
+      "title": "semana-academica\\app\\src\\components\\MeusCertificados.vue",
+      "time": {
+       "start": 1790138173358,
+       "end": 1790138173365
+      }
+     },
+     "metadata": {
+      "google": {
+       "thoughtSignature": "EqICCp8CAWkUfRNkswgtvVEiA1X2i1hVOO0fz6B96c2gi86blTQV10ui9yj4qFkBurxzUc+wMySjueJMWwDmcewJp8ECz7u6gsbDktPNmSYWv4IvN8Qx3fmpMWph6+TwRTA7Owek+O5WOLMYCiyss31/rSWMn4w6BLCZI9zemnK9vhDaBgFmdnfTXmw4P/71ekMumR1OS14h3ru7xS2Y305gaiHRTxzp+4Dej1zSEucMnbXXVXwpO+dWBzcAH8PMYBL6gcw2j7Q9RE+X+CaOn5vk3ts/On1pKxrNJVs7g6nHM/HM+DFvAnPTgy+r1B9bQ3epv13L0/hGOOnWxZazF6QfIBtLYOIjghq9oPMbsMMi9i+IfySHUb86ps1E8EDUqpXIFl8="
+      }
+     },
+     "id": "prt_0cc8cc7ab0017TTYq8yjJ4gzI4",
+     "sessionID": "ses_f3374e882ffenhMKEo3sBlbmjA",
+     "messageID": "msg_0cc8ba40e0018h1Zijx9gyTbbz"
+    },
+    {
+     "reason": "tool-calls",
+     "snapshot": "6f1a00423a7ee723365316c2c7697c97538b72c7",
+     "type": "step-finish",
+     "tokens": {
+      "total": 44295,
+      "input": 11538,
+      "output": 55,
+      "reasoning": 58,
+      "cache": {
+       "write": 0,
+       "read": 32644
+      }
+     },
+     "cost": 0.00472322,
+     "id": "prt_0cc8cc91f001sTegrHwEcbBIn4",
+     "sessionID": "ses_f3374e882ffenhMKEo3sBlbmjA",
+     "messageID": "msg_0cc8ba40e0018h1Zijx9gyTbbz"
+    }
+   ]
+  },
+  {
+   "info": {
+    "parentID": "msg_0cc8b178d001qVP5x9a9RbgFPx",
+    "role": "assistant",
+    "mode": "build",
+    "agent": "build",
+    "path": {
+     "cwd": "C:\\Users\\acura\\Desktop\\Trabalho Final Queiroz\\ProjetoSemanaAcademica\\semana-academica",
+     "root": "C:\\Users\\acura\\Desktop\\Trabalho Final Queiroz\\ProjetoSemanaAcademica"
+    },
+    "cost": 0.0050511,
+    "tokens": {
+     "total": 45487,
+     "input": 12748,
+     "output": 55,
+     "reasoning": 44,
+     "cache": {
+      "write": 0,
+      "read": 32640
+     }
+    },
+    "modelID": "gemini-3.5-flash-lite",
+    "providerID": "google",
+    "time": {
+     "created": 1790138174074,
+     "completed": 1790138176511
+    },
+    "finish": "tool-calls",
+    "id": "msg_0cc8cca7a001DmgUD1zhwVcJo4",
+    "sessionID": "ses_f3374e882ffenhMKEo3sBlbmjA"
+   },
+   "parts": [
+    {
+     "snapshot": "6f1a00423a7ee723365316c2c7697c97538b72c7",
+     "type": "step-start",
+     "id": "prt_0cc8cd139001GkqY37cj15Lgxl",
+     "sessionID": "ses_f3374e882ffenhMKEo3sBlbmjA",
+     "messageID": "msg_0cc8cca7a001DmgUD1zhwVcJo4"
+    },
+    {
+     "type": "tool",
+     "tool": "read",
+     "callID": "FrKwpnsFNyMZJniM",
+     "state": {
+      "status": "completed",
+      "input": {
+       "filePath": "C:\\Users\\acura\\Desktop\\Trabalho Final Queiroz\\ProjetoSemanaAcademica\\semana-academica\\app\\tests\\ExtratoHoras.test.js"
+      },
+      "output": "[1810 caracteres omitidos]",
+      "title": "semana-academica\\app\\tests\\ExtratoHoras.test.js",
+      "time": {
+       "start": 1790138175807,
+       "end": 1790138175812
+      }
+     },
+     "metadata": {
+      "google": {
+       "thoughtSignature": "EuYBCuMBAWkUfRP8va79A12FlSEzo9PHEfGisqA9JQg2DS5PDq4oI4/GQl1Hts9PqG+naXtUds/g/H7Db+7x2WyDLjtZdtgahD3RhbqyX8AR3VpBBoPeX8J9tackHwunsY1RpM/RPI6+LS54sfzJXHNho8NZPGWH0oa4DTNK+4F9Yw1WOnBWEFrhTOIJMXJVu7GZoF5JYG10ROhpjQWzcR1/jK8KIMsrVsq0s+b4yQWqmekvL8wqxUnxEJgnXAuz3Gj1RtrCM9O6/qIlN7vISWq0Av8l4x+FXz2GViS3cgYiB6d5QMtfC58="
+      }
+     },
+     "id": "prt_0cc8cd13b001CD0sJfBjHOOh4c",
+     "sessionID": "ses_f3374e882ffenhMKEo3sBlbmjA",
+     "messageID": "msg_0cc8cca7a001DmgUD1zhwVcJo4"
+    },
+    {
+     "reason": "tool-calls",
+     "snapshot": "6f1a00423a7ee723365316c2c7697c97538b72c7",
+     "type": "step-finish",
+     "tokens": {
+      "total": 45487,
+      "input": 12748,
+      "output": 55,
+      "reasoning": 44,
+      "cache": {
+       "write": 0,
+       "read": 32640
+      }
+     },
+     "cost": 0.0050511,
+     "id": "prt_0cc8cd2b3001ivFcDRLpAHWbSY",
+     "sessionID": "ses_f3374e882ffenhMKEo3sBlbmjA",
+     "messageID": "msg_0cc8cca7a001DmgUD1zhwVcJo4"
+    }
+   ]
+  },
+  {
+   "info": {
+    "parentID": "msg_0cc8b178d001qVP5x9a9RbgFPx",
+    "role": "assistant",
+    "mode": "build",
+    "agent": "build",
+    "path": {
+     "cwd": "C:\\Users\\acura\\Desktop\\Trabalho Final Queiroz\\ProjetoSemanaAcademica\\semana-academica",
+     "root": "C:\\Users\\acura\\Desktop\\Trabalho Final Queiroz\\ProjetoSemanaAcademica"
+    },
+    "cost": 0.00524275,
+    "tokens": {
+     "total": 46224,
+     "input": 13504,
+     "output": 55,
+     "reasoning": 30,
+     "cache": {
+      "write": 0,
+      "read": 32635
+     }
+    },
+    "modelID": "gemini-3.5-flash-lite",
+    "providerID": "google",
+    "time": {
+     "created": 1790138176514,
+     "completed": 1790138178954
+    },
+    "finish": "tool-calls",
+    "id": "msg_0cc8cd4020019JL3A4nSJO6O2x",
+    "sessionID": "ses_f3374e882ffenhMKEo3sBlbmjA"
+   },
+   "parts": [
+    {
+     "snapshot": "6f1a00423a7ee723365316c2c7697c97538b72c7",
+     "type": "step-start",
+     "id": "prt_0cc8cdac10019RzhunVBejvxMe",
+     "sessionID": "ses_f3374e882ffenhMKEo3sBlbmjA",
+     "messageID": "msg_0cc8cd4020019JL3A4nSJO6O2x"
+    },
+    {
+     "type": "tool",
+     "tool": "read",
+     "callID": "3VyYnM9XwS1kscpl",
+     "state": {
+      "status": "completed",
+      "input": {
+       "filePath": "C:\\Users\\acura\\Desktop\\Trabalho Final Queiroz\\ProjetoSemanaAcademica\\semana-academica\\app\\src\\components\\ExtratoHoras.vue"
+      },
+      "output": "[1777 caracteres omitidos]",
+      "title": "semana-academica\\app\\src\\components\\ExtratoHoras.vue",
+      "time": {
+       "start": 1790138178246,
+       "end": 1790138178253
+      }
+     },
+     "metadata": {
+      "google": {
+       "thoughtSignature": "EtQBCtEBAWkUfRNy5cg1/ZzKPr1w4MlVxEvqSDQsjRoHA7DZwCsWIIqlXl5Qm1GHYa9VZn5bQihqv53vTRxAo2W1aULNw3HQ2lJ6MbOQc+otI08zDRr30y1tm5sbOdy3uhxrvfsC9GaQSNF/TQH9MRSkPpowVxdFPYwLnda/cytKXinISPay15HU+l5rxM3bm9fjkYncnprn27maogl4ufbIJ7gn64OmLOxV5gbi3L6M0mm0t+9njkwYg1BB5Vl5GUdm3j2/3OcTlZ9PCKf7N/r67XOTwWs="
+      }
+     },
+     "id": "prt_0cc8cdac3001C2tfZqdFRkoR45",
+     "sessionID": "ses_f3374e882ffenhMKEo3sBlbmjA",
+     "messageID": "msg_0cc8cd4020019JL3A4nSJO6O2x"
+    },
+    {
+     "reason": "tool-calls",
+     "snapshot": "6f1a00423a7ee723365316c2c7697c97538b72c7",
+     "type": "step-finish",
+     "tokens": {
+      "total": 46224,
+      "input": 13504,
+      "output": 55,
+      "reasoning": 30,
+      "cache": {
+       "write": 0,
+       "read": 32635
+      }
+     },
+     "cost": 0.00524275,
+     "id": "prt_0cc8cdc2c001taeI4RJo1C2xW6",
+     "sessionID": "ses_f3374e882ffenhMKEo3sBlbmjA",
+     "messageID": "msg_0cc8cd4020019JL3A4nSJO6O2x"
+    }
+   ]
+  },
+  {
+   "info": {
+    "parentID": "msg_0cc8b178d001qVP5x9a9RbgFPx",
+    "role": "assistant",
+    "mode": "build",
+    "agent": "build",
+    "path": {
+     "cwd": "C:\\Users\\acura\\Desktop\\Trabalho Final Queiroz\\ProjetoSemanaAcademica\\semana-academica",
+     "root": "C:\\Users\\acura\\Desktop\\Trabalho Final Queiroz\\ProjetoSemanaAcademica"
+    },
+    "cost": 0.00543523,
+    "tokens": {
+     "total": 46994,
+     "input": 14296,
+     "output": 52,
+     "reasoning": 15,
+     "cache": {
+      "write": 0,
+      "read": 32631
+     }
+    },
+    "modelID": "gemini-3.5-flash-lite",
+    "providerID": "google",
+    "time": {
+     "created": 1790138178957,
+     "completed": 1790138181203
+    },
+    "finish": "tool-calls",
+    "id": "msg_0cc8cdd8d001ry6WiBgxItN5x0",
+    "sessionID": "ses_f3374e882ffenhMKEo3sBlbmjA"
+   },
+   "parts": [
+    {
+     "snapshot": "6f1a00423a7ee723365316c2c7697c97538b72c7",
+     "type": "step-start",
+     "id": "prt_0cc8ce399001hBq1VNyKjiyKYC",
+     "sessionID": "ses_f3374e882ffenhMKEo3sBlbmjA",
+     "messageID": "msg_0cc8cdd8d001ry6WiBgxItN5x0"
+    },
+    {
+     "type": "tool",
+     "tool": "read",
+     "callID": "LOpdPX0kKNewoJpH",
+     "state": {
+      "status": "completed",
+      "input": {
+       "filePath": "C:\\Users\\acura\\Desktop\\Trabalho Final Queiroz\\ProjetoSemanaAcademica\\semana-academica\\app\\tests\\mocks\\handlers.js"
+      },
+      "output": "[9657 caracteres omitidos]",
+      "title": "semana-academica\\app\\tests\\mocks\\handlers.js",
+      "time": {
+       "start": 1790138180511,
+       "end": 1790138180518
+      }
+     },
+     "metadata": {
+      "google": {
+       "thoughtSignature": "EogBCoUBAWkUfRNItdiYfeh1BKonm6/Tqhw0dV/VOJxJGFQ/Y3IzN1PAUVusvQpPyCokxYPpvfJAkfq8f9tagofa/fCnBTaAb6vvsMBJeQxBdHRl6gKCKE9s3VwiMSMYJHs54T732rt3VZ4PnhKKF049xHLIqd0bpShcOKlwTBZqhHMboJ8diP4RgA=="
+      }
+     },
+     "id": "prt_0cc8ce39b001y2gh2bYmbgrhMv",
+     "sessionID": "ses_f3374e882ffenhMKEo3sBlbmjA",
+     "messageID": "msg_0cc8cdd8d001ry6WiBgxItN5x0"
+    },
+    {
+     "reason": "tool-calls",
+     "snapshot": "6f1a00423a7ee723365316c2c7697c97538b72c7",
+     "type": "step-finish",
+     "tokens": {
+      "total": 46994,
+      "input": 14296,
+      "output": 52,
+      "reasoning": 15,
+      "cache": {
+       "write": 0,
+       "read": 32631
+      }
+     },
+     "cost": 0.00543523,
+     "id": "prt_0cc8ce51d001cVCUAX6o7rg6Rs",
+     "sessionID": "ses_f3374e882ffenhMKEo3sBlbmjA",
+     "messageID": "msg_0cc8cdd8d001ry6WiBgxItN5x0"
+    }
+   ]
+  },
+  {
+   "info": {
+    "parentID": "msg_0cc8b178d001qVP5x9a9RbgFPx",
+    "role": "assistant",
+    "mode": "build",
+    "agent": "build",
+    "path": {
+     "cwd": "C:\\Users\\acura\\Desktop\\Trabalho Final Queiroz\\ProjetoSemanaAcademica\\semana-academica",
+     "root": "C:\\Users\\acura\\Desktop\\Trabalho Final Queiroz\\ProjetoSemanaAcademica"
+    },
+    "cost": 0.00661795,
+    "tokens": {
+     "total": 50918,
+     "input": 18213,
+     "output": 52,
+     "reasoning": 18,
+     "cache": {
+      "write": 0,
+      "read": 32635
+     }
+    },
+    "modelID": "gemini-3.5-flash-lite",
+    "providerID": "google",
+    "time": {
+     "created": 1790138181207,
+     "completed": 1790138190369
+    },
+    "finish": "tool-calls",
+    "id": "msg_0cc8ce657001A00ZF5ZSvbrkYN",
+    "sessionID": "ses_f3374e882ffenhMKEo3sBlbmjA"
+   },
+   "parts": [
+    {
+     "snapshot": "6f1a00423a7ee723365316c2c7697c97538b72c7",
+     "type": "step-start",
+     "id": "prt_0cc8ced50001aaRxEfzwsogZkO",
+     "sessionID": "ses_f3374e882ffenhMKEo3sBlbmjA",
+     "messageID": "msg_0cc8ce657001A00ZF5ZSvbrkYN"
+    },
+    {
+     "type": "tool",
+     "tool": "bash",
+     "callID": "E6sBQCkEC8zqtF6L",
+     "state": {
+      "status": "completed",
+      "input": {
+       "command": "npm test",
+       "workdir": "C:\\Users\\acura\\Desktop\\Trabalho Final Queiroz\\ProjetoSemanaAcademica\\semana-academica\\app"
+      },
+      "output": "\n> app@1.0.0 test\n> vitest\n\n\u001b[33m(!) Your Vite config uses features that are unsupported by `configLoader: 'native'`, which is planned to become the default in a future major version of Vite:\n  - ESM syntax in a file loaded as CommonJS (vite.config.js:1:1). Use a `.mjs` extension or set `\"type\": \"module\"` in the closest package.json\nSet `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.\u001b[39m\n\n RUN  v5.0.1 C:/Users/acura/Desktop/Trabalho Final Queiroz/ProjetoSemanaAcademica/semana-academica/app\n\n\n Test Files  10 passed (10)\n      Tests  28 passed (28)\n   Start at  01:36:24\n   Duration  5.35s (environment 69%, import 17%, tests 9%, transform 5%)\n\n",
+      "metadata": {
+       "output": "\n> app@1.0.0 test\n> vitest\n\n\u001b[33m(!) Your Vite config uses features that are unsupported by `configLoader: 'native'`, which is planned to become the default in a future major version of Vite:\n  - ESM syntax in a file loaded as CommonJS (vite.config.js:1:1). Use a `.mjs` extension or set `\"type\": \"module\"` in the closest package.json\nSet `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.\u001b[39m\n\n RUN  v5.0.1 C:/Users/acura/Desktop/Trabalho Final Queiroz/ProjetoSemanaAcademica/semana-academica/app\n\n\n Test Files  10 passed (10)\n      Tests  28 passed (28)\n   Start at  01:36:24\n   Duration  5.35s (environment 69%, import 17%, tests 9%, transform 5%)\n\n",
+       "exit": 0,
+       "truncated": false
+      },
+      "title": "npm test",
+      "time": {
+       "start": 1790138182997,
+       "end": 1790138189653
+      }
+     },
+     "metadata": {
+      "google": {
+       "thoughtSignature": "ErUBCrIBAWkUfROqG2ctLWQ9Fi3qbWol4cR5SuNea918QdN8eIR3o97OXemaLr45QUIExghlSuozUv8/jTEC+znNtrFq+g+bQYhFNy8RZd5xWQkAlLpioM1xdoA137H8Ch3Zs/lBr6jFSMLBUF1VYUvNm/Zj5tK+viw8QGxo5+0NBtOf5u3NlBrho3dX3nPrQLpjqXSJURCkum+4fyV+5a1SbQxm8M1lcienEqfGW48fK9jjnO5iUA=="
+      }
+     },
+     "id": "prt_0cc8ced51001WLBoAYVbv6ONsN",
+     "sessionID": "ses_f3374e882ffenhMKEo3sBlbmjA",
+     "messageID": "msg_0cc8ce657001A00ZF5ZSvbrkYN"
+    },
+    {
+     "reason": "tool-calls",
+     "snapshot": "6f1a00423a7ee723365316c2c7697c97538b72c7",
+     "type": "step-finish",
+     "tokens": {
+      "total": 50918,
+      "input": 18213,
+      "output": 52,
+      "reasoning": 18,
+      "cache": {
+       "write": 0,
+       "read": 32635
+      }
+     },
+     "cost": 0.00661795,
+     "id": "prt_0cc8d08d0001s7Y3wzxk4Dsvky",
+     "sessionID": "ses_f3374e882ffenhMKEo3sBlbmjA",
+     "messageID": "msg_0cc8ce657001A00ZF5ZSvbrkYN"
+    }
+   ]
+  },
+  {
+   "info": {
+    "parentID": "msg_0cc8b178d001qVP5x9a9RbgFPx",
+    "role": "assistant",
+    "mode": "build",
+    "agent": "build",
+    "path": {
+     "cwd": "C:\\Users\\acura\\Desktop\\Trabalho Final Queiroz\\ProjetoSemanaAcademica\\semana-academica",
+     "root": "C:\\Users\\acura\\Desktop\\Trabalho Final Queiroz\\ProjetoSemanaAcademica"
+    },
+    "cost": 0.00338562,
+    "tokens": {
+     "total": 51661,
+     "input": 2216,
+     "output": 50,
+     "reasoning": 451,
+     "cache": {
+      "write": 0,
+      "read": 48944
+     }
+    },
+    "modelID": "gemini-3.5-flash-lite",
+    "providerID": "google",
+    "time": {
+     "created": 1790138190373,
+     "completed": 1790138202277
+    },
+    "finish": "tool-calls",
+    "id": "msg_0cc8d0a25001TLrs2r35aQCy2S",
+    "sessionID": "ses_f3374e882ffenhMKEo3sBlbmjA"
+   },
+   "parts": [
+    {
+     "snapshot": "6f1a00423a7ee723365316c2c7697c97538b72c7",
+     "type": "step-start",
+     "id": "prt_0cc8d3508001qw2ZiAZ94zmvm9",
+     "sessionID": "ses_f3374e882ffenhMKEo3sBlbmjA",
+     "messageID": "msg_0cc8d0a25001TLrs2r35aQCy2S"
+    },
+    {
+     "type": "tool",
+     "tool": "bash",
+     "callID": "4xEBDmb7VieA4T2B",
+     "state": {
+      "status": "completed",
+      "input": {
+       "command": "git status",
+       "workdir": "C:\\Users\\acura\\Desktop\\Trabalho Final Queiroz\\ProjetoSemanaAcademica\\semana-academica"
+      },
+      "output": "On branch main\nYour branch is ahead of 'origin/main' by 2 commits.\n  (use \"git push\" to publish your local commits)\n\nnothing to commit, working tree clean\n",
+      "metadata": {
+       "output": "On branch main\nYour branch is ahead of 'origin/main' by 2 commits.\n  (use \"git push\" to publish your local commits)\n\nnothing to commit, working tree clean\n",
+       "exit": 0,
+       "truncated": false
+      },
+      "title": "git status",
+      "time": {
+       "start": 1790138201358,
+       "end": 1790138201595
+      }
+     },
+     "metadata": {
+      "google": {
+       "thoughtSignature": "EtMPCtAPAWkUfRN3w3y2GqcyTUm5k7jxYYnggEtaCsxpL37ztHiupeYVGaizJ0cCyHHx9xauBxZZRa8QX1ZiNe6H2M/fevHgRtgxeyRbQ1Jnk4g0O6trfMKgyMNmjNtlIkBmztlge6wFXOv0RmkRyTbKXam7l0bK8pVBJFp3l1IBM1KjBjCNLxz5z70cProS02g3IE7k5gL3rgwB93JYihYqvVcXhNAjgW+2TBe4GJh1n9LeTNMdFXvappMGu7HsDIykNk5DjhsusVmuBADqxyFPaVAaowUvAxh6BGRH7E5LFm36ch1I5sn8q4WW8smz+CXBag8VaH6BHYkOfuDBfQYCVOJRYV4ZH88Uv/6RRIqeZiCJYUl+4WLQJX+k1WsXGj4jF+7qoTe0hObv6pO1/bGJRA0bUfalneHKJvpw0/46jiYxuYqaS3KLPgMNR8JQ5AgiWDGyiQh0HiqyxVOW3QqBIIxtqIz69vPK/R41QGa8WkWOaRN6i/Jo70/l3WSnrbe9XLjm7GmpJLQvBMbY8XYwzzumnQZuzblQCRkco4sGzh3aTcTc5Ik8yT50DDl4zysiUcq7oFYN4WqUhqbUvh9Mk/dUrJ3pk6Z56s74wT+o3L2GFKb7JyowhLeCoz6nq/YljRreeB85v0qWYUGvlx9qVuKCAUGBkaBUmwAoIQ/h90QosjJEqa1iMx0zLCHySKrfmEGFMz/Wd4a4PqY+LJXStBERgGUck9jXk+vSlrD/0G15N2HajPeitt4VyKOzstt3wuLwWhJ3aNbyKjzTkn7oIuN30Ut8Hh69ZeHnxgIU9UMtP+WzaRYk36SxgGUb/K6DsIN1pDrg61kWVH7YZmdSIbHpftxzhpARNFf1XWXu681QX87V7ojWglD6OO0/BAwRSLyM3eSfg2LlxtzVnVFRh71nt89Qa9XGgaPOE1Z3Cc25fbjzArO6F1W2F1QTXkdJMLWi/Yz7ZevuK7fkfjIJ8XtKMo476FRygFDJiNFZIAL9QFzIaU4WWJo0DdA08ar3jdN3NNCMoXWqGaFAUEkudX/dh0IH+Z1pHUCSPPGof9UlGMDG1JdXRNeMHg6A7qbATepCboW/t+QzNX5oxc0VjHQ+JfZCX8HxIdqRhN/4HrVIKYVVsQT4mq0OCimesD31Qth6vECH5iyvE/TYRCnjWkmo7+cYIlWPyngSa89SdteXYBzQqwPmndlrxvbJSaYE2XBqFqw5vMlyjfaAHSAt3pSf4Erxdt6xw1mdSF9xa2KfPoYc+WgbN254fUUTTLpnTJkmMVE5rllZINzxWGk1b/Vqaf0VLmpNtkzu4Tk0gJ6geTQG3RCfAOjs4Dqr7O1u32RCQQUdvKz8je8odzRG9Ee7pRbKRJd0mEsgs++yNIAd9J0lIbXrZTLdseWlX3ZURyziDkzXtSz9Qtmy9nyP75mT3zAoSawW2bXtK74xMa24OrKbNwuCgnlfDkOfBjMWhgM5vlcsFRXcG9H5ahAM4QKvLXq5G8lmjQuXR+8ObvCKSHjYiPgdFxTk/HBiQxNSkAZMaLdlaIjYe+3wFBw1LbZrdSvKtb4alszQo89Q2uexQpSEQy/IyjRBfCkwE+9VIeKq3aipsBSOyiHBx8gIWoBHkXLADDt6nwEAWqhPOZOrQWbMqb8aU7tmu15S5fXs1+JXnHM2uiwlsUzX6PadRJpeWZzGxwjlgmIVhKdUMqkeA3E7M4413VA1Yjojzpl6w3P4aDQ2N9O9jEm3/8Ue6vbNjpd92WzoGnjTRF72P8okdfUoJ2y8IKNqXc7Ds4qTLU0S4ni1ZkXBtlu0FmLETRlyJjTEW67FpCrs2isNZ40/KRUXerOaORSW26NxH1j2CHaF7AVWI5D4W1Y/wvKChEdDnCCDkAn1IiZmOOpnjCOSqg897sMSldmwYEBsDIOaRU1HAirgdyPSxCd+gfulcM0EpUiPgyVPOT9qGfBPtaYc0unNmAKIvEPtGjSg3Pyg8nZ0GMC/d4tDJCdqikPY8bWGrU+x+VWBMJJUCrAyxyZGfjPFIQOd9DoGIV6A3uf2RprdvygzmbE2PDKNKBQ7cB48k1HSUyZ6/ofzKc/JouDA+4084Dczn50pkaxa/+mdkOTYzYrgbxYQnCf0MQeVWjAkxHc8ukgR2aK+A6VNqOZgUJY8nA3FWLVGD4HjzLHfcvUT3WhtxXXo53JkBA8qkR6DCQLMw9yfsAnjemPc9GGkkPYn4vZafklbKZ9YO9+aWgzgiJ8GjpZf8xHFIaIEbGDiXgdKVnrZd1FMijhCGXjkAxJP6dYb2YV772mYWoXPjOFL03FUh9dnWnMhFnB6stvoO5BLOBC5k7XssUqZQj133u9v3/kbjigesp7Don5u5Wd3QcMMnuA1z5Aug/EOqG15/7uFD697ju4WwZu4CSSXClbVfDvMbszdT7uGQTRP+lpZrqSGjwkFtF9Yudggeh956Xdilz2c7jcjShg7MszbKVnPEBtIqhAfsiq9rzsidBF36n1PTN6QPlL4RerHqRpA+oJ2v/Ow66v0MtDSbw6FdT3doyP5F79L+bVwATvH+rE+EDlGSCmbQIUUDxeQN/snyiEzzvxYZfmXl0+N3U+JXIsW8vyNVK7HHQUdlU4Fy3a3Y11QxbvFK5cpUXpmAIK71i/LhPWKD1WMZqOp/PaqsSw="
+      }
+     },
+     "id": "prt_0cc8d350a001fWn0MtfidN3CQS",
+     "sessionID": "ses_f3374e882ffenhMKEo3sBlbmjA",
+     "messageID": "msg_0cc8d0a25001TLrs2r35aQCy2S"
+    },
+    {
+     "reason": "tool-calls",
+     "snapshot": "6f1a00423a7ee723365316c2c7697c97538b72c7",
+     "type": "step-finish",
+     "tokens": {
+      "total": 51661,
+      "input": 2216,
+      "output": 50,
+      "reasoning": 451,
+      "cache": {
+       "write": 0,
+       "read": 48944
+      }
+     },
+     "cost": 0.00338562,
+     "id": "prt_0cc8d3747001Xkho7YGiCvpPGx",
+     "sessionID": "ses_f3374e882ffenhMKEo3sBlbmjA",
+     "messageID": "msg_0cc8d0a25001TLrs2r35aQCy2S"
+    }
+   ]
+  },
+  {
+   "info": {
+    "parentID": "msg_0cc8b178d001qVP5x9a9RbgFPx",
+    "role": "assistant",
+    "mode": "build",
+    "agent": "build",
+    "path": {
+     "cwd": "C:\\Users\\acura\\Desktop\\Trabalho Final Queiroz\\ProjetoSemanaAcademica\\semana-academica",
+     "root": "C:\\Users\\acura\\Desktop\\Trabalho Final Queiroz\\ProjetoSemanaAcademica"
+    },
+    "cost": 0.00339801,
+    "tokens": {
+     "total": 52158,
+     "input": 2783,
+     "output": 154,
+     "reasoning": 284,
+     "cache": {
+      "write": 0,
+      "read": 48937
+     }
+    },
+    "modelID": "gemini-3.5-flash-lite",
+    "providerID": "google",
+    "time": {
+     "created": 1790138202281,
+     "completed": 1790138206078
+    },
+    "finish": "stop",
+    "id": "msg_0cc8d38a9001of7HBN893M5NhT",
+    "sessionID": "ses_f3374e882ffenhMKEo3sBlbmjA"
+   },
+   "parts": [
+    {
+     "snapshot": "6f1a00423a7ee723365316c2c7697c97538b72c7",
+     "type": "step-start",
+     "id": "prt_0cc8d435d0015XNEjQIDKRNR4O",
+     "sessionID": "ses_f3374e882ffenhMKEo3sBlbmjA",
+     "messageID": "msg_0cc8d38a9001of7HBN893M5NhT"
+    },
+    {
+     "type": "text",
+     "text": "Testes e implementação da Fatia 3 - M4 (meus certificados, extrato de horas e verificação pública de certificado pelo código) executados com sucesso. \n\n- **Backend (API):** Rotas de emissão (`POST /atividades/:id/certificado`), listagem (`GET /certificados`), extrato (`GET /extrato`) e verificação pública (`GET /certificados/:codigo`) validadas por testes automatizados (`78` testes aprovados).\n- **Frontend (App):** Componentes `MeusCertificados.vue`, `ExtratoHoras.vue` e `VerificacaoCertificado.vue` implementados e testados com MSW (`28` testes aprovados).",
+     "time": {
+      "start": 1790138205022,
+      "end": 1790138205407
+     },
+     "id": "prt_0cc8d435e0011VXqGhFf2dWHpY",
+     "sessionID": "ses_f3374e882ffenhMKEo3sBlbmjA",
+     "messageID": "msg_0cc8d38a9001of7HBN893M5NhT"
+    },
+    {
+     "reason": "stop",
+     "snapshot": "6f1a00423a7ee723365316c2c7697c97538b72c7",
+     "type": "step-finish",
+     "tokens": {
+      "total": 52158,
+      "input": 2783,
+      "output": 154,
+      "reasoning": 284,
+      "cache": {
+       "write": 0,
+       "read": 48937
+      }
+     },
+     "cost": 0.00339801,
+     "id": "prt_0cc8d462e001ownqfh4vlOK3PK",
+     "sessionID": "ses_f3374e882ffenhMKEo3sBlbmjA",
+     "messageID": "msg_0cc8d38a9001of7HBN893M5NhT"
+    }
+   ]
+  }
+ ]
+}
