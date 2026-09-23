@@ -22,4 +22,5 @@ Requisições são chamadas ao modelo: cada passo do agente é uma. Skills conta
 | 23/09 01:05 | [Implementação da Fatia 1 - M4 de Certificados](ses_f338f67fbffe6c4ekJohxA3F5r.md) | 40 | — | — | 6 / 6 | 2 | 1 | 0 | — |
 | 23/09 01:28 | [Implementação Fatia 2 - M4: Certificados e horas](ses_f337a4b6effehQerqGUxutSLBC.md) | 20 | front-end | — | 0 / 3 | 0 | 0 | 0 | — |
 | 23/09 01:34 | [Fatia 3 - M4: Certificados e extrato de horas](ses_f3374e882ffenhMKEo3sBlbmjA.md) | 20 | — | — | 0 / 2 | 0 | 0 | 0 | — |
-| | **Total: 10 sessões** | 403 | grilling, to-spec, tdd (3), front-end | — | 64 / 27 | 4 | 8 | 0 | — |
+| 23/09 01:41 | [Auditoria M4-certificados.md com contrato-api](ses_f336dee85ffeo56F57m2s2dBya.md) | 5 | — | revisor-de-contrato | 0 / 0 | 0 | 0 | 0 | — |
+| | **Total: 11 sessões** | 408 | grilling, to-spec, tdd (3), front-end | revisor-de-contrato | 64 / 27 | 4 | 8 | 0 | — |
