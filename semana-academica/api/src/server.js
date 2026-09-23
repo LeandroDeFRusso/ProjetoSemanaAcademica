@@ -775,7 +775,7 @@ export function criarServidor(portaDesejada = 3000) {
         if (!inscricao) {
           return res.status(403).json({ erro: 'NAO_INSCRITO', mensagem: 'Participante não inscrito' });
         }
-
+        
         const justificativa = body.justificativa;
         if (!justificativa || typeof justificativa !== 'string' || justificativa.trim().length < 10) {
           return res.status(422).json({ erro: 'JUSTIFICATIVA_OBRIGATORIA', mensagem: 'Justificativa obrigatória (mínimo 10 caracteres)' });
@@ -959,8 +959,10 @@ export function criarServidor(portaDesejada = 3000) {
       });
 
     // GET /certificados/:codigo
+    // GET /certificados/:codigo
     app.get('/certificados/:codigo', (req, res) => {
-      const cert = db.prepare('SELECT c.*, a.titulo as atividadeTitulo FROM certificados c JOIN atividades a ON c.atividadeId = a.id WHERE c.codigo = ?').get(req.params.codigo.toUpperCase());
+      const codigo = req.params.codigo.toUpperCase();
+      const cert = db.prepare('SELECT c.*, a.titulo as atividadeTitulo FROM certificados c JOIN atividades a ON c.atividadeId = a.id WHERE c.codigo = ?').get(codigo);
       if (!cert) {
         return res.status(404).json({ erro: 'NAO_ENCONTRADO', mensagem: 'Certificado não encontrado' });
       }
