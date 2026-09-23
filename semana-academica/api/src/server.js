@@ -958,6 +958,72 @@ export function criarServidor(portaDesejada = 3000) {
         })));
       });
 
+    // GET /certificados/:codigo
+    app.get('/certificados/:codigo', (req, res) => {
+      const cert = db.prepare('SELECT c.*, a.titulo as atividadeTitulo FROM certificados c JOIN atividades a ON c.atividadeId = a.id WHERE c.codigo = ?').get(req.params.codigo.toUpperCase());
+      if (!cert) {
+        return res.status(404).json({ erro: 'NAO_ENCONTRADO', mensagem: 'Certificado não encontrado' });
+      }
+      const participante = db.prepare('SELECT nome FROM usuarios WHERE id = ?').get(cert.participanteId);
+      res.json({
+        codigo: cert.codigo,
+        participante: participante.nome,
+        atividade: cert.atividadeTitulo,
+        cargaHorariaMinutos: cert.cargaHorariaMinutos,
+        emitidoEm: cert.emitidoEm
+      });
+    });
+
+    // GET /extrato
+    app.get('/extrato', (req, res) => {
+      if (req.usuario.papel !== 'participante') {
+        return res.status(403).json({ erro: 'SOMENTE_PARTICIPANTE', mensagem: 'Apenas participante' });
+      }
+
+      const inscricoes = db.prepare(`
+        SELECT i.atividadeId FROM inscricoes i
+        WHERE i.participanteId = ? AND i.status = 'confirmada'
+      `).all(req.usuario.id);
+
+      const itens = [];
+      let palestrasMinutos = 0;
+      let minicursosMinutos = 0;
+      let totalMinutos = 0;
+
+      for (const inc of inscricoes) {
+        const atvRow = db.prepare('SELECT * FROM atividades WHERE id = ?').get(inc.atividadeId);
+        const atvObj = getAtividadeObj(atvRow);
+        const cert = db.prepare('SELECT codigo FROM certificados WHERE atividadeId = ? AND participanteId = ?').get(inc.atividadeId, req.usuario.id);
+        
+        const carga = atvObj.cargaHorariaMinutos;
+        itens.push({
+          atividadeId: inc.atividadeId,
+          titulo: atvRow.titulo,
+          tipo: atvRow.tipo,
+          cargaHorariaMinutos: carga,
+          codigo: cert ? cert.codigo : null
+        });
+
+        if (atvRow.tipo === 'palestra') {
+          palestrasMinutos += carga;
+        } else if (atvRow.tipo === 'minicurso') {
+          minicursosMinutos += carga;
+        }
+        totalMinutos += carga;
+      }
+
+      const aproveitadoMinutos = Math.min(1200, Math.min(240, palestrasMinutos) + minicursosMinutos + (totalMinutos - palestrasMinutos - minicursosMinutos));
+
+      res.json({
+        itens,
+        palestrasMinutos,
+        minicursosMinutos,
+        totalMinutos,
+        aproveitadoMinutos
+      });
+    });
+
+
     // GET /inscricoes/:id
     app.get('/inscricoes/:id', (req, res) => {
       const row = db.prepare('SELECT * FROM inscricoes WHERE id = ?').get(req.params.id);

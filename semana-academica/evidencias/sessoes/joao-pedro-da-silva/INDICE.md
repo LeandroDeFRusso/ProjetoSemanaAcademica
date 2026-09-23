@@ -16,4 +16,5 @@ Requisições são chamadas ao modelo: cada passo do agente é uma. Skills conta
 | 22/09 21:49 | [Respostas pendentes em M4-certificados.md](ses_f344317aeffeU7bz4gfGtRHSdm.md) | 20 | — | — | 0 / 0 | 0 | 0 | 0 | — |
 | 22/09 22:00 | [New session - 2026-09-23T01:00:19.424Z](ses_f3438e19fffe5pXg1TZs28OYjs.md) | 9 | to-spec | — | 0 / 0 | 0 | 0 | 0 | — |
 | 22/09 22:07 | [TDD na fatia 1 de M4-certificados.md](ses_f343221c8ffeq0hfXZEOazt65c.md) | 69 | tdd | — | 5 / 6 | 2 | 1 | 0 | — |
-| | **Total: 4 sessões** | 122 | grilling, to-spec, tdd | — | 5 / 6 | 2 | 1 | 0 | — |
+| 22/09 22:46 | [TDD na fatia 2 de M4-certificados.md](ses_f340e8eddffed42ZbdNtQGaF7Y.md) | 43 | tdd | — | 11 / 2 | 0 | 2 | 0 | — |
+| | **Total: 5 sessões** | 165 | grilling, to-spec, tdd (2) | — | 16 / 8 | 2 | 3 | 0 | — |
