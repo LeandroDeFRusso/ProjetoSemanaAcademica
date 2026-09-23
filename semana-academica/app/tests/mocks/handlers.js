@@ -135,5 +135,93 @@ export const handlers = [
       registradaEm: new Date().toISOString(),
       justificativa: body.justificativa
     }, { status: 201 });
+  }),
+  http.get('/certificados', ({ request }) => {
+    const auth = request.headers.get('X-Usuario');
+    if (!auth) {
+      return HttpResponse.json({ erro: 'USUARIO_DESCONHECIDO', mensagem: 'Usuário não identificado' }, { status: 401 });
+    }
+    if (auth === 'org-ana') {
+      return HttpResponse.json({ erro: 'SOMENTE_PARTICIPANTE', mensagem: 'Apenas participante' }, { status: 403 });
+    }
+    return HttpResponse.json([
+      {
+        codigo: 'SA26-ABCD-1234',
+        atividadeId: 'atv_1',
+        participanteId: auth,
+        cargaHorariaMinutos: 120,
+        presencas: 1,
+        encontros: 1,
+        emitidoEm: '2026-10-19T13:00:00-03:00'
+      }
+    ]);
+  }),
+  http.post('/atividades/:id/certificado', ({ params, request }) => {
+    const auth = request.headers.get('X-Usuario');
+    if (!auth) {
+      return HttpResponse.json({ erro: 'USUARIO_DESCONHECIDO', mensagem: 'Usuário não identificado' }, { status: 401 });
+    }
+    if (auth === 'org-ana') {
+      return HttpResponse.json({ erro: 'SOMENTE_ORGANIZACAO', mensagem: 'Apenas organização' }, { status: 403 });
+    }
+    if (params.id === 'atv_nao_encerrada') {
+      return HttpResponse.json({ erro: 'ATIVIDADE_NAO_ENCERRADA', mensagem: 'Atividade não encerrada' }, { status: 422 });
+    }
+    if (params.id === 'atv_presenca_insuficiente') {
+      return HttpResponse.json({ erro: 'PRESENCA_INSUFICIENTE', mensagem: 'Presença insuficiente' }, { status: 422 });
+    }
+    return HttpResponse.json({
+      codigo: `SA26-${params.id.toUpperCase().slice(0, 4).padEnd(4, 'X')}-1234`,
+      atividadeId: params.id,
+      participanteId: auth,
+      cargaHorariaMinutos: 120,
+      presencas: 1,
+      encontros: 1,
+      emitidoEm: '2026-10-19T13:00:00-03:00'
+    }, { status: 201 });
+  }),
+  http.get('/extrato', ({ request }) => {
+    const auth = request.headers.get('X-Usuario');
+    if (!auth) {
+      return HttpResponse.json({ erro: 'USUARIO_DESCONHECIDO', mensagem: 'Usuário não identificado' }, { status: 401 });
+    }
+    if (auth === 'org-ana') {
+      return HttpResponse.json({ erro: 'SOMENTE_ORGANIZACAO', mensagem: 'Apenas organização' }, { status: 403 });
+    }
+    return HttpResponse.json({
+      itens: [
+        {
+          atividadeId: 'atv_1',
+          titulo: 'Palestra Exemplo',
+          tipo: 'palestra',
+          cargaHorariaMinutos: 120,
+          codigo: 'SA26-ABCD-1234'
+        },
+        {
+          atividadeId: 'atv_2',
+          titulo: 'Minicurso Exemplo',
+          tipo: 'minicurso',
+          cargaHorariaMinutos: 180,
+          codigo: null
+        }
+      ],
+      palestrasMinutos: 120,
+      minicursosMinutos: 180,
+      totalMinutos: 300,
+      aproveitadoMinutos: 300
+    });
+  }),
+  http.get('/certificados/:codigo', ({ params }) => {
+    const codigo = params.codigo.toUpperCase();
+    if (codigo === 'SA26-INEXISTENTE' || codigo === 'INVALIDO') {
+      return HttpResponse.json({ erro: 'NAO_ENCONTRADO', mensagem: 'Certificado não encontrado' }, { status: 404 });
+    }
+    return HttpResponse.json({
+      codigo: codigo,
+      participante: 'Carla Mendes Souza',
+      atividade: 'Palestra Exemplo',
+      cargaHorariaMinutos: 120,
+      emitidoEm: '2026-10-19T13:00:00-03:00'
+    });
   })
 ];
