@@ -1,0 +1,871 @@
+{
+ "info": {
+  "id": "ses_f3438e19fffe5pXg1TZs28OYjs",
+  "slug": "neon-nebula",
+  "projectID": "83101555cb47ec2aac60beaa3444a9fffcf1229a",
+  "directory": "C:\\Users\\acura\\Desktop\\Trabalho Final Queiroz\\ProjetoSemanaAcademica\\semana-academica",
+  "path": "semana-academica",
+  "title": "New session - 2026-09-23T01:00:19.424Z",
+  "agent": "build",
+  "model": {
+   "id": "gemini-3.5-flash-lite",
+   "providerID": "google"
+  },
+  "version": "1.18.32",
+  "summary": {
+   "additions": 0,
+   "deletions": 0,
+   "files": 0
+  },
+  "cost": 0.05975129999999999,
+  "tokens": {
+   "input": 135478,
+   "output": 2733,
+   "reasoning": 4314,
+   "cache": {
+    "read": 49680,
+    "write": 0
+   }
+  },
+  "time": {
+   "created": 1790125219424,
+   "updated": 1790125260665
+  }
+ },
+ "messages": [
+  {
+   "info": {
+    "role": "user",
+    "time": {
+     "created": 1790125219440
+    },
+    "agent": "build",
+    "model": {
+     "providerID": "google",
+     "modelID": "gemini-3.5-flash-lite"
+    },
+    "summary": {
+     "diffs": [
+      {
+       "file": "semana-academica/specs/M4-certificados.md",
+       "patch": "Index: semana-academica/specs/M4-certificados.md\n===================================================================\n--- semana-academica/specs/M4-certificados.md\t\n+++ semana-academica/specs/M4-certificados.md\t\n@@ -0,0 +1,76 @@\n+# Spec — M4 — Certificados e Extrato\n+\n+## 1. Objetivo\n+Permitir que participantes emitam certificados de atividades concluídas (com base em presença mínima e encerramento da atividade), consultem seus certificados emitidos, obtenham o extrato de horas complementares computadas com aplicação de tetos, e que qualquer pessoa verifique publicamente a autenticidade de um certificado por seu código.\n+\n+## 2. Fora de escopo\n+- Gestão de atividades, salas e encontros (tratado em M1).\n+- Inscrições e lista de espera em atividades (tratado em M2).\n+- Registro de presenças por QR code e manual (tratado em M3).\n+- Painel gerencial, estatísticas e bloqueios por faltas (tratado em M5).\n+\n+## 3. Modelo\n+\n+### Certificado\n+- `codigo`: string (formato `SA26-XXXX-XXXX`, alfabeto da RN-305)\n+- `atividadeId`: string\n+- `participanteId`: string\n+- `cargaHorariaMinutos`: número (minutos)\n+- `presencas`: número\n+- `encontros`: número\n+- `emitidoEm`: string ISO 8601\n+\n+### Verificacao\n+- `codigo`: string\n+- `participante`: string (nome do participante)\n+- `atividade`: string (título da atividade)\n+- `cargaHorariaMinutos`: número\n+- `emitidoEm`: string ISO 8601\n+\n+### Extrato\n+- `itens`: array de objetos `ItemExtrato`\n+  - `atividadeId`: string\n+  - `titulo`: string\n+  - `tipo`: string (`palestra`, `minicurso`, etc.)\n+  - `cargaHorariaMinutos`: número\n+  - `codigo`: string ou `null` (código do certificado se emitido, `null` se não emitido)\n+- `palestrasMinutos`: número (soma bruta da carga horária de palestras elegíveis)\n+- `minicursosMinutos`: número (soma bruta da carga horária de minicursos elegíveis)\n+- `totalMinutos`: número (soma bruta de tudo)\n+- `aproveitadoMinutos`: número (valor computado após aplicação dos tetos: palestras contam no máximo 240 min; total aproveitado limitado a no máximo 1200 min).\n+\n+## 4. Endpoints\n+\n+- `POST /atividades/:id/certificado`: Emite ou recupera o certificado da atividade para o participante autenticado (201 na primeira emissão, 200 nas seguintes). Exclusivo para participantes (`403`).\n+- `GET /certificados`: Retorna a lista de certificados já emitidos pelo participante autenticado (200 `[Certificado]`). Exclusivo para participantes (`403`).\n+- `GET /certificados/:codigo`: Rota pública (sem `X-Usuario`) que verifica um certificado pelo código (200 `Verificacao` ou 404 se inválido/inexistente).\n+- `GET /extrato`: Retorna o extrato de horas complementares do participante autenticado (200 `Extrato`). Exclusivo para participantes (`403`).\n+\n+## 5. Regras\n+\n+- **R1 (P1, RN-404)**: Critério de presença mínima (`PRESENCA_INSUFICIENTE`): A emissão de certificado exige frequência mínima de 75% dos encontros da atividade, calculada sem arredondar a favor do participante. Em termos inteiros: presenças × 4 ≥ encontros × 3. Caso o participante não atinja esse mínimo, a operação deve ser recusada com status `422 PRESENCA_INSUFICIENTE`.\n+- **R2 (P2, RN-401)**: Condição de atividade encerrada (`ATIVIDADE_NAO_ENCERRADA`): A emissão de certificado (`POST /atividades/:id/certificado`) exige que a atividade esteja encerrada. A atividade só é considerada encerrada a partir do fim do último encontro. Antes disso, qualquer tentativa de emissão deve ser recusada com status `422 ATIVIDADE_NAO_ENCERRADA`.\n+- **R3 (P3, RN-305, RN-407)**: Formato e comportamento da emissão (`POST /atividades/:id/certificado`): O código do certificado é gerado no formato `SA26-XXXX-XXXX`, utilizando o alfabeto definido na RN-305, sendo único e gerado exclusivamente na primeira emissão (permanecendo inalterado nas consultas subsequentes). Na 1ª emissão, responde com `201` e o objeto `Certificado` criado. Emissões seguintes da mesma atividade pelo mesmo participante respondem com `200` retornando o mesmo certificado (mesmo código).\n+- **R4 (P4, RN-410, RN-411, RN-412)**: Cálculo do Extrato (`GET /extrato`): O extrato é calculado dinamicamente na consulta (não persistido) e lista toda atividade elegível do participante, emitida ou não (`codigo` igual a `null` se não emitida). `palestrasMinutos` e `minicursosMinutos` representam a soma da carga horária total das atividades elegíveis de cada tipo. `totalMinutos` é a soma bruta de tudo. `aproveitadoMinutos` aplica os tetos regulamentares: palestras contam no máximo 240 min (4h) no aproveitado, e o aproveitado total é limitado a no máximo 1200 min (20h).\n+- **R5 (P5, RN-408, RN-413)**: Verificação pública de certificados (`GET /certificados/:codigo`): A rota é pública (não exige cabeçalho `X-Usuario`) e aceita o código em minúsculas. Conforme a ordem de validação da RN-413, código inexistente ou inválido cai no primeiro caso da cadeia e deve ser recusado com status `404`.\n+- **R6 (Contrato)**: Restrições de papel e autenticação nas rotas de certificados e extrato: As rotas `POST /atividades/:id/certificado`, `GET /certificados` e `GET /extrato` exigem autenticação de participante (`X-Usuario` válido de um participante). Requisições sem cabeçalho ou com usuário desconhecido respondem `401 USUARIO_DESCONHECIDO`. Tentativas por usuários da organização respondem `403`. A rota `GET /certificados/:codigo` é pública e não exige `X-Usuario`.\n+\n+## 6. Critérios de aceite\n+\n+1. (R1) `POST /atividades/:id/certificado` com frequência inferior a 75% (presenças × 4 < encontros × 3) → `422 PRESENCA_INSUFICIENTE`.\n+2. (R1) `POST /atividades/:id/certificado` com frequência igual ou superior a 75% (presenças × 4 ≥ encontros × 3) → permitido quanto à presença.\n+3. (R2) `POST /atividades/:id/certificado` antes do fim do último encontro da atividade → `422 ATIVIDADE_NAO_ENCERRADA`.\n+4. (R3) `POST /atividades/:id/certificado` na primeira emissão bem-sucedida → `201` com `Certificado` contendo código no formato `SA26-XXXX-XXXX`.\n+5. (R3) `POST /atividades/:id/certificado` em emissões subsequentes da mesma atividade pelo mesmo participante → `200` retornando o mesmo certificado e código.\n+6. (R4) `GET /extrato` listando atividades elegíveis (emitidas com código e não emitidas com `codigo: null`), somando `palestrasMinutos`, `minicursosMinutos`, `totalMinutos` e aplicando os tetos em `aproveitadoMinutos` (palestras máx 240 min, total máx 1200 min).\n+7. (R5) `GET /certificados/:codigo` com código válido (inclusive em minúsculas) sem cabeçalho `X-Usuario` → `200` com `Verificacao`.\n+8. (R5) `GET /certificados/:codigo` com código inexistente ou inválido → `404`.\n+9. (R6) Chamada de rotas de certificado/extrato por usuário da organização ou sem `X-Usuario` (exceto `/certificados/:codigo`) → `401` ou `403`.\n+\n+## 7. Como isto será verificado\n+Testes automatizados via requisições HTTP (Supertest / fetch) no servidor Express (`criarServidor()`), validando o fluxo de emissão após término de atividades, cálculo de frequências, aplicação de tetos no extrato e verificação pública de códigos.\n+\n+## 8. Fatias de entrega\n+- **Fatia 1**: Emissão de certificados (`POST /atividades/:id/certificado`, listagem `GET /certificados`), validando presença mínima (`R1`), encerramento (`R2`), formato e idempotência do código (`R3`) e papéis (`R6`).\n+- **Fatia 2**: Cálculo do Extrato de horas (`GET /extrato`) com somas brutas e aplicação de tetos por tipo e total (`R4`, `R6`).\n+- **Fatia 3**: Verificação pública de certificados (`GET /certificados/:codigo`) por código (`R5`).\n",
+       "additions": 76,
+       "deletions": 0,
+       "status": "added"
+      }
+     ]
+    },
+    "id": "msg_0cbc71e70001hdN9UolgDIgbRh",
+    "sessionID": "ses_f3438e19fffe5pXg1TZs28OYjs"
+   },
+   "parts": [
+    {
+     "type": "text",
+     "text": "Use a skill to-spec. Escreva specs/M4-certificados.md a partir de entrevistas/M4-certificados.md. Cada regra cita a pergunta (P-xx) e, se houver, a regra do documento (RN-xxx). ",
+     "id": "prt_0cbc71e71001j1W9LW46rRV6co",
+     "sessionID": "ses_f3438e19fffe5pXg1TZs28OYjs",
+     "messageID": "msg_0cbc71e70001hdN9UolgDIgbRh"
+    }
+   ]
+  },
+  {
+   "info": {
+    "parentID": "msg_0cbc71e70001hdN9UolgDIgbRh",
+    "role": "assistant",
+    "mode": "build",
+    "agent": "build",
+    "path": {
+     "cwd": "C:\\Users\\acura\\Desktop\\Trabalho Final Queiroz\\ProjetoSemanaAcademica\\semana-academica",
+     "root": "C:\\Users\\acura\\Desktop\\Trabalho Final Queiroz\\ProjetoSemanaAcademica"
+    },
+    "cost": 0.0037112,
+    "tokens": {
+     "total": 10486,
+     "input": 10229,
+     "output": 16,
+     "reasoning": 241,
+     "cache": {
+      "write": 0,
+      "read": 0
+     }
+    },
+    "modelID": "gemini-3.5-flash-lite",
+    "providerID": "google",
+    "time": {
+     "created": 1790125219451,
+     "completed": 1790125223983
+    },
+    "finish": "tool-calls",
+    "id": "msg_0cbc71e7b001J6sfWeqiy4i7dY",
+    "sessionID": "ses_f3438e19fffe5pXg1TZs28OYjs"
+   },
+   "parts": [
+    {
+     "snapshot": "347918c083127dff7a405be022edaaf2efe57e1e",
+     "type": "step-start",
+     "id": "prt_0cbc72c7a001j610s0asigTwB0",
+     "sessionID": "ses_f3438e19fffe5pXg1TZs28OYjs",
+     "messageID": "msg_0cbc71e7b001J6sfWeqiy4i7dY"
+    },
+    {
+     "type": "reasoning",
+     "text": "**Defining the Scope**\n\nI'm focused on developing the \"to-spec\" skill. My goal is to generate \"specs/M4-certificados.md\" based on the content of \"entrevistas/M4-certificados.md.\" Each specification rule will reference the relevant question (P-xx) and the corresponding document rule (RN-xxx), if applicable.\n\n\n",
+     "time": {
+      "start": 1790125223036,
+      "end": 1790125223519
+     },
+     "id": "prt_0cbc72c7c001J0cBBW3bKF1aPf",
+     "sessionID": "ses_f3438e19fffe5pXg1TZs28OYjs",
+     "messageID": "msg_0cbc71e7b001J6sfWeqiy4i7dY"
+    },
+    {
+     "type": "tool",
+     "tool": "skill",
+     "callID": "xJNVGV37gltiHiYF",
+     "state": {
+      "status": "completed",
+      "input": {
+       "name": "to-spec"
+      },
+      "output": "<skill_content name=\"to-spec\">\n# Skill: to-spec\n\n# A conversa vira contrato\r\n\r\nVocê já tem tudo o que precisa: está na conversa. **Não entreviste de novo.** Sua\r\ntarefa é escrever, num arquivo, o que já foi decidido — e nada além.\r\n\r\nRegra que ninguém decidiu **não entra**. Se faltar alguma coisa para a spec ficar de pé,\r\npare e pergunte só aquilo. Não preencha buraco com \"geralmente é assim\".\r\n\r\n## Onde escrever\r\n\r\n`spec-<recurso>.md`, na raiz do projeto. Um arquivo por recurso.\r\n\r\n## Antes de escrever\r\n\r\nLeia o reporqositório: convenções, vocabulário, nomes que já existem. A spec fala a língua\r\ndo projeto — se o código chama de `leitor`, a spec não inventa `usuário`.\r\n\r\nDecida também **onde isto vai ser verificado**. Prefira a costura mais externa que já\r\nexistir (aqui: HTTP, pelo `criarServidor()`). Quanto menos pontos de teste novos, melhor.\r\n\r\n## Modelo\r\n\r\n```markdown\r\n# Spec — <recurso>\r\n\r\n## 1. Objetivo\r\nUm parágrafo: que problema isto resolve, na visão de quem usa.\r\n\r\n## 2. Fora de escopo\r\nLista do que este recurso NÃO faz. Isto é tão contrato quanto o resto — é aqui que\r\nse recusa código que ninguém pediu.\r\n\r\n## 3. Modelo\r\nOs campos da entidade, com tipo e origem (informado pelo cliente / calculado / derivado).\r\nCampo derivado nunca é guardado.\r\n\r\n## 4. Endpoints\r\nMétodo, caminho, corpo esperado, status de sucesso.\r\n\r\n## 5. Regras\r\nNumeradas: R1, R2, R3… Uma regra por linha de decisão, cada uma com o número, o limite\r\nou o valor exato que foi decidido, e o status HTTP de recusa quando houver.\r\n\r\nToda regra precisa ser observável de fora. \"O sistema deve ser rápido\" não é regra.\r\n\"Devolver depois da data prevista cobra 1,50 por dia inteiro de atraso, teto de 30\" é.\r\n\r\nQuando duas regras podem recusar a mesma operação, diga qual vale primeiro.\r\n\r\n## 6. Critérios de aceite\r\nLista numerada de cenários concretos, cada um apontando a regra que ele prova:\r\n\r\n1. (R1, R3) POST /x com dados válidos → 201, campo `y` igual a Z.\r\n\r\nRegra sem pelo menos um critério é regra sem prova. Volte e escreva o critério.\r\n\r\n## 7. Como isto será verificado\r\nA costura (interface) usada nos testes e por quê.\r\n\r\n## 8. Fatias de entrega\r\nA ordem de implementação, em fatias verticais. Cada fatia é um conjunto pequeno de\r\nregras que já dá para rodar e verificar sozinho.\r\n```\r\n\r\n## Depois de escrever\r\n\r\nMostre ao usuário a lista das regras numeradas — só os números e uma linha cada — e\r\npergunte se falta alguma. É a última chance de corrigir barato.\n\nBase directory for this skill: C:\\Users\\acura\\Desktop\\Trabalho Final Queiroz\\ProjetoSemanaAcademica\\semana-academica\\.opencode\\skills\\to-spec\nRelative paths in this skill (e.g., scripts/, reference/) are relative to this base directory.\nNote: file list is sampled.\n\n<skill_files>\n\n</skill_files>\n</skill_content>",
+      "metadata": {
+       "name": "to-spec",
+       "dir": "C:\\Users\\acura\\Desktop\\Trabalho Final Queiroz\\ProjetoSemanaAcademica\\semana-academica\\.opencode\\skills\\to-spec",
+       "truncated": false
+      },
+      "title": "Loaded skill: to-spec",
+      "time": {
+       "start": 1790125223506,
+       "end": 1790125223560
+      }
+     },
+     "metadata": {
+      "google": {
+       "thoughtSignature": "ErMICrAIAWkUfRNFVMdG7yAa6oz5tc9UrI7flpc5iR6aiMfEYalGOmdKPmt86PjADXPvWbOuTcHDXjTCI8G1sy7gVkeLV5LxGNVp0cvUj6IlS8WM7w/uLK3ifRaIySihozLakxI+3xLGFOkpJoiQzKHdV4WWyFo+/KPA9h9D4+GoRnqodyp81QIX1Uyc3iUyqvrlk76oRxg6PoxqyH2NDAAdQhwFwBGyNnupNCp4sntR14vFWuipYnMNocfGV0Z9jiCBMMsqXxOkgLyublsRDsMi4mQVTwuozWBVkAdRQ6J24gt9MA1+4EjN6HSF/Oa/EWXn1UsQ0eZxg1HY3uzS6m1R/oObFYZqU5HQRTr9T/iHS1XfleV5CoLdwJfTa42Hkzbj0i8LMjoaDMz2cMsLCcqPyJlaY0YseFfwKHUmeZzFwpOVsLK1zARwd+nyyNjMaN4gpbQGkym78qfuar1Wjr0tT4oC7SBxvPtcZHN2cDaJxgegxqaS5C6JeA3TxZOLl3I+FsIAPOzHhq6CupkRkUwScHdIC2PW5Hem2/Gtkq6RRCXzhM3b9xcvo/8e+pa1rJF1H/CvbjCe7utQE6cpfYGcu6MVnqjHBUyVipIix6+rld5g0moaaPRvTeObiEatdHl3idj856Yxu87/tjezZO2ECEykVajgf18fzFBbXnEtdAGLhMhlfjTkHbBp+YjjwI5KO/R+xAut6rQ8azhHXSVYxi9MjEQ2j4SqUizoJ0oetbw7jnb9Vg861wCyvnpJ1vuW0dFtTftLPR1JwCUJwu6G4p2aP16lzQ7YgULVK0VVf6l48ZvLQ1KSHlEM8Dgeo+1QVVX4FLdtzzGtxU5wvs+ElK65rU2BJVCrCP1Tv2ITfu4DiW1CN2FCYORuIDwNcpjXnEPDn+v6mMFXVNiAT5SzwNUdaZD18laYYKylNdD1sHHNEju/e6EAx9NwBJ4IK3jsIpEe92HXgqYSNfOMa7WTKMZZzkh1vGG2KDaIVfbvCZ4VlDWWGtaDzOxhO75VAKeymPySH5VyoN9Z3j9ToE8a6Q2XNSYf/LoyP50QLctXULyFSUoqXpXziCPLZuBhOl2OL06WpDsLmFGg9Dwer51BFIGPPyriOTFAIXL+BD1jTTPV6mE17LgHD4Q8C47raNb+ceCPx4iYGRAm4sWlF2u8+PeYDOfb3GRe8K8laNfE7DESsinQV0cSVXyzgmERbQlfkV9ZDJe/UVqUZPINHbYVvWo1LmqdRHhPeyyGFrDeLfjPIz3LK+nKSotOGsxX75cjGi5TxoqfZH+194tUj5FoGPwQ/lNJf8hnm636bI5OAoMxA8B5mVjSxGQ7rc/2by/F5cg03I9StnktHXxj/z9gwI1XcCi4YCAxXFYRmfsBIlAhx+PVdNDPtnqUFz0GmtaTR7GX7eaprCYfEXUpuWqmz2LHUg=="
+      }
+     },
+     "id": "prt_0cbc72e4c001d6SEV015xeGbkE",
+     "sessionID": "ses_f3438e19fffe5pXg1TZs28OYjs",
+     "messageID": "msg_0cbc71e7b001J6sfWeqiy4i7dY"
+    },
+    {
+     "reason": "tool-calls",
+     "snapshot": "347918c083127dff7a405be022edaaf2efe57e1e",
+     "type": "step-finish",
+     "tokens": {
+      "total": 10486,
+      "input": 10229,
+      "output": 16,
+      "reasoning": 241,
+      "cache": {
+       "write": 0,
+       "read": 0
+      }
+     },
+     "cost": 0.0037112,
+     "id": "prt_0cbc72f4f001knS2R3CiszPnyS",
+     "sessionID": "ses_f3438e19fffe5pXg1TZs28OYjs",
+     "messageID": "msg_0cbc71e7b001J6sfWeqiy4i7dY"
+    }
+   ]
+  },
+  {
+   "info": {
+    "parentID": "msg_0cbc71e70001hdN9UolgDIgbRh",
+    "role": "assistant",
+    "mode": "build",
+    "agent": "build",
+    "path": {
+     "cwd": "C:\\Users\\acura\\Desktop\\Trabalho Final Queiroz\\ProjetoSemanaAcademica\\semana-academica",
+     "root": "C:\\Users\\acura\\Desktop\\Trabalho Final Queiroz\\ProjetoSemanaAcademica"
+    },
+    "cost": 0.0040052,
+    "tokens": {
+     "total": 11598,
+     "input": 11359,
+     "output": 54,
+     "reasoning": 185,
+     "cache": {
+      "write": 0,
+      "read": 0
+     }
+    },
+    "modelID": "gemini-3.5-flash-lite",
+    "providerID": "google",
+    "time": {
+     "created": 1790125223986,
+     "completed": 1790125226580
+    },
+    "finish": "tool-calls",
+    "id": "msg_0cbc73032001OstDih8X6261Hi",
+    "sessionID": "ses_f3438e19fffe5pXg1TZs28OYjs"
+   },
+   "parts": [
+    {
+     "snapshot": "347918c083127dff7a405be022edaaf2efe57e1e",
+     "type": "step-start",
+     "id": "prt_0cbc73842001WJPE3q5m0XrG5z",
+     "sessionID": "ses_f3438e19fffe5pXg1TZs28OYjs",
+     "messageID": "msg_0cbc73032001OstDih8X6261Hi"
+    },
+    {
+     "type": "tool",
+     "tool": "read",
+     "callID": "h7CQkEX3WLkVT3ue",
+     "state": {
+      "status": "completed",
+      "input": {
+       "filePath": "C:\\Users\\acura\\Desktop\\Trabalho Final Queiroz\\ProjetoSemanaAcademica\\semana-academica\\entrevistas\\M4-certificados.md"
+      },
+      "output": "[1981 caracteres omitidos]",
+      "title": "semana-academica\\entrevistas\\M4-certificados.md",
+      "time": {
+       "start": 1790125226056,
+       "end": 1790125226063
+      }
+     },
+     "metadata": {
+      "google": {
+       "thoughtSignature": "EpkGCpYGAWkUfROBzWYfFEQMooE/SqIB4bliYMtIW9PvQ9GO9jGbBUV1ntY+X2VFRNQp5sAWQtAZJfwp8OEl6A54pD0ovB0Nk4G1aei3fiKQk9FslxKpIwDzY3vT1wwzloPPMfM2KrPyI6/CssPgsoR/pO/8FMux59g8t488ROz5XI5L6cgPigmEUXx5ijQZUpD8CW6zTLDfklmGKZXpmIjTlK9CSdrQRIqstPP2PAh1CxFqK7xyoz/V+5QbmUdsS01f2jD3FU8yS6AL8jmShCgi2Pwc5ODhU3LYIMqPaZxbt9D0RWLCcTsQS40DKG70yHEF5lunA4pWKgUxFLw3RYc3pdin5C4WYi0eIyZu6cvb05V+RrEe+Hw449kjKVXbCXigZBYoo1qaapjg4gaFcBOvIY5nYjDdJGKULH0G+2pCG2GIxcp3H8cnxSglqgcZb/yzjdFzlrQIlyuFeYp3Yx/sn+dEiWLm2bkG6xFEAufezx5tM20x9WZPzRLkh1+7QBF2xvvtxoIwJewEddWMdm8IX+QvPTfaekINzlD2QxN1YzoePGbUj40In6keZRYrA9l2W0I7ZDAQMKlvvUt6t8vqHuibBj2X8Xn4lXZGNDfFbpD7+ZABH3ztJ5JOfEtNs0Er/n33uKtrwQ+AHUBYD7vZo/i3vCD9zMK2YBMrE5iKAbqijnmsA+DBhww2RhoguV7Cb7e1DZVsmjLN/xPyc5zSreehzUASAGZ65a3TOgu0ljphAoAl1newMKNA+dcnkQo4+xq25ywONQISM3fHIiHLjtgSgLe/1XeubB3fiU/VtcK2qaZduB9iqAVuXRWbnvvBUVYzGU9+mZAWWbhxtJcZ3nP1vyBAcHnxF/EHssZi5nT7VHuMPewayWiRAPLDeky8wWcwaI/yM5608xFIJ8GCBIzihOx8vtJGI8FV3PxgYcD/FPtPBUlsrHAeK31GGzT6JorOzpP0wmE/mUc/G+73kSjV4u4I/L91LHQHYr/HUkoxEWbxZklbcNlwZDFftQ2U/In3bapxifPcpqEcKtZEMegA2mw0tl2jMg=="
+      }
+     },
+     "id": "prt_0cbc738440016cl7zJcChkaIXj",
+     "sessionID": "ses_f3438e19fffe5pXg1TZs28OYjs",
+     "messageID": "msg_0cbc73032001OstDih8X6261Hi"
+    },
+    {
+     "reason": "tool-calls",
+     "snapshot": "347918c083127dff7a405be022edaaf2efe57e1e",
+     "type": "step-finish",
+     "tokens": {
+      "total": 11598,
+      "input": 11359,
+      "output": 54,
+      "reasoning": 185,
+      "cache": {
+       "write": 0,
+       "read": 0
+      }
+     },
+     "cost": 0.0040052,
+     "id": "prt_0cbc7397e001mpTdJMs0CxnjFc",
+     "sessionID": "ses_f3438e19fffe5pXg1TZs28OYjs",
+     "messageID": "msg_0cbc73032001OstDih8X6261Hi"
+    }
+   ]
+  },
+  {
+   "info": {
+    "parentID": "msg_0cbc71e70001hdN9UolgDIgbRh",
+    "role": "assistant",
+    "mode": "build",
+    "agent": "build",
+    "path": {
+     "cwd": "C:\\Users\\acura\\Desktop\\Trabalho Final Queiroz\\ProjetoSemanaAcademica\\semana-academica",
+     "root": "C:\\Users\\acura\\Desktop\\Trabalho Final Queiroz\\ProjetoSemanaAcademica"
+    },
+    "cost": 0.0038011,
+    "tokens": {
+     "total": 12289,
+     "input": 12237,
+     "output": 16,
+     "reasoning": 36,
+     "cache": {
+      "write": 0,
+      "read": 0
+     }
+    },
+    "modelID": "gemini-3.5-flash-lite",
+    "providerID": "google",
+    "time": {
+     "created": 1790125226583,
+     "completed": 1790125228253
+    },
+    "finish": "tool-calls",
+    "id": "msg_0cbc73a57001a0Y3NcOEMcFNPX",
+    "sessionID": "ses_f3438e19fffe5pXg1TZs28OYjs"
+   },
+   "parts": [
+    {
+     "snapshot": "347918c083127dff7a405be022edaaf2efe57e1e",
+     "type": "step-start",
+     "id": "prt_0cbc73f06001JdGRNbLrG1RVBJ",
+     "sessionID": "ses_f3438e19fffe5pXg1TZs28OYjs",
+     "messageID": "msg_0cbc73a57001a0Y3NcOEMcFNPX"
+    },
+    {
+     "type": "tool",
+     "tool": "glob",
+     "callID": "gC8Vco3cvAghBu4x",
+     "state": {
+      "status": "completed",
+      "input": {
+       "pattern": "specs/**/*.md"
+      },
+      "output": "[340 caracteres omitidos]",
+      "title": "semana-academica",
+      "time": {
+       "start": 1790125227788,
+       "end": 1790125227836
+      }
+     },
+     "metadata": {
+      "google": {
+       "thoughtSignature": "Eu4BCusBAWkUfRNOuT5/mhl2Qp6AJtRAIoBRXRLQ/Uh9+KV2Ysc5wNZU0CLkJyr7PdQjM2Q7c21c0qZANJzBaHkLvghBJ8dO9kkdaQycwMAhl8+wn9BBS7bqFSeLMG//Z8knr9aYF45w+P+58sI1DgNMBUW/fxC04cP/3fNkpq5ZD/7weZd8a1KyLyYWQB8rMTIe0LWidWH2ktTbTeUaPiRwv0j3iY/wMqcsgoy0VoCjh9/NRtnkfvpL+/olM7ro+RkVYyG1eGzZeu4+/uopweszv+FkkCFX9OK2FbjKFQi4P5k14FIoSsMMLb7qq0o5xw=="
+      }
+     },
+     "id": "prt_0cbc73f080018TdwCq4LTX6KKY",
+     "sessionID": "ses_f3438e19fffe5pXg1TZs28OYjs",
+     "messageID": "msg_0cbc73a57001a0Y3NcOEMcFNPX"
+    },
+    {
+     "reason": "tool-calls",
+     "snapshot": "347918c083127dff7a405be022edaaf2efe57e1e",
+     "type": "step-finish",
+     "tokens": {
+      "total": 12289,
+      "input": 12237,
+      "output": 16,
+      "reasoning": 36,
+      "cache": {
+       "write": 0,
+       "read": 0
+      }
+     },
+     "cost": 0.0038011,
+     "id": "prt_0cbc74012001YMwu63g61mCtvL",
+     "sessionID": "ses_f3438e19fffe5pXg1TZs28OYjs",
+     "messageID": "msg_0cbc73a57001a0Y3NcOEMcFNPX"
+    }
+   ]
+  },
+  {
+   "info": {
+    "parentID": "msg_0cbc71e70001hdN9UolgDIgbRh",
+    "role": "assistant",
+    "mode": "build",
+    "agent": "build",
+    "path": {
+     "cwd": "C:\\Users\\acura\\Desktop\\Trabalho Final Queiroz\\ProjetoSemanaAcademica\\semana-academica",
+     "root": "C:\\Users\\acura\\Desktop\\Trabalho Final Queiroz\\ProjetoSemanaAcademica"
+    },
+    "cost": 0.0040427,
+    "tokens": {
+     "total": 12559,
+     "input": 12434,
+     "output": 62,
+     "reasoning": 63,
+     "cache": {
+      "write": 0,
+      "read": 0
+     }
+    },
+    "modelID": "gemini-3.5-flash-lite",
+    "providerID": "google",
+    "time": {
+     "created": 1790125228256,
+     "completed": 1790125230182
+    },
+    "finish": "tool-calls",
+    "id": "msg_0cbc740e0001yPAea3LVq7saCR",
+    "sessionID": "ses_f3438e19fffe5pXg1TZs28OYjs"
+   },
+   "parts": [
+    {
+     "snapshot": "347918c083127dff7a405be022edaaf2efe57e1e",
+     "type": "step-start",
+     "id": "prt_0cbc746b9001ObZtIYgQvvTYNi",
+     "sessionID": "ses_f3438e19fffe5pXg1TZs28OYjs",
+     "messageID": "msg_0cbc740e0001yPAea3LVq7saCR"
+    },
+    {
+     "type": "tool",
+     "tool": "read",
+     "callID": "ghbrTm1hVafHSgZG",
+     "state": {
+      "status": "completed",
+      "input": {
+       "filePath": "C:\\Users\\acura\\Desktop\\Trabalho Final Queiroz\\ProjetoSemanaAcademica\\semana-academica\\specs\\M3-presenca-por-qr.md",
+       "limit": 200
+      },
+      "output": "[8400 caracteres omitidos]",
+      "title": "semana-academica\\specs\\M3-presenca-por-qr.md",
+      "time": {
+       "start": 1790125229759,
+       "end": 1790125229766
+      }
+     },
+     "metadata": {
+      "google": {
+       "thoughtSignature": "EscCCsQCAWkUfRO9Ur7rHt2Wk9iYfuWz2ESXPVOKxCRmdQJnC3mxbGnZGVtkJQ2cjNvHltXMxLBsUxJKY3vDzDTp1a6Rv9OgqI8Kh2YyArZhVbM75jpTTCTOIULa1F8AOdjnfgJ9I7uVWhU+z509UcwPRZatgPB3PMLI5N0Cq4vpKBlzNsGxFO5wSwJ5pWEKdMkmkuNRU9xFZTsC6w7fJTiEeYEg+EitBK8c7zt9vAHHhhZhYz+OFOxxMPO0w0/mqvbJcVvRzN8VqrHZ3i/SM1vreCC89pN4Tjx1f25tfuC5phkYkqULPhxjEOBWYs2cHvlSTP/eW0023/EaCxWfyjM46n2A0Tq/NBF61L0ZAaalAfbSiv4hxyP6AT1vphf4QdpcU41bC8gdpZYN7T0cmS9QeW4qr4L8lM78HqTdpVbmmvyTPSdcDmxc"
+      }
+     },
+     "id": "prt_0cbc746bb001PfaaIUR5ncZVdl",
+     "sessionID": "ses_f3438e19fffe5pXg1TZs28OYjs",
+     "messageID": "msg_0cbc740e0001yPAea3LVq7saCR"
+    },
+    {
+     "reason": "tool-calls",
+     "snapshot": "347918c083127dff7a405be022edaaf2efe57e1e",
+     "type": "step-finish",
+     "tokens": {
+      "total": 12559,
+      "input": 12434,
+      "output": 62,
+      "reasoning": 63,
+      "cache": {
+       "write": 0,
+       "read": 0
+      }
+     },
+     "cost": 0.0040427,
+     "id": "prt_0cbc74796001h37Dm8UvsApiJw",
+     "sessionID": "ses_f3438e19fffe5pXg1TZs28OYjs",
+     "messageID": "msg_0cbc740e0001yPAea3LVq7saCR"
+    }
+   ]
+  },
+  {
+   "info": {
+    "parentID": "msg_0cbc71e70001hdN9UolgDIgbRh",
+    "role": "assistant",
+    "mode": "build",
+    "agent": "build",
+    "path": {
+     "cwd": "C:\\Users\\acura\\Desktop\\Trabalho Final Queiroz\\ProjetoSemanaAcademica\\semana-academica",
+     "root": "C:\\Users\\acura\\Desktop\\Trabalho Final Queiroz\\ProjetoSemanaAcademica"
+    },
+    "cost": 0.0047697,
+    "tokens": {
+     "total": 15415,
+     "input": 15349,
+     "output": 14,
+     "reasoning": 52,
+     "cache": {
+      "write": 0,
+      "read": 0
+     }
+    },
+    "modelID": "gemini-3.5-flash-lite",
+    "providerID": "google",
+    "time": {
+     "created": 1790125230185,
+     "completed": 1790125236444
+    },
+    "finish": "tool-calls",
+    "id": "msg_0cbc74869001MMeK1gc3GMrwgP",
+    "sessionID": "ses_f3438e19fffe5pXg1TZs28OYjs"
+   },
+   "parts": [
+    {
+     "snapshot": "347918c083127dff7a405be022edaaf2efe57e1e",
+     "type": "step-start",
+     "id": "prt_0cbc75ddb001eqhQ8tlvTf114V",
+     "sessionID": "ses_f3438e19fffe5pXg1TZs28OYjs",
+     "messageID": "msg_0cbc74869001MMeK1gc3GMrwgP"
+    },
+    {
+     "type": "tool",
+     "tool": "grep",
+     "callID": "TFseKPqbucoTYP26",
+     "state": {
+      "status": "completed",
+      "input": {
+       "pattern": "certificado"
+      },
+      "output": "[39459 caracteres omitidos]",
+      "title": "certificado",
+      "time": {
+       "start": 1790125235681,
+       "end": 1790125235921
+      }
+     },
+     "metadata": {
+      "google": {
+       "thoughtSignature": "ErYCCrMCAWkUfRNiBfqachbiOgbaBX2dJ8MrvsknVaOAC0rw9jWpG60lvSHGamnbPGjluRPOXrzUMReJQiWXN1O/uxZ4W7PnV3dFhP5X82iyUs6w7t2+/P2G/QYnPAGQ7PHiEyAYXMds9LABCou8xTFSYcljUWjGE33mNzRbyQbXCKJvw40vQaRL6YeiiTmX578uR+qKqbYa5lbgpBR3xeBE2t8tJR/aXraoB4hfqv+aI87m9cxhv5/1jiMJ9quGxGfEg8dgMuvpjjY7RqDCycBbiUu630ZmE+jXHyNyCi+li0KrW64RhRAi0DqNsJCT11Bg9QN1ROnKW3qBP3bwqrYGr9wmSEdkL5LMDgaRqkx4crAdI82nECYK39ORlMib9xJ/56UIycLCNAB8y0o8DWdg8pytxVRPgQ=="
+      }
+     },
+     "id": "prt_0cbc75ddd001R23ON2lhsb1vQM",
+     "sessionID": "ses_f3438e19fffe5pXg1TZs28OYjs",
+     "messageID": "msg_0cbc74869001MMeK1gc3GMrwgP"
+    },
+    {
+     "reason": "tool-calls",
+     "snapshot": "347918c083127dff7a405be022edaaf2efe57e1e",
+     "type": "step-finish",
+     "tokens": {
+      "total": 15415,
+      "input": 15349,
+      "output": 14,
+      "reasoning": 52,
+      "cache": {
+       "write": 0,
+       "read": 0
+      }
+     },
+     "cost": 0.0047697,
+     "id": "prt_0cbc75fe2001rbIJD5bgrsyhR1",
+     "sessionID": "ses_f3438e19fffe5pXg1TZs28OYjs",
+     "messageID": "msg_0cbc74869001MMeK1gc3GMrwgP"
+    }
+   ]
+  },
+  {
+   "info": {
+    "parentID": "msg_0cbc71e70001hdN9UolgDIgbRh",
+    "role": "assistant",
+    "mode": "build",
+    "agent": "build",
+    "path": {
+     "cwd": "C:\\Users\\acura\\Desktop\\Trabalho Final Queiroz\\ProjetoSemanaAcademica\\semana-academica",
+     "root": "C:\\Users\\acura\\Desktop\\Trabalho Final Queiroz\\ProjetoSemanaAcademica"
+    },
+    "cost": 0.0087208,
+    "tokens": {
+     "total": 28182,
+     "input": 28061,
+     "output": 38,
+     "reasoning": 83,
+     "cache": {
+      "write": 0,
+      "read": 0
+     }
+    },
+    "modelID": "gemini-3.5-flash-lite",
+    "providerID": "google",
+    "time": {
+     "created": 1790125236448,
+     "completed": 1790125239073
+    },
+    "finish": "tool-calls",
+    "id": "msg_0cbc760e0001PAAQcAg1wD75SY",
+    "sessionID": "ses_f3438e19fffe5pXg1TZs28OYjs"
+   },
+   "parts": [
+    {
+     "snapshot": "347918c083127dff7a405be022edaaf2efe57e1e",
+     "type": "step-start",
+     "id": "prt_0cbc76929001PGigC76xhdqO86",
+     "sessionID": "ses_f3438e19fffe5pXg1TZs28OYjs",
+     "messageID": "msg_0cbc760e0001PAAQcAg1wD75SY"
+    },
+    {
+     "type": "tool",
+     "tool": "grep",
+     "callID": "yeFwuRoKrmVDwxOH",
+     "state": {
+      "status": "completed",
+      "input": {
+       "pattern": "certificado|extrato|Certificado|Extrato|Verificacao",
+       "include": "contrato-api.md"
+      },
+      "output": "[1181 caracteres omitidos]",
+      "title": "certificado|extrato|Certificado|Extrato|Verificacao",
+      "time": {
+       "start": 1790125238575,
+       "end": 1790125238621
+      }
+     },
+     "metadata": {
+      "google": {
+       "thoughtSignature": "EsIDCr8DAWkUfRMnHQz7ElAlpZwVBadlLc0uf974QmDQt+/rTb+QbPchdcO3O0p+Ld2SF8z7qhZyxrioQ3KKD2djr9YGRPjx03OtzFPdSQFsLW9mQSED4+f7H6X/4hooQ+AlP4rnygjpmP0Z5UKaJBFv5rkHCAveWmUsI42WAGUizN6YaWptEaAf7vDaqbILtPuVNX9uknWvjbX5YEE85WWoM0U0raIHFnCuTcUh2bM8V2+v4KCWa8zou7rxCfXFVfXp6Lpt5ZsCd3f4M3JrAT4gtrizx5CTeqYH5WpuLcgt7OZDdxmWunth/BU6WJam7FJM7CWkfMPCQ3LZ2DZ06aJs0LryHTRcn2VrGrEz32kWucZHL0ja8J+RkgrHXxNqKZhV6z4UbQ7tt7t3NVKiFZ0bHy7EYvcriF7T4H5CA6YwVEv57mEcGekNcnmoA/V94hRHRmrLquCV6kbGHimeVit7x8zRT8w5KNHB5VfHlDDi6xl9kHq5jltnqVNjSDP6mkkQepE/gmmHxoQXi8tdimhs7RV3OMRXwc+OVM9eHEKUghK7O32WIzsMZFkWv1g9wR+1mPczoqjEUGdwkiebudchTLRb"
+      }
+     },
+     "id": "prt_0cbc7692b001RunIydBfohWVqY",
+     "sessionID": "ses_f3438e19fffe5pXg1TZs28OYjs",
+     "messageID": "msg_0cbc760e0001PAAQcAg1wD75SY"
+    },
+    {
+     "reason": "tool-calls",
+     "snapshot": "347918c083127dff7a405be022edaaf2efe57e1e",
+     "type": "step-finish",
+     "tokens": {
+      "total": 28182,
+      "input": 28061,
+      "output": 38,
+      "reasoning": 83,
+      "cache": {
+       "write": 0,
+       "read": 0
+      }
+     },
+     "cost": 0.0087208,
+     "id": "prt_0cbc76a26001hedIwLo1CwFwIO",
+     "sessionID": "ses_f3438e19fffe5pXg1TZs28OYjs",
+     "messageID": "msg_0cbc760e0001PAAQcAg1wD75SY"
+    }
+   ]
+  },
+  {
+   "info": {
+    "parentID": "msg_0cbc71e70001hdN9UolgDIgbRh",
+    "role": "assistant",
+    "mode": "build",
+    "agent": "build",
+    "path": {
+     "cwd": "C:\\Users\\acura\\Desktop\\Trabalho Final Queiroz\\ProjetoSemanaAcademica\\semana-academica",
+     "root": "C:\\Users\\acura\\Desktop\\Trabalho Final Queiroz\\ProjetoSemanaAcademica"
+    },
+    "cost": 0.00438512,
+    "tokens": {
+     "total": 28723,
+     "input": 12263,
+     "output": 60,
+     "reasoning": 26,
+     "cache": {
+      "write": 0,
+      "read": 16374
+     }
+    },
+    "modelID": "gemini-3.5-flash-lite",
+    "providerID": "google",
+    "time": {
+     "created": 1790125239076,
+     "completed": 1790125241252
+    },
+    "finish": "tool-calls",
+    "id": "msg_0cbc76b24001Lm20rqbC9GyIzW",
+    "sessionID": "ses_f3438e19fffe5pXg1TZs28OYjs"
+   },
+   "parts": [
+    {
+     "snapshot": "347918c083127dff7a405be022edaaf2efe57e1e",
+     "type": "step-start",
+     "id": "prt_0cbc771bb001gRoFwywroX6puC",
+     "sessionID": "ses_f3438e19fffe5pXg1TZs28OYjs",
+     "messageID": "msg_0cbc76b24001Lm20rqbC9GyIzW"
+    },
+    {
+     "type": "tool",
+     "tool": "read",
+     "callID": "P5j0HgEZmlsvU0tw",
+     "state": {
+      "status": "completed",
+      "input": {
+       "offset": 185,
+       "limit": 70,
+       "filePath": "C:\\Users\\acura\\Desktop\\Trabalho Final Queiroz\\ProjetoSemanaAcademica\\semana-academica\\contrato-api.md"
+      },
+      "output": "[2618 caracteres omitidos]",
+      "title": "semana-academica\\contrato-api.md",
+      "time": {
+       "start": 1790125240769,
+       "end": 1790125240775
+      }
+     },
+     "metadata": {
+      "google": {
+       "thoughtSignature": "EqsBCqgBAWkUfRN+/96xWEqcWZK/Vmi2Sr0PaOETItKbK2FjK+LbGtkL4J+du168QKSsiomaXuGQw2s26Os/jQkRE+/HXqMHoH6SUsg/KLeC4xUmfo+EaQdQNWZAdQgRmuC1beQd+WABf6D8v1xK8FRvrEw8JLmXOEG/NtEejfFeVPZ0Dd6RLiRXZnGPavyLm5hkCiX4YKFTiJ/D2A0S0BKsW95UTMWjXoAiHva4"
+      }
+     },
+     "id": "prt_0cbc771bd001MDeVbQltrqN5v9",
+     "sessionID": "ses_f3438e19fffe5pXg1TZs28OYjs",
+     "messageID": "msg_0cbc76b24001Lm20rqbC9GyIzW"
+    },
+    {
+     "reason": "tool-calls",
+     "snapshot": "347918c083127dff7a405be022edaaf2efe57e1e",
+     "type": "step-finish",
+     "tokens": {
+      "total": 28723,
+      "input": 12263,
+      "output": 60,
+      "reasoning": 26,
+      "cache": {
+       "write": 0,
+       "read": 16374
+      }
+     },
+     "cost": 0.00438512,
+     "id": "prt_0cbc772b9001YYVq3Iuei46Swp",
+     "sessionID": "ses_f3438e19fffe5pXg1TZs28OYjs",
+     "messageID": "msg_0cbc76b24001Lm20rqbC9GyIzW"
+    }
+   ]
+  },
+  {
+   "info": {
+    "parentID": "msg_0cbc71e70001hdN9UolgDIgbRh",
+    "role": "assistant",
+    "mode": "build",
+    "agent": "build",
+    "path": {
+     "cwd": "C:\\Users\\acura\\Desktop\\Trabalho Final Queiroz\\ProjetoSemanaAcademica\\semana-academica",
+     "root": "C:\\Users\\acura\\Desktop\\Trabalho Final Queiroz\\ProjetoSemanaAcademica"
+    },
+    "cost": 0.01879947,
+    "tokens": {
+     "total": 35641,
+     "input": 13578,
+     "output": 2193,
+     "reasoning": 3501,
+     "cache": {
+      "write": 0,
+      "read": 16369
+     }
+    },
+    "modelID": "gemini-3.5-flash-lite",
+    "providerID": "google",
+    "time": {
+     "created": 1790125241257,
+     "completed": 1790125257322
+    },
+    "finish": "tool-calls",
+    "id": "msg_0cbc773a90015GdPgG0prvcvht",
+    "sessionID": "ses_f3438e19fffe5pXg1TZs28OYjs"
+   },
+   "parts": [
+    {
+     "snapshot": "347918c083127dff7a405be022edaaf2efe57e1e",
+     "type": "step-start",
+     "id": "prt_0cbc77d0b0012SXaI3YVBb16Jv",
+     "sessionID": "ses_f3438e19fffe5pXg1TZs28OYjs",
+     "messageID": "msg_0cbc773a90015GdPgG0prvcvht"
+    },
+    {
+     "type": "reasoning",
+     "text": "**Analyzing the Prompt's Intent**\n\nI'm digging into the user's prompt, focusing on the core task. I'm parsing the request to understand the intended output and inputs, particularly the \"specs/M4-certificados.md\" generation from \"entrevistas/M4-certificados.md.\" My aim is to extract the critical features, rules and relationship between them. The prompt's structure is providing me with a solid understanding of the task.\n\n\n**Examining the Specification Model**\n\nI'm now diving into the structure of the \"to-spec\" skill model, dissecting its components: Objective, Out of Scope, Model (Certificado, Verificacao, etc.), Endpoints, and Rules (each linked to questions and document rules). I'm also scrutinizing Acceptance Criteria (linked to rules), verification methods, and delivery slices. I will also make sure to compare with the model of other specs and will review the rules provided on `entrevistas/M4-certificados.md` to see how they are structured. For instance, the presence criteria and activity closure conditions are being analyzed to understand their precise implementation in the spec.\n\n\n**Investigating Missing Elements**\n\nI'm now focusing on potential gaps, specifically authentication and role considerations. I am checking `contract-api.md` and other specifications for missing pieces. This involves a deeper dive into error codes and overall API behavior, to ensure a complete understanding of how the API functions in its entirety. I am also checking how to integrate the newly found elements.\n\n\n**Defining the Scope Precisely**\n\nI'm now zeroing in on the specific requirements for the `specs/M4-certificados.md` document, making sure I align perfectly with the provided prompt. I am integrating error codes and roles from `contract-api.md`, such as `ATIVIDADE_CANCELADA`, `NAO_INSCRITO`, and handling user roles for different endpoints. I am clarifying endpoints and their respective access permissions. I'm focusing on crafting the document with the objective and rules as specified.\n\n\n**Clarifying Functional Components**\n\nI'm now focusing on the functional components required. The key is to generate certificates for concluded activities, and also to enable certificate consultation, an hour statement based on the applied limits, and a public certificate verification. I'm also ensuring activities management, enrollment, presence registration, and dashboards are out of scope. The specific data model for certificates is being defined, which includes fields like `codigo`, `atividadeId`, `participanteId`, `cargaHorariaMinutos`, and others, and that has also implications for the verification model.\n\n\n**Refining the Data Structure**\n\nI'm now refining the data structure for the certificate extract, focusing on a clear presentation for the `itens` array, including activity details, types, and the status of certificate issuance using the `codigo` field. I'm also precisely calculating the different time sums, taking into account the limitations of lectures and the total, that will be available in the `extrato`, and considering how these values will be incorporated into the relevant endpoints. The emphasis is on a format that accurately reflects all activity participation.\n\n\n**Formulating Rule Implementations**\n\nI'm now implementing the rules. I'm focusing on the GET /extrato, which returns the authenticated participant's complementary hours (200 Extrato), and it is restricted to participants, returning 403 on forbidden access. I am also focusing on the public API (without `X-Usuario`) to verify certificates by code, returning 200 (Verificacao) or 404 if invalid. I am focusing on rules R1, R2, and R3 and how they will shape endpoints and error handling.\n\n\n**Implementing Specific Rules**\n\nI am now implementing rules R4 and R5. Specifically, I am focusing on generating certificates that are unique and on-demand. Also, I am now tackling the dynamic calculation of the `GET /extrato` endpoint, which includes calculating `palestrasMinutos`, `minicursosMinutos`, and `totalMinutos` while applying the time limits for both lecture and the overall certificate's use. Furthermore, I'm integrating the public certificate verification route, covering both positive (200) and negative (404) cases.\n\n\n**Finalizing Access Restrictions**\n\nI'm now implementing access restrictions based on the user's role and authentication status for specific endpoints. I'm focusing on rules related to certificate and extract routes, specifically `POST /atividades/:id/certificado`, `GET /certificados`, and `GET /extrato`, which require participant authentication and responding with appropriate error codes (401, 403) for unauthorized requests. The public certificate verification route is being implemented correctly.\n\n\n**Implementing Detailed Rules**\n\nI am now focusing on implementing rules R3 to R6. The `POST /atividades/:id/certificado` endpoint now returns 201 on the first successful issuance and 200 on subsequent requests. I'm verifying the `GET /extrato` endpoint, ensuring eligibility and calculating time sums with limits. The public certificate verification (`GET /certificados/:codigo`) now responds correctly with 200 or 404. Furthermore, I am implementing the access restrictions for unauthorized calls, considering the 401 and 403 HTTP status codes.\n\n\n**Finalizing Implementation Steps**\n\nI'm now integrating the final delivery slices: certificate issuance, hour extract calculation, and public verification. For Slice 1, I'm validating presence, activity closure, and code idempotency. Slice 2 focuses on calculating the hour extract, applying limits to the sums, and ensuring eligibility. Slice 3 handles public certificate verification by code. I'm focusing on aligning all rules with the cited questions and document rules, and incorporating the specific formatting requirements (P-xx, RN-xxx).\n\n\n",
+     "time": {
+      "start": 1790125243661,
+      "end": 1790125256553
+     },
+     "id": "prt_0cbc77d0d001AsVjrD7hWB27ew",
+     "sessionID": "ses_f3438e19fffe5pXg1TZs28OYjs",
+     "messageID": "msg_0cbc773a90015GdPgG0prvcvht"
+    },
+    {
+     "type": "tool",
+     "tool": "write",
+     "callID": "Bp7lk86sSvGRFu1G",
+     "state": {
+      "status": "completed",
+      "input": {
+       "content": "# Spec — M4 — Certificados e Extrato\n\n## 1. Objetivo\nPermitir que participantes emitam certificados de atividades concluídas (com base em presença mínima e encerramento da atividade), consultem seus certificados emitidos, obtenham o extrato de horas complementares computadas com aplicação de tetos, e que qualquer pessoa verifique publicamente a autenticidade de um certificado por seu código.\n\n## 2. Fora de escopo\n- Gestão de atividades, salas e encontros (tratado em M1).\n- Inscrições e lista de espera em atividades (tratado em M2).\n- Registro de presenças por QR code e manual (tratado em M3).\n- Painel gerencial, estatísticas e bloqueios por faltas (tratado em M5).\n\n## 3. Modelo\n\n### Certificado\n- `codigo`: string (formato `SA26-XXXX-XXXX`, alfabeto da RN-305)\n- `atividadeId`: string\n- `participanteId`: string\n- `cargaHorariaMinutos`: número (minutos)\n- `presencas`: número\n- `encontros`: número\n- `emitidoEm`: string ISO 8601\n\n### Verificacao\n- `codigo`: string\n- `participante`: string (nome do participante)\n- `atividade`: string (título da atividade)\n- `cargaHorariaMinutos`: número\n- `emitidoEm`: string ISO 8601\n\n### Extrato\n- `itens`: array de objetos `ItemExtrato`\n  - `atividadeId`: string\n  - `titulo`: string\n  - `tipo`: string (`palestra`, `minicurso`, etc.)\n  - `cargaHorariaMinutos`: número\n  - `codigo`: string ou `null` (código do certificado se emitido, `null` se não emitido)\n- `palestrasMinutos`: número (soma bruta da carga horária de palestras elegíveis)\n- `minicursosMinutos`: número (soma bruta da carga horária de minicursos elegíveis)\n- `totalMinutos`: número (soma bruta de tudo)\n- `aproveitadoMinutos`: número (valor computado após aplicação dos tetos: palestras contam no máximo 240 min; total aproveitado limitado a no máximo 1200 min).\n\n## 4. Endpoints\n\n- `POST /atividades/:id/certificado`: Emite ou recupera o certificado da atividade para o participante autenticado (201 na primeira emissão, 200 nas seguintes). Exclusivo para participantes (`403`).\n- `GET /certificados`: Retorna a lista de certificados já emitidos pelo participante autenticado (200 `[Certificado]`). Exclusivo para participantes (`403`).\n- `GET /certificados/:codigo`: Rota pública (sem `X-Usuario`) que verifica um certificado pelo código (200 `Verificacao` ou 404 se inválido/inexistente).\n- `GET /extrato`: Retorna o extrato de horas complementares do participante autenticado (200 `Extrato`). Exclusivo para participantes (`403`).\n\n## 5. Regras\n\n- **R1 (P1, RN-404)**: Critério de presença mínima (`PRESENCA_INSUFICIENTE`): A emissão de certificado exige frequência mínima de 75% dos encontros da atividade, calculada sem arredondar a favor do participante. Em termos inteiros: presenças × 4 ≥ encontros × 3. Caso o participante não atinja esse mínimo, a operação deve ser recusada com status `422 PRESENCA_INSUFICIENTE`.\n- **R2 (P2, RN-401)**: Condição de atividade encerrada (`ATIVIDADE_NAO_ENCERRADA`): A emissão de certificado (`POST /atividades/:id/certificado`) exige que a atividade esteja encerrada. A atividade só é considerada encerrada a partir do fim do último encontro. Antes disso, qualquer tentativa de emissão deve ser recusada com status `422 ATIVIDADE_NAO_ENCERRADA`.\n- **R3 (P3, RN-305, RN-407)**: Formato e comportamento da emissão (`POST /atividades/:id/certificado`): O código do certificado é gerado no formato `SA26-XXXX-XXXX`, utilizando o alfabeto definido na RN-305, sendo único e gerado exclusivamente na primeira emissão (permanecendo inalterado nas consultas subsequentes). Na 1ª emissão, responde com `201` e o objeto `Certificado` criado. Emissões seguintes da mesma atividade pelo mesmo participante respondem com `200` retornando o mesmo certificado (mesmo código).\n- **R4 (P4, RN-410, RN-411, RN-412)**: Cálculo do Extrato (`GET /extrato`): O extrato é calculado dinamicamente na consulta (não persistido) e lista toda atividade elegível do participante, emitida ou não (`codigo` igual a `null` se não emitida). `palestrasMinutos` e `minicursosMinutos` representam a soma da carga horária total das atividades elegíveis de cada tipo. `totalMinutos` é a soma bruta de tudo. `aproveitadoMinutos` aplica os tetos regulamentares: palestras contam no máximo 240 min (4h) no aproveitado, e o aproveitado total é limitado a no máximo 1200 min (20h).\n- **R5 (P5, RN-408, RN-413)**: Verificação pública de certificados (`GET /certificados/:codigo`): A rota é pública (não exige cabeçalho `X-Usuario`) e aceita o código em minúsculas. Conforme a ordem de validação da RN-413, código inexistente ou inválido cai no primeiro caso da cadeia e deve ser recusado com status `404`.\n- **R6 (Contrato)**: Restrições de papel e autenticação nas rotas de certificados e extrato: As rotas `POST /atividades/:id/certificado`, `GET /certificados` e `GET /extrato` exigem autenticação de participante (`X-Usuario` válido de um participante). Requisições sem cabeçalho ou com usuário desconhecido respondem `401 USUARIO_DESCONHECIDO`. Tentativas por usuários da organização respondem `403`. A rota `GET /certificados/:codigo` é pública e não exige `X-Usuario`.\n\n## 6. Critérios de aceite\n\n1. (R1) `POST /atividades/:id/certificado` com frequência inferior a 75% (presenças × 4 < encontros × 3) → `422 PRESENCA_INSUFICIENTE`.\n2. (R1) `POST /atividades/:id/certificado` com frequência igual ou superior a 75% (presenças × 4 ≥ encontros × 3) → permitido quanto à presença.\n3. (R2) `POST /atividades/:id/certificado` antes do fim do último encontro da atividade → `422 ATIVIDADE_NAO_ENCERRADA`.\n4. (R3) `POST /atividades/:id/certificado` na primeira emissão bem-sucedida → `201` com `Certificado` contendo código no formato `SA26-XXXX-XXXX`.\n5. (R3) `POST /atividades/:id/certificado` em emissões subsequentes da mesma atividade pelo mesmo participante → `200` retornando o mesmo certificado e código.\n6. (R4) `GET /extrato` listando atividades elegíveis (emitidas com código e não emitidas com `codigo: null`), somando `palestrasMinutos`, `minicursosMinutos`, `totalMinutos` e aplicando os tetos em `aproveitadoMinutos` (palestras máx 240 min, total máx 1200 min).\n7. (R5) `GET /certificados/:codigo` com código válido (inclusive em minúsculas) sem cabeçalho `X-Usuario` → `200` com `Verificacao`.\n8. (R5) `GET /certificados/:codigo` com código inexistente ou inválido → `404`.\n9. (R6) Chamada de rotas de certificado/extrato por usuário da organização ou sem `X-Usuario` (exceto `/certificados/:codigo`) → `401` ou `403`.\n\n## 7. Como isto será verificado\nTestes automatizados via requisições HTTP (Supertest / fetch) no servidor Express (`criarServidor()`), validando o fluxo de emissão após término de atividades, cálculo de frequências, aplicação de tetos no extrato e verificação pública de códigos.\n\n## 8. Fatias de entrega\n- **Fatia 1**: Emissão de certificados (`POST /atividades/:id/certificado`, listagem `GET /certificados`), validando presença mínima (`R1`), encerramento (`R2`), formato e idempotência do código (`R3`) e papéis (`R6`).\n- **Fatia 2**: Cálculo do Extrato de horas (`GET /extrato`) com somas brutas e aplicação de tetos por tipo e total (`R4`, `R6`).\n- **Fatia 3**: Verificação pública de certificados (`GET /certificados/:codigo`) por código (`R5`).\n",
+       "filePath": "C:\\Users\\acura\\Desktop\\Trabalho Final Queiroz\\ProjetoSemanaAcademica\\semana-academica\\specs\\M4-certificados.md"
+      },
+      "output": "Wrote file successfully.",
+      "metadata": {
+       "diagnostics": {},
+       "filepath": "C:\\Users\\acura\\Desktop\\Trabalho Final Queiroz\\ProjetoSemanaAcademica\\semana-academica\\specs\\M4-certificados.md",
+       "exists": false,
+       "truncated": false
+      },
+      "title": "semana-academica\\specs\\M4-certificados.md",
+      "time": {
+       "start": 1790125256550,
+       "end": 1790125256571
+      }
+     },
+     "metadata": {
+      "google": {
+       "thoughtSignature": "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"
+      }
+     },
+     "id": "prt_0cbc7af62001s2Czb3j8RzhIdd",
+     "sessionID": "ses_f3438e19fffe5pXg1TZs28OYjs",
+     "messageID": "msg_0cbc773a90015GdPgG0prvcvht"
+    },
+    {
+     "reason": "tool-calls",
+     "snapshot": "e8405f75494214651899b9a0a63dcd66de283508",
+     "type": "step-finish",
+     "tokens": {
+      "total": 35641,
+      "input": 13578,
+      "output": 2193,
+      "reasoning": 3501,
+      "cache": {
+       "write": 0,
+       "read": 16369
+      }
+     },
+     "cost": 0.01879947,
+     "id": "prt_0cbc7b12f001610cWwIFeQC0KK",
+     "sessionID": "ses_f3438e19fffe5pXg1TZs28OYjs",
+     "messageID": "msg_0cbc773a90015GdPgG0prvcvht"
+    },
+    {
+     "type": "patch",
+     "hash": "347918c083127dff7a405be022edaaf2efe57e1e",
+     "files": [
+      "C:/Users/acura/Desktop/Trabalho Final Queiroz/ProjetoSemanaAcademica/semana-academica/specs/M4-certificados.md"
+     ],
+     "id": "prt_0cbc7b268001bblSYj3B640Lhm",
+     "sessionID": "ses_f3438e19fffe5pXg1TZs28OYjs",
+     "messageID": "msg_0cbc773a90015GdPgG0prvcvht"
+    }
+   ]
+  },
+  {
+   "info": {
+    "parentID": "msg_0cbc71e70001hdN9UolgDIgbRh",
+    "role": "assistant",
+    "mode": "build",
+    "agent": "build",
+    "path": {
+     "cwd": "C:\\Users\\acura\\Desktop\\Trabalho Final Queiroz\\ProjetoSemanaAcademica\\semana-academica",
+     "root": "C:\\Users\\acura\\Desktop\\Trabalho Final Queiroz\\ProjetoSemanaAcademica"
+    },
+    "cost": 0.00751601,
+    "tokens": {
+     "total": 37312,
+     "input": 19968,
+     "output": 280,
+     "reasoning": 127,
+     "cache": {
+      "write": 0,
+      "read": 16937
+     }
+    },
+    "modelID": "gemini-3.5-flash-lite",
+    "providerID": "google",
+    "time": {
+     "created": 1790125257325,
+     "completed": 1790125260659
+    },
+    "finish": "stop",
+    "id": "msg_0cbc7b26d001kz6Dut7zxdEOx2",
+    "sessionID": "ses_f3438e19fffe5pXg1TZs28OYjs"
+   },
+   "parts": [
+    {
+     "snapshot": "e8405f75494214651899b9a0a63dcd66de283508",
+     "type": "step-start",
+     "id": "prt_0cbc7bad8001Fpnay34oC8bSTC",
+     "sessionID": "ses_f3438e19fffe5pXg1TZs28OYjs",
+     "messageID": "msg_0cbc7b26d001kz6Dut7zxdEOx2"
+    },
+    {
+     "type": "text",
+     "text": "- **R1** (P1, RN-404): Critério de presença mínima (`PRESENCA_INSUFICIENTE`) de 75% dos encontros (presenças × 4 ≥ encontros × 3).\n- **R2** (P2, RN-401): Condição de atividade encerrada (`ATIVIDADE_NAO_ENCERRADA`) a partir do fim do último encontro.\n- **R3** (P3, RN-305, RN-407): Formato de código (`SA26-XXXX-XXXX`), idempotência (201 na 1ª emissão, 200 nas seguintes).\n- **R4** (P4, RN-410 a RN-412): Cálculo do Extrato com somas brutas e tetos aplicados (`aproveitadoMinutos`).\n- **R5** (P5, RN-408, RN-413): Verificação pública de certificados (`GET /certificados/:codigo`) sem autenticação, com erro 404 para códigos inválidos.\n- **R6** (Contrato): Restrições de papel e autenticação (`X-Usuario`) para as rotas protegidas de participantes e organização.\n\nFalta alguma regra?",
+     "time": {
+      "start": 1790125259482,
+      "end": 1790125260199
+     },
+     "id": "prt_0cbc7bada0015jDmuapfVwq0UR",
+     "sessionID": "ses_f3438e19fffe5pXg1TZs28OYjs",
+     "messageID": "msg_0cbc7b26d001kz6Dut7zxdEOx2"
+    },
+    {
+     "reason": "stop",
+     "snapshot": "e8405f75494214651899b9a0a63dcd66de283508",
+     "type": "step-finish",
+     "tokens": {
+      "total": 37312,
+      "input": 19968,
+      "output": 280,
+      "reasoning": 127,
+      "cache": {
+       "write": 0,
+       "read": 16937
+      }
+     },
+     "cost": 0.00751601,
+     "id": "prt_0cbc7be83001PDDUgk7QinFSwx",
+     "sessionID": "ses_f3438e19fffe5pXg1TZs28OYjs",
+     "messageID": "msg_0cbc7b26d001kz6Dut7zxdEOx2"
+    }
+   ]
+  }
+ ]
+}
