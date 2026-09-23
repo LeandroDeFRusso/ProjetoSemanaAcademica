@@ -227,3 +227,37 @@ test('POST /atividades/:id/certificado com frequencia >= 75% gera certificado (2
     app.close();
   }
 });
+
+test('GET /certificados sem autenticacao retorna 401 e por organizacao retorna 403 (R6)', async () => {
+  process.env.MODO_TESTE = '1';
+  const { app, porta } = await criarServidor(0);
+  try {
+    await fetch(`http://localhost:${porta}/_teste/reset`, { method: 'POST' });
+    const res401 = await fetch(`http://localhost:${porta}/certificados`);
+    assert.equal(res401.status, 401);
+
+    const res403 = await fetch(`http://localhost:${porta}/certificados`, {
+      headers: { 'X-Usuario': 'org-ana' }
+    });
+    assert.equal(res403.status, 403);
+  } finally {
+    app.close();
+  }
+});
+
+test('GET /extrato sem autenticacao retorna 401 e por organizacao retorna 403 (R6)', async () => {
+  process.env.MODO_TESTE = '1';
+  const { app, porta } = await criarServidor(0);
+  try {
+    await fetch(`http://localhost:${porta}/_teste/reset`, { method: 'POST' });
+    const res401 = await fetch(`http://localhost:${porta}/extrato`);
+    assert.equal(res401.status, 401);
+
+    const res403 = await fetch(`http://localhost:${porta}/extrato`, {
+      headers: { 'X-Usuario': 'org-ana' }
+    });
+    assert.equal(res403.status, 403);
+  } finally {
+    app.close();
+  }
+});
