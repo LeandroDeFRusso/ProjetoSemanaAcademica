@@ -1,6 +1,5 @@
 import express from 'express';
-import Database from 'better-sqlite3';
-const DatabaseSync = Database;
+import { DatabaseSync } from 'node:sqlite';
 import crypto from 'node:crypto';
 
 const ocupadasStubs = new Map();
@@ -84,6 +83,16 @@ export function criarServidor(portaDesejada = 3000) {
       registradaEm TEXT NOT NULL,
       justificativa TEXT
     );
+
+    CREATE TABLE IF NOT EXISTS certificados (
+      codigo TEXT PRIMARY KEY,
+      atividadeId TEXT NOT NULL,
+      participanteId TEXT NOT NULL,
+      cargaHorariaMinutos INTEGER NOT NULL,
+      presencas INTEGER NOT NULL,
+      encontros INTEGER NOT NULL,
+      emitidoEm TEXT NOT NULL
+    );
   `);
 
   function popularDadosIniciais() {
@@ -94,6 +103,7 @@ export function criarServidor(portaDesejada = 3000) {
     db.exec('DELETE FROM sistema');
     db.exec('DELETE FROM inscricoes');
     db.exec('DELETE FROM presencas');
+    db.exec('DELETE FROM certificados');
 
     const usuariosIniciais = [
       ['org-ana', 'Ana Beatriz Lima', 'organizacao'],
@@ -841,6 +851,110 @@ export function criarServidor(portaDesejada = 3000) {
           lidoEm: p.lidoEm,
           registradaEm: p.registradaEm,
           justificativa: p.justificativa
+        })));
+      });
+
+      // POST /atividades/:id/certificado
+      app.post('/atividades/:id/certificado', (req, res) => {
+        if (req.usuario.papel !== 'participante') {
+          return res.status(403).json({ erro: 'SOMENTE_PARTICIPANTE', mensagem: 'Apenas participante' });
+        }
+        const atividadeRow = db.prepare('SELECT * FROM atividades WHERE id = ?').get(req.params.id);
+        if (!atividadeRow) {
+          return res.status(404).json({ erro: 'NAO_ENCONTRADO', mensagem: 'Atividade não encontrada' });
+        }
+        if (atividadeRow.cancelada) {
+          return res.status(422).json({ erro: 'ATIVIDADE_CANCELADA', mensagem: 'Atividade cancelada' });
+        }
+        const atividade = getAtividadeObj(atividadeRow);
+        if (atividade.situacao !== 'encerrada') {
+          return res.status(422).json({ erro: 'ATIVIDADE_NAO_ENCERRADA', mensagem: 'Atividade não encerrada' });
+        }
+
+        const encontrosRows = db.prepare('SELECT id, inicio, fim FROM encontros WHERE atividadeId = ? ORDER BY inicio ASC').all(atividadeRow.id);
+        const totalEncontros = encontrosRows.length;
+
+        let presencasCount = 0;
+        if (totalEncontros > 0) {
+          const encontroIds = encontrosRows.map(e => e.id);
+          const placeholders = encontroIds.map(() => '?').join(',');
+          const pRow = db.prepare(`SELECT COUNT(*) as cnt FROM presencas WHERE participanteId = ? AND encontroId IN (${placeholders})`).get(req.usuario.id, ...encontroIds);
+          presencasCount = pRow ? pRow.cnt : 0;
+        }
+
+        if (totalEncontros > 0 && (presencasCount * 4 < totalEncontros * 3)) {
+          return res.status(422).json({ erro: 'PRESENCA_INSUFICIENTE', mensagem: 'Presença insuficiente' });
+        }
+
+        const existing = db.prepare('SELECT * FROM certificados WHERE atividadeId = ? AND participanteId = ?').get(atividadeRow.id, req.usuario.id);
+        if (existing) {
+          return res.status(200).json({
+            codigo: existing.codigo,
+            atividadeId: existing.atividadeId,
+            participanteId: existing.participanteId,
+            cargaHorariaMinutos: existing.cargaHorariaMinutos,
+            presencas: existing.presencas,
+            encontros: existing.encontros,
+            emitidoEm: existing.emitidoEm
+          });
+        }
+
+        let codigo;
+        let attempts = 0;
+        while (attempts < 10) {
+          const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+          const randPart = (len) => {
+            let r = '';
+            const bytes = crypto.randomBytes(len);
+            for (let i = 0; i < len; i++) {
+              r += chars[bytes[i] % chars.length];
+            }
+            return r;
+          };
+          codigo = `SA26-${randPart(4)}-${randPart(4)}`;
+          const check = db.prepare('SELECT codigo FROM certificados WHERE codigo = ?').get(codigo);
+          if (!check) break;
+          attempts++;
+        }
+
+        const relogioRow = db.prepare('SELECT valor FROM sistema WHERE chave = ?').get('relogio');
+        const emitidoEm = relogioRow ? relogioRow.valor : new Date().toISOString();
+
+        db.prepare('INSERT INTO certificados (codigo, atividadeId, participanteId, cargaHorariaMinutos, presencas, encontros, emitidoEm) VALUES (?, ?, ?, ?, ?, ?, ?)').run(
+          codigo,
+          atividadeRow.id,
+          req.usuario.id,
+          atividade.cargaHorariaMinutos,
+          presencasCount,
+          totalEncontros,
+          emitidoEm
+        );
+
+        return res.status(201).json({
+          codigo,
+          atividadeId: atividadeRow.id,
+          participanteId: req.usuario.id,
+          cargaHorariaMinutos: atividade.cargaHorariaMinutos,
+          presencas: presencasCount,
+          encontros: totalEncontros,
+          emitidoEm
+        });
+      });
+
+      // GET /certificados
+      app.get('/certificados', (req, res) => {
+        if (req.usuario.papel !== 'participante') {
+          return res.status(403).json({ erro: 'SOMENTE_PARTICIPANTE', mensagem: 'Apenas participante' });
+        }
+        const certs = db.prepare('SELECT * FROM certificados WHERE participanteId = ?').all(req.usuario.id);
+        res.json(certs.map(c => ({
+          codigo: c.codigo,
+          atividadeId: c.atividadeId,
+          participanteId: c.participanteId,
+          cargaHorariaMinutos: c.cargaHorariaMinutos,
+          presencas: c.presencas,
+          encontros: c.encontros,
+          emitidoEm: c.emitidoEm
         })));
       });
 
