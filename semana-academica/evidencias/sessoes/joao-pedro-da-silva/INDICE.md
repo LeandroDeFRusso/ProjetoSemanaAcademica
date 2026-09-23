@@ -13,4 +13,5 @@ Requisições são chamadas ao modelo: cada passo do agente é uma. Skills conta
 | Início | Sessão | Requisições | Skills | Subagentes | Vermelhas / verdes | Ciclos | Nasceu verde | Juntos | Alertas |
 |---|---|---|---|---|---|---|---|---|---|
 | 22/09 21:30 | [New session - 2026-09-23T00:30:11.098Z](ses_f34547965ffej2qDtfx7VhCBUS.md) | 24 | grilling | — | 0 / 0 | 0 | 0 | 0 | — |
-| | **Total: 1 sessões** | 24 | grilling | — | 0 / 0 | 0 | 0 | 0 | — |
+| 22/09 21:49 | [Respostas pendentes em M4-certificados.md](ses_f344317aeffeU7bz4gfGtRHSdm.md) | 20 | — | — | 0 / 0 | 0 | 0 | 0 | — |
+| | **Total: 2 sessões** | 44 | grilling | — | 0 / 0 | 0 | 0 | 0 | — |
